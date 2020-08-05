@@ -16,34 +16,49 @@ const Workout: React.FC = () => {
   const [workouts, setWorkouts] = useState<WorkoutProps[]>([
     {
       name: "Burpees",
-      sets: 3,
+      sets: 1,
       reps: 8,
     },
     {
       name: "Crunches",
-      sets: 4,
+      sets: 2,
       reps: 10,
     },
     {
       name: "Bench Press",
-      sets: 5,
+      sets: 3,
       reps: 12,
     },
   ]);
-  const [currentWorkout, setCurrentWorkout] = useState<WorkoutProps>(
-    workouts[0]
-  );
-  const [showWorkout, setShowWorkout] = useState(false);
+  const [currentWorkout, setCurrentWorkout] = useState(0);
   const [currentSet, setCurrentSet] = useState(1);
+
+  const [showWorkout, setShowWorkout] = useState(false);
   const [isResting, setIsResting] = useState(false);
+  const [isWorkoutFinished, setIsWorkoutFinished] = useState(false);
+
+  if (
+    currentSet > workouts[currentWorkout].sets &&
+    currentWorkout < workouts.length
+  ) {
+    setCurrentSet(1);
+    if (currentWorkout === workouts.length - 1) {
+      console.log("Finished");
+      setIsWorkoutFinished(true);
+    } else {
+      setCurrentWorkout(currentWorkout + 1);
+    }
+  }
 
   let timer: JSX.Element;
   let finishSetButton: JSX.Element;
+  let workoutApp: JSX.Element;
+  let finishedState: JSX.Element;
 
   timer = (
     <View style={styles.timer}>
       <Timer
-        countdown={5}
+        countdown={2}
         finishHandler={() => {
           setIsResting((prevValue) => {
             return !prevValue;
@@ -65,14 +80,14 @@ const Workout: React.FC = () => {
     />
   );
 
-  // * EDIT VIEW DASHBOARD DISINI
-  return (
-    <View style={styles.container}>
+  workoutApp = (
+    <View>
       <View style={styles.startButton}>
         <Button
           title={showWorkout ? "Stop Workout" : "Start Workout"}
           onPress={() => {
             setIsResting(false);
+            setCurrentWorkout(0);
             setCurrentSet(1);
             setShowWorkout(!showWorkout);
           }}
@@ -81,11 +96,36 @@ const Workout: React.FC = () => {
 
       {showWorkout ? (
         <View>
-          <Info currentWorkout={currentWorkout} currentSet={currentSet} />
+          <Info
+            currentWorkout={workouts[currentWorkout]}
+            currentSet={currentSet}
+          />
           {!isResting ? finishSetButton : null}
           {isResting ? timer : null}
         </View>
       ) : null}
+    </View>
+  );
+
+  finishedState = (
+    <View>
+      <Text>Congrats! You finished the exercise today :D</Text>
+      <Button
+        title="Workout again if you're a fucking chad"
+        onPress={() => {
+          setIsWorkoutFinished(false);
+          setCurrentWorkout(0);
+          setCurrentSet(1);
+          setIsResting(false);
+        }}
+      />
+    </View>
+  );
+
+  // * EDIT VIEW DASHBOARD DISINI
+  return (
+    <View style={styles.container}>
+      {isWorkoutFinished ? finishedState : workoutApp}
     </View>
   );
 };
