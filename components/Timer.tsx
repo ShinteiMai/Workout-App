@@ -33,9 +33,6 @@ const Timer: React.FC<Props> = (props) => {
       counterRef.current = previousValue - 1;
       return previousValue - 1;
     });
-    // ini udah disini logicnya
-    // nanti return nya kayak gini
-    // return props.startWorkout() <- datengnya dari TabOneScreen.tsx
     if (counterRef.current === 0) return props.finishHandler();
 
     setTimeout(runTimer, 1000);
