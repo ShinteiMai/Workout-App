@@ -1,8 +1,8 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 
-import Workout from "../components/Workout/Workout";
-import { View, Text } from "../components/Themed";
+import Workout from "../../components/Workout/Workout";
+import { View, Text } from "../../components/Themed";
 
 const TabOneScreen = () => {
   return (

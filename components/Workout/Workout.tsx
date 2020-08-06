@@ -58,7 +58,7 @@ const Workout: React.FC = () => {
   timer = (
     <View style={styles.timer}>
       <Timer
-        countdown={2}
+        countdown={5}
         finishHandler={() => {
           setIsResting((prevValue) => {
             return !prevValue;
