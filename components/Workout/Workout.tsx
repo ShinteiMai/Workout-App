@@ -5,6 +5,12 @@ import { Button, StyleSheet } from "react-native";
 
 import Info from "./components/Info";
 import Timer from "../Timer";
+import { RoutineProps } from "../../navigation/screens/Routines";
+
+type Props = {
+  routine: RoutineProps;
+  finishHandler: () => void;
+};
 
 export interface WorkoutProps {
   name: string;
@@ -12,24 +18,10 @@ export interface WorkoutProps {
   reps: number;
 }
 
-const Workout: React.FC = () => {
-  const [workouts, setWorkouts] = useState<WorkoutProps[]>([
-    {
-      name: "Burpees",
-      sets: 1,
-      reps: 8,
-    },
-    {
-      name: "Crunches",
-      sets: 2,
-      reps: 10,
-    },
-    {
-      name: "Bench Press",
-      sets: 3,
-      reps: 12,
-    },
-  ]);
+const Workout: React.FC<Props> = (props) => {
+  const [workouts, setWorkouts] = useState<WorkoutProps[]>(
+    props.routine.exercises
+  );
   const [currentWorkout, setCurrentWorkout] = useState(0);
   const [currentSet, setCurrentSet] = useState(1);
 
@@ -45,6 +37,7 @@ const Workout: React.FC = () => {
     if (currentWorkout === workouts.length - 1) {
       console.log("Finished");
       setIsWorkoutFinished(true);
+      props.finishHandler();
     } else {
       setCurrentWorkout(currentWorkout + 1);
     }

@@ -8,8 +8,6 @@ import useColorScheme from "../hooks/useColorScheme";
 
 /* Screens */
 import Home from "./screens/Home";
-import TabOneScreen from "./screens/TabOneScreen";
-import TabTwoScreen from "./screens/TabTwoScreen";
 
 /* Screen Prop Types */
 import {
@@ -87,25 +85,6 @@ export default function BottomTabNavigator() {
             ),
           }}
         />
-
-        <BottomTab.Screen
-          name="Dashboard"
-          component={TabOneNavigator}
-          options={{
-            tabBarIcon: ({ color }) => (
-              <TabBarIcon name="ios-code" color={color} />
-            ),
-          }}
-        />
-        <BottomTab.Screen
-          name="TabTwo"
-          component={TabTwoNavigator}
-          options={{
-            tabBarIcon: ({ color }) => (
-              <TabBarIcon name="ios-code" color={color} />
-            ),
-          }}
-        />
       </BottomTab.Navigator>
     </RoutinesContext.Provider>
   );
@@ -143,33 +122,5 @@ function HomeNavigator() {
         options={{ headerTitle: "Home" }}
       />
     </HomeStack.Navigator>
-  );
-}
-
-const TabOneStack = createStackNavigator<TabOneParamList>();
-
-function TabOneNavigator() {
-  return (
-    <TabOneStack.Navigator>
-      <TabOneStack.Screen
-        name="DashboardScreen"
-        component={TabOneScreen}
-        options={{ headerTitle: "Dashboard" }}
-      />
-    </TabOneStack.Navigator>
-  );
-}
-
-const TabTwoStack = createStackNavigator<TabTwoParamList>();
-
-function TabTwoNavigator() {
-  return (
-    <TabTwoStack.Navigator>
-      <TabTwoStack.Screen
-        name="TabTwoScreen"
-        component={TabTwoScreen}
-        options={{ headerTitle: "Tab Two Title" }}
-      />
-    </TabTwoStack.Navigator>
   );
 }
