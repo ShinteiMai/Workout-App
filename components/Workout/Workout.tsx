@@ -50,6 +50,7 @@ const Workout: React.FC<Props> = (props) => {
 
   timer = (
     <View style={styles.timer}>
+      <Text>Rest Time!</Text>
       <Timer
         countdown={5}
         finishHandler={() => {

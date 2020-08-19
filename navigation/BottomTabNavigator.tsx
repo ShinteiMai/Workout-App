@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+
 import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
 
@@ -10,78 +11,36 @@ import useColorScheme from "../hooks/useColorScheme";
 import Home from "./screens/Home";
 
 /* Screen Prop Types */
-import {
-  BottomTabParamList,
-  TabOneParamList,
-  TabTwoParamList,
-  HomeParamList,
-  RoutinesParamList,
-} from "../types";
+import { BottomTabParamList, HomeParamList, RoutinesParamList } from "../types";
 import Routines from "./screens/Routines";
 import { RoutinesContext } from "./RoutinesContext";
+import { routines } from "../data/data.json";
 
-const BottomTab = createBottomTabNavigator<BottomTabParamList>();
+const BottomTab = createMaterialBottomTabNavigator<BottomTabParamList>();
 
 export default function BottomTabNavigator() {
   const colorScheme = useColorScheme();
-
-  const routines = [
-    {
-      title: "Noob",
-      desc: "soys only",
-      exercises: [
-        {
-          name: "Burpees",
-          sets: 2,
-          reps: 5,
-        },
-        {
-          name: "Crunches",
-          sets: 2,
-          reps: 10,
-        },
-        {
-          name: "Bench Press",
-          sets: 3,
-          reps: 12,
-        },
-      ],
-    },
-    {
-      title: "Actually Zyzz",
-      desc: "motherfuckin jacked",
-      exercises: [
-        {
-          name: "literally lifting 69 women at the same time",
-          sets: 6,
-          reps: 9,
-        },
-      ],
-    },
-  ];
-
   return (
     <RoutinesContext.Provider value={routines}>
       <BottomTab.Navigator
         initialRouteName="Home"
-        tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
+        // tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
       >
-        <BottomTab.Screen
-          name="Routines"
-          component={Routines}
-          options={{
-            tabBarIcon: ({ color }) => (
-              <TabBarIcon name="ios-code" color={color} />
-            ),
-          }}
-        />
-
         <BottomTab.Screen
           name="Home"
           component={Home}
           options={{
             tabBarIcon: ({ color }) => (
-              <TabBarIcon name="ios-code" color={color} />
+              <TabBarIcon name="ios-home" color={color} />
+            ),
+          }}
+        />
+        <BottomTab.Screen
+          name="Routines"
+          component={Routines}
+          options={{
+            tabBarIcon: ({ color }) => (
+              <TabBarIcon name="ios-calendar" color={color} />
             ),
           }}
         />
@@ -93,12 +52,13 @@ export default function BottomTabNavigator() {
 // You can explore the built-in icon families and icons on the web at:
 // https://icons.expo.fyi/
 function TabBarIcon(props: { name: string; color: string }) {
-  return <Ionicons size={30} style={{ marginBottom: -3 }} {...props} />;
+  return <Ionicons size={30} style={{ marginBottom: 0 }} {...props} />;
 }
 
 // Each tab has its own navigation stack, you can read more about this pattern here:
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
 const RoutinesStack = createStackNavigator<RoutinesParamList>();
+
 function RoutinesNavigator() {
   return (
     <RoutinesStack.Navigator>
