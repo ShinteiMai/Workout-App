@@ -14,6 +14,9 @@ import Workout from "../../components/Workout/Workout";
 import CarouselComponent from "../../components/UI/Carousel";
 import Layout from "../../components/Layout";
 
+import Login from "../../components/Auth/Login";
+import Register from "../../components/Auth/Register";
+
 const Home = () => {
   const routines = useContext(RoutinesContext);
 
@@ -49,6 +52,8 @@ const Home = () => {
                 />
               </Surface>
             </Surface>
+            <Login />
+            <Register />
           </Surface>
         ) : (
           <Surface>

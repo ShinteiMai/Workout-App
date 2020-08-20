@@ -1,12 +1,16 @@
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy_utils import UUIDType
 from db import db
 import uuid
 
 
-class RoutineModel(db.model):
+def generate_uuid():
+    return str(uuid.uuid4())
+
+
+class RoutineModel(db.Model):
     __tablename__ = "routines"
-    id = db.Column(UUID(as_uuid=True), primary_key=True,
-                   default=uuid.uuid4, unique=True, nullable=False)
+    id = db.Column(UUIDType(binary=False),
+                   primary_key=True, default=generate_uuid)
     title = db.Column(db.String(255))
     desc = db.Column(db.Text)
 
@@ -16,7 +20,7 @@ class RoutineModel(db.model):
 
     def json(self):
         return {
-            'id': self.id,
+            'id': str(self.id),
             'title': self.title,
             'desc': self.desc
         }
