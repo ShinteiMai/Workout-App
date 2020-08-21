@@ -1,7 +1,9 @@
 import React, { useState, useContext } from "react";
 import { StyleSheet } from "react-native";
 import { RoutinesContext } from "../RoutinesContext";
+import { UserContext } from "../../components/Contexts/UserContext";
 import {
+  Text,
   Title,
   Paragraph,
   Surface,
@@ -19,6 +21,7 @@ import Register from "../../components/Auth/Register";
 
 const Home = () => {
   const routines = useContext(RoutinesContext);
+  const { user } = useContext(UserContext);
 
   const [hasWorkoutStarted, setHasWorkoutStarted] = useState<boolean>(false);
   const [selectedRoutine, setSelectedRoutine] = useState<number>(0);
@@ -27,7 +30,7 @@ const Home = () => {
     <Layout>
       <Surface style={styles.container}>
         <Title>Stronk - Chad Academy</Title>
-
+        <Text>{user ? user.email + "test" : "chad"}</Text>
         {!hasWorkoutStarted ? (
           <Surface style={styles.dashboard}>
             <Title style={styles.title}>Dashboard</Title>

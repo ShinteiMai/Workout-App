@@ -65,7 +65,7 @@ class Login(Resource):
 
             return ({
                 'user': user.json(),
-                'access_token': access_token,
+                'jwt': access_token,
                 'refresh_token': refresh_token
             }, 200)
 
@@ -94,7 +94,6 @@ class Register(Resource):
             return ({
                 "message": "An user with the email of '{}' already exists".format(data.email)
             }, 400)
-        print(data)
         user = UserModel(**data)
 
         try:

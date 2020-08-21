@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-
+import { AsyncStorage } from "react-native";
 import { StyleSheet } from "react-native";
 
 import {
@@ -25,25 +25,25 @@ interface values {
 
 interface Props {}
 
-const LoginModal: React.FC<Props> = () => {
-  const [visible, setVisible] = useState(true);
+const Login: React.FC<Props> = () => {
+  const { id, username, email, password } = useContext(UserContext);
+
+  const [visible, setVisible] = useState(false);
+
+  const LoginModal = () => {
+    return (
+      <Provider>
+        <Portal>
+          <Modal visible={visible} onDismiss={hideModal}>
+            <Text>Login attempt failed</Text>
+          </Modal>
+        </Portal>
+      </Provider>
+    );
+  };
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-
-  return (
-    <Provider>
-      <Portal>
-        <Modal visible={visible} onDismiss={hideModal}>
-          <Text>Login attempt failed</Text>
-        </Modal>
-      </Portal>
-    </Provider>
-  );
-};
-
-const Login: React.FC<Props> = () => {
-  const { id, username, email, password } = useContext(UserContext);
 
   const validateSchema = Yup.object().shape({
     email: Yup.string()
@@ -63,11 +63,14 @@ const Login: React.FC<Props> = () => {
       data: values,
     })
       .then((res) => {
-        // const { token } = res.data;
-        // localStorage.setItem("jwtToken", token);
+        const { jwt } = res.data.jwt;
+
+        AsyncStorage.setItem("jwt", jwt);
+
         console.log(res);
       })
       .catch((err) => {
+        showModal();
         console.log(err);
       });
   };
@@ -114,7 +117,7 @@ const Login: React.FC<Props> = () => {
           )}
         </Formik>
       </Surface>
-      <LoginModal />
+      {LoginModal}
     </Surface>
   );
 };
