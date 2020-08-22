@@ -1,5 +1,7 @@
 import Axios from "axios";
 
+import * as data from "./localtunnel.json";
+
 export const axios = Axios.create({
-  baseURL: "https://neat-lionfish-65.serverless.social",
+  baseURL: (<any>data).url,
 });
