@@ -1,22 +1,25 @@
 import React from "react";
 import { AsyncStorage } from "react-native";
 import axios from "axios";
-import jwt_decode from "jwt-decode";
+import jwtDecode from "jwt-decode";
 
 interface Props {
-  setUser: React.Dispatch<React.SetStateAction<React.Context<Props>>>;
-  setIsAuth: React.Dispatch<React.SetStateAction<React.Context<Props>>>;
+  setUser: React.Dispatch<React.SetStateAction<string>>;
+  setIsAuth: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const CheckAuthStatus = ({ setUser, setIsAuth }: Props) => {
-  axios({
+export const CheckAuthStatus = async ({ setUser, setIsAuth }: Props) => {
+  await axios({
     method: "GET",
     url: "/auth/me",
-  }).then((res) => {
-    if (AsyncStorage.getItem("jwt")) {
-      const decoded = jwt_decode(AsyncStorage.getItem("jwt"));
-      setUser(decoded);
-      setIsAuth(true);
+  }).then(async (res) => {
+    const token = await AsyncStorage.getItem("jwt");
+    if (token) {
+      const decoded = jwtDecode(token);
+      if (decoded) {
+        setUser(decoded as string);
+        setIsAuth(true);
+      }
     }
   });
 };
