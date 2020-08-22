@@ -5,7 +5,7 @@ interface Props {
   setIsAuth: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const isAuth = createContext<Props>({
+export const isAuthContext = createContext<Props>({
   isAuth: false,
   setIsAuth: () => {},
 });

@@ -8,7 +8,7 @@ from flask_jwt_extended import JWTManager
 
 from resources.exercise import Exercise, Exercises
 from resources.routine import Routine, Routines
-from resources.user import Register, Login, Users, User
+from resources.user import Register, Login, Users, User, Me
 
 load_dotenv()
 PORT = os.getenv('PORT')
@@ -42,7 +42,6 @@ class Home(Resource):
 api.add_resource(Exercises, '/exercises')
 api.add_resource(Exercise, '/exercise')
 
-
 api.add_resource(Routines, '/routines')
 api.add_resource(Routine, '/routine')
 
@@ -51,6 +50,7 @@ api.add_resource(User, '/user')
 
 api.add_resource(Register, '/register')
 api.add_resource(Login, '/login')
+api.add_resource(Me, '/me')
 
 api.add_resource(Home, "/")
 

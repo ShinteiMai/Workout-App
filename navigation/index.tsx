@@ -7,10 +7,12 @@ import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
 import { ColorSchemeName } from "react-native";
 
+import AuthScreen from "./screens/AuthScreen";
 import NotFoundScreen from "./screens/NotFoundScreen";
 import { RootStackParamList } from "../types";
 import BottomTabNavigator from "./BottomTabNavigator";
 import LinkingConfiguration from "./LinkingConfiguration";
+import { isAuthContext } from "../components/Contexts/isAuthContext";
 
 // If you are not familiar with React Navigation, we recommend going through the
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
@@ -33,10 +35,18 @@ export default function Navigation({
 // Read more here: https://reactnavigation.org/docs/modal
 const Stack = createStackNavigator<RootStackParamList>();
 
-function RootNavigator() {
+const RootNavigator: React.FC = () => {
+  const { isAuth, setIsAuth } = React.useContext(isAuthContext);
+
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {}
       <Stack.Screen name="Root" component={BottomTabNavigator} />
+      <Stack.Screen
+        name="Auth"
+        component={AuthScreen}
+        options={{ title: "Let's Auth" }}
+      />
       <Stack.Screen
         name="NotFound"
         component={NotFoundScreen}
@@ -44,4 +54,4 @@ function RootNavigator() {
       />
     </Stack.Navigator>
   );
-}
+};

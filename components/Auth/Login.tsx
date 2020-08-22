@@ -26,7 +26,7 @@ interface values {
 interface Props {}
 
 const Login: React.FC<Props> = () => {
-  const { id, username, email, password } = useContext(UserContext);
+  const { id, email } = useContext(UserContext);
 
   const [visible, setVisible] = useState(false);
 
@@ -63,11 +63,11 @@ const Login: React.FC<Props> = () => {
       data: values,
     })
       .then((res) => {
-        const { jwt } = res.data.jwt;
+        const jwt = res.data.jwt;
+        console.log(res);
+        console.log(jwt);
 
         AsyncStorage.setItem("jwt", jwt);
-
-        console.log(res);
       })
       .catch((err) => {
         showModal();

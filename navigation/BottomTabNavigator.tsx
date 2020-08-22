@@ -13,7 +13,7 @@ import Home from "./screens/Home";
 /* Screen Prop Types */
 import { BottomTabParamList, HomeParamList, RoutinesParamList } from "../types";
 import Routines from "./screens/Routines";
-import { RoutinesContext } from "./RoutinesContext";
+import { RoutinesContext } from "../components/Contexts/RoutinesContext";
 import { routines } from "../data/data.json";
 
 const BottomTab = createMaterialBottomTabNavigator<BottomTabParamList>();

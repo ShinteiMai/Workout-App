@@ -3,6 +3,8 @@ from models.user import UserModel
 from flask_jwt_extended import (
     create_access_token,
     create_refresh_token,
+    jwt_required,
+    get_jwt_identity
 )
 
 
@@ -104,3 +106,17 @@ class Register(Resource):
             }, 500)
 
         return user.json(), 201
+
+
+class Me(Resource):
+    @jwt_required
+    def post(self):
+        user_id = get_jwt_identity()
+        try:
+            user = UserModel.find_by_id(user_id)
+        except:
+            return ({
+                "message": "An error occurred during finding the user with id of {}".format(user_id)
+            }, 500)
+
+        return user.json(), 200

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useMemo } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { AsyncStorage } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -17,14 +17,26 @@ export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
 
-  const [isAuth, setIsAuth] = useState(isAuthContext);
-  const [user, setUser] = useState(UserContext);
+  const [isAuth, setIsAuth] = useState(false);
+  const [user, setUser] = useState({
+    id: "",
+    email: "",
+  });
+  // const userValues = useMemo(() => ({ user, setUser }), [user, setUser]);
+  const userValues = {
+    ...user,
+    setUser,
+  };
 
-  const userValues = useMemo(() => ({ user, setUser }), [user, setUser]);
+  const isAuthValues = {
+    isAuth,
+    setIsAuth,
+  };
 
   useEffect(() => {
-    CheckAuthStatus({ setUser, setIsAuth });
-  }, [setUser, setIsAuth]);
+    const checkAuth = async () => await CheckAuthStatus({ setUser, setIsAuth });
+    checkAuth();
+  }, [isAuth]);
 
   if (!isLoadingComplete) {
     return null;
@@ -32,16 +44,12 @@ export default function App() {
     return (
       <SafeAreaProvider>
         <UserContext.Provider value={userValues}>
-          <PaperProvider>
-            {isAuth ? (
-              <>
-                <Navigation colorScheme={colorScheme} />
-                <StatusBar />
-              </>
-            ) : (
-              <Auth />
-            )}
-          </PaperProvider>
+          <isAuthContext.Provider value={isAuthValues}>
+            <PaperProvider>
+              <Navigation colorScheme={colorScheme} />
+              <StatusBar />
+            </PaperProvider>
+          </isAuthContext.Provider>
         </UserContext.Provider>
       </SafeAreaProvider>
     );

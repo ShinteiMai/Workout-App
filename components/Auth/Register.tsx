@@ -19,7 +19,7 @@ import { UserContext } from "../Contexts/UserContext";
 import { axios } from "../../axios";
 
 interface values {
-  username: string;
+  // username: string;
   email: string;
   password: string;
 }
@@ -44,10 +44,10 @@ const RegisterModal: React.FC<Props> = () => {
 };
 
 const Register: React.FC<Props> = () => {
-  const { id, username, email, password } = useContext(UserContext);
+  const { id, email } = useContext(UserContext);
 
   const validateSchema = Yup.object().shape({
-    username: Yup.string().label("Username").required("Enter a username"),
+    // username: Yup.string().label("Username").required("Enter a username"),
     email: Yup.string()
       .label("Email")
       .email("Enter valid email")
@@ -91,13 +91,13 @@ const Register: React.FC<Props> = () => {
         >
           {({ values, handleSubmit, handleChange, errors }) => (
             <Surface style={styles.form}>
-              <TextInput
+              {/* <TextInput
                 mode="outlined"
                 label="Username"
                 value={values.username}
                 onChangeText={handleChange("username")}
               />
-              <Text>{errors.username}</Text>
+              <Text>{errors.username}</Text> */}
               <TextInput
                 mode="outlined"
                 label="Email"

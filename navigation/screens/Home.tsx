@@ -1,6 +1,6 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { StyleSheet } from "react-native";
-import { RoutinesContext } from "../RoutinesContext";
+import { RoutinesContext } from "../../components/Contexts/RoutinesContext";
 import { UserContext } from "../../components/Contexts/UserContext";
 import {
   Text,
@@ -18,13 +18,36 @@ import Layout from "../../components/Layout";
 
 import Login from "../../components/Auth/Login";
 import Register from "../../components/Auth/Register";
+import { axios } from "../../axios";
+import { RoutineProps } from "./Routines";
+
+export const fetchRoutines = async (
+  setRoutines: React.Dispatch<React.SetStateAction<RoutineProps[]>>
+) => {
+  try {
+    const response = await axios({
+      method: "GET",
+      url: "/routines",
+    });
+
+    if (response && response.data) {
+      setRoutines(response.data);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 const Home = () => {
-  const routines = useContext(RoutinesContext);
-  const { user } = useContext(UserContext);
+  const user = useContext(UserContext);
+  const { routines, setRoutines } = useContext(RoutinesContext);
 
   const [hasWorkoutStarted, setHasWorkoutStarted] = useState<boolean>(false);
   const [selectedRoutine, setSelectedRoutine] = useState<number>(0);
+
+  useEffect(() => {
+    fetchRoutines(setRoutines);
+  }, [routines]);
 
   return (
     <Layout>

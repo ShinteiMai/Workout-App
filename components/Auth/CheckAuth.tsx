@@ -15,13 +15,14 @@ interface Props {
   setIsAuth: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const CheckAuthStatus = ({ setUser, setIsAuth }: Props) => {
+export const CheckAuthStatus = async ({ setUser, setIsAuth }: Props) => {
   axios({
-    method: "GET",
-    url: "/auth/me",
-  }).then((res) => {
+    method: "POST",
+    url: "/me",
+  }).then(async (res) => {
     if (AsyncStorage.getItem("jwt")) {
-      const decoded = jwt_decode(AsyncStorage.getItem("jwt"));
+      const token = await AsyncStorage.getItem("jwt");
+      const decoded = jwt_decode(token);
       setUser(decoded);
       setIsAuth(true);
     }
