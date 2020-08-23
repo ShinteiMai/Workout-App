@@ -1,11 +1,13 @@
 from flask_restful import Resource, reqparse
 from models.user import UserModel
 from flask_jwt_extended import (
+    get_raw_jwt,
     create_access_token,
     create_refresh_token,
     jwt_required,
     get_jwt_identity
 )
+from blacklist import BLACKLIST
 
 
 class Users(Resource):
@@ -106,6 +108,17 @@ class Register(Resource):
             }, 500)
 
         return user.json(), 201
+
+
+class Logout(Resource):
+    @jwt_required
+    def get(self):
+        jti = get_raw_jwt()['jti']
+        BLACKLIST.add(jti)
+
+        return ({
+            'message': 'Successfully logged out'
+        }, 200)
 
 
 class Me(Resource):

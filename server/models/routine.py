@@ -21,12 +21,12 @@ class RoutineModel(db.Model):
                    primary_key=True, default=generate_uuid, unique=True)
     title = db.Column(db.String(255))
     description = db.Column(db.Text)
-    exercises = db.relationship('ExerciseModel', secondary=exercise_identifier)
+    exercises = db.relationship(
+        'ExerciseModel', secondary=exercise_identifier, lazy='dynamic')
 
-    def __init__(self, title, description, exercises):
+    def __init__(self, title, description):
         self.title = title
         self.description = description
-        self.exercises = exercises
 
     def json(self):
         return {

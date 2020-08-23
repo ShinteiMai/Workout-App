@@ -7,6 +7,7 @@ import { Provider as PaperProvider } from "react-native-paper";
 import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
 import Navigation from "./navigation";
+// import Application from "./navigation/index";
 
 import { UserContext } from "./components/Contexts/UserContext";
 import { isAuthContext } from "./components/Contexts/isAuthContext";
@@ -47,6 +48,7 @@ export default function App() {
           <isAuthContext.Provider value={isAuthValues}>
             <PaperProvider>
               <Navigation colorScheme={colorScheme} />
+              {/* <Application /> */}
               <StatusBar />
             </PaperProvider>
           </isAuthContext.Provider>

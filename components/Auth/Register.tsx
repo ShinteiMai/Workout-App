@@ -26,23 +26,6 @@ interface values {
 
 interface Props {}
 
-const RegisterModal: React.FC<Props> = () => {
-  const [visible, setVisible] = useState(true);
-
-  const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
-
-  return (
-    <Provider>
-      <Portal>
-        <Modal visible={visible} onDismiss={hideModal}>
-          <Text>Register attempt failed</Text>
-        </Modal>
-      </Portal>
-    </Provider>
-  );
-};
-
 const Register: React.FC<Props> = () => {
   const { id, email } = useContext(UserContext);
 
@@ -65,13 +48,10 @@ const Register: React.FC<Props> = () => {
       data: values,
     })
       .then((res) => {
-        // const { token } = res.data;
-        // localStorage.setItem("jwtToken", token);
         console.log(res);
       })
       .catch((err) => {
         console.log(err);
-        return <RegisterModal />;
       });
   };
 
@@ -104,7 +84,7 @@ const Register: React.FC<Props> = () => {
                 value={values.email}
                 onChangeText={handleChange("email")}
               />
-              <Text>{errors.email}</Text>
+              <Text>{errors.email ? errors.email : " "}</Text>
               <TextInput
                 mode="outlined"
                 label="Password"
@@ -112,7 +92,7 @@ const Register: React.FC<Props> = () => {
                 secureTextEntry={true}
                 onChangeText={handleChange("password")}
               />
-              <Text>{errors.password}</Text>
+              <Text>{errors.password ? errors.password : " "}</Text>
               <Button
                 icon="account-plus"
                 mode="contained"
@@ -124,7 +104,6 @@ const Register: React.FC<Props> = () => {
           )}
         </Formik>
       </Surface>
-      <RegisterModal />
     </Surface>
   );
 };
@@ -134,7 +113,8 @@ const styles = StyleSheet.create({
     // backgroundColor: "#fff",
   },
   title: {
-    left: 10,
+    // left: 10,
+    textAlign: "center",
   },
   form: {
     marginHorizontal: 10,

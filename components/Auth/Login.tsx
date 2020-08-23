@@ -1,6 +1,10 @@
 import React, { useState, useContext } from "react";
 import { AsyncStorage } from "react-native";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { StackNavigationProp } from "@react-navigation/stack";
+
+import Colors from "../../constants/Colors";
+import { RootStackParamList } from "../../types";
 
 import {
   Button,
@@ -16,6 +20,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 
 import { UserContext } from "../Contexts/UserContext";
+import { isAuthContext } from "../Contexts/isAuthContext";
 import { axios } from "../../axios";
 
 interface values {
@@ -23,27 +28,15 @@ interface values {
   password: string;
 }
 
-interface Props {}
+type LoginProp = StackNavigationProp<RootStackParamList>;
 
-const Login: React.FC<Props> = () => {
+interface Props {
+  navigation: LoginProp;
+}
+
+const Login: React.FC<Props> = ({ navigation }) => {
   const { id, email } = useContext(UserContext);
-
-  const [visible, setVisible] = useState(false);
-
-  const LoginModal = () => {
-    return (
-      <Provider>
-        <Portal>
-          <Modal visible={visible} onDismiss={hideModal}>
-            <Text>Login attempt failed</Text>
-          </Modal>
-        </Portal>
-      </Provider>
-    );
-  };
-
-  const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
+  const { setIsAuth } = useContext(isAuthContext);
 
   const validateSchema = Yup.object().shape({
     email: Yup.string()
@@ -57,6 +50,7 @@ const Login: React.FC<Props> = () => {
   });
 
   const submitHandler = (values: values) => {
+    let self = this;
     axios({
       method: "POST",
       url: "/login",
@@ -68,17 +62,20 @@ const Login: React.FC<Props> = () => {
         console.log(jwt);
 
         AsyncStorage.setItem("jwt", jwt);
+        if (res && res.data) {
+          setIsAuth(true);
+          navigation.navigate("Root");
+        }
       })
+      // .t//   if (res /    props.navigation.navi //; // })
       .catch((err) => {
-        showModal();
         console.log(err);
       });
   };
-
   return (
     <Surface style={styles.container}>
       <Title style={styles.title}>LOGIN</Title>
-      <Surface>
+      <View>
         <Formik
           initialValues={{
             email: "",
@@ -90,22 +87,24 @@ const Login: React.FC<Props> = () => {
           }}
         >
           {({ values, handleSubmit, handleChange, errors }) => (
-            <Surface style={styles.form}>
+            <View style={styles.form}>
               <TextInput
                 mode="outlined"
                 label="Email"
                 value={values.email}
                 onChangeText={handleChange("email")}
+                style={styles.input}
               />
-              <Text>{errors.email}</Text>
+              <Text>{errors.email ? errors.email : " "}</Text>
               <TextInput
                 mode="outlined"
                 label="Password"
                 value={values.password}
                 secureTextEntry={true}
                 onChangeText={handleChange("password")}
+                style={styles.input}
               />
-              <Text>{errors.password}</Text>
+              <Text>{errors.password ? errors.password : " "}</Text>
               <Button
                 icon="account-arrow-left"
                 mode="contained"
@@ -113,11 +112,10 @@ const Login: React.FC<Props> = () => {
               >
                 Login
               </Button>
-            </Surface>
+            </View>
           )}
         </Formik>
-      </Surface>
-      {LoginModal}
+      </View>
     </Surface>
   );
 };
@@ -127,11 +125,15 @@ const styles = StyleSheet.create({
     // backgroundColor: "#fff",
   },
   title: {
-    left: 10,
+    // left: 10,
+    textAlign: "center",
   },
   form: {
     marginHorizontal: 10,
     paddingVertical: 10,
+  },
+  input: {
+    // paddingBottom: 15,
   },
 });
 

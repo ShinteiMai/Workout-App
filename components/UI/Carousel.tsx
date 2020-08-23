@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet, View } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import { RoutineProps } from "../../navigation/screens/Routines";
 import { Surface, Title, Paragraph, Button } from "react-native-paper";
@@ -18,6 +18,8 @@ interface Props {
   data: RoutineProps[];
   startHandler: (routineIndex: number) => void;
 }
+let width = Dimensions.get("window").width;
+let height = Dimensions.get("window").height;
 
 const CarouselComponent: React.FC<Props> = ({ data, startHandler }) => {
   let carousel: Carousel<any> | null;
@@ -30,9 +32,9 @@ const CarouselComponent: React.FC<Props> = ({ data, startHandler }) => {
         <Surface>
           {routine.exercises.map((exercise, index) => {
             return (
-              <Surface key={index}>
+              <View key={index}>
                 <Paragraph>Exercise: {exercise.name}</Paragraph>
-              </Surface>
+              </View>
             );
           })}
         </Surface>
@@ -54,9 +56,9 @@ const CarouselComponent: React.FC<Props> = ({ data, startHandler }) => {
       }}
       data={data}
       renderItem={renderItem}
-      sliderWidth={300}
-      sliderHeight={500}
-      itemWidth={300}
+      sliderWidth={width - 60}
+      sliderHeight={700}
+      itemWidth={width - 60}
     />
   );
 };

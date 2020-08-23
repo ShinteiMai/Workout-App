@@ -1,6 +1,11 @@
+export type AuthParamsList = {
+  Auth: undefined;
+};
+
 export type RootStackParamList = {
   Root: undefined;
   Auth: undefined;
+  Splash: undefined;
   NotFound: undefined;
 };
 
@@ -10,6 +15,7 @@ export type BottomTabParamList = {
   Routines: undefined;
   Home: undefined;
   Dashboard: undefined;
+  Exercises: undefined;
   TabTwo: undefined;
 };
 
@@ -21,6 +27,10 @@ export type HomeParamList = {
 
 export type RoutinesParamList = {
   RoutinesScreen: undefined;
+};
+
+export type ExercisesParamList = {
+  ExercisesScreen: undefined;
 };
 
 export type TabOneParamList = {

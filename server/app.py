@@ -7,8 +7,8 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 
 from resources.exercise import Exercise, Exercises
-from resources.routine import Routine, Routines
-from resources.user import Register, Login, Users, User, Me
+from resources.routine import Routine, Routines, PushExercise, PopExercise
+from resources.user import Register, Login, Logout, Users, User, Me
 
 load_dotenv()
 PORT = os.getenv('PORT')
@@ -39,21 +39,24 @@ class Home(Resource):
         })
 
 
-api.add_resource(Exercises, '/exercises')
-api.add_resource(Exercise, '/exercise')
+api.add_resource(PushExercise, '/routine/push-exercise')
+api.add_resource(PopExercise, '/routine/pop-exercise')
 
 api.add_resource(Routines, '/routines')
 api.add_resource(Routine, '/routine')
+
+api.add_resource(Exercises, '/exercises')
+api.add_resource(Exercise, '/exercise')
 
 api.add_resource(Users, '/users')
 api.add_resource(User, '/user')
 
 api.add_resource(Register, '/register')
 api.add_resource(Login, '/login')
+api.add_resource(Logout, '/logout')
 api.add_resource(Me, '/me')
 
 api.add_resource(Home, "/")
-
 
 if __name__ == "__main__":
     from db import db

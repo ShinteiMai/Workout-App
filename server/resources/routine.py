@@ -1,5 +1,6 @@
 from flask_restful import Resource, reqparse
 from models.routine import RoutineModel
+from models.exercise import ExerciseModel
 
 
 class Routines(Resource):
@@ -133,7 +134,33 @@ class PushExercise(Resource):
                             )
 
         data = parser.parse_args()
-        print(data)
+
+        try:
+            routine = RoutineModel.find_by_id(data.routine_id)
+            if routine is None:
+                return ({
+                    "message": "Routine with the id of {} could not be found".format(data.routine_id)
+                }, 404)
+
+            exercise = ExerciseModel.find_by_id(data.exercise_id)
+            if exercise is None:
+                return ({
+                    "message": "Exercise with the id of {} could not be found".format(data.exercise_id)
+                }, 404)
+        except:
+            return ({
+                "message": "An error occurred during verifying the routine and exercise"
+            }, 500)
+
+        routine.exercises.append(exercise)
+        try:
+            routine.save()
+        except:
+            return ({
+                "message": "An error occurred during appending an exercise to a routine"
+            }, 500)
+
+        return routine.json(), 201
 
 
 class PopExercise(Resource):
@@ -150,3 +177,29 @@ class PopExercise(Resource):
                             help="You have to specify the exercise_id"
                             )
         data = parser.parse_args()
+
+        try:
+            routine = RoutineModel.find_by_id(data.routine_id)
+            if routine is None:
+                return ({
+                    "message": "Routine with the id of {} could not be found".format(data.routine_id)
+                }, 404)
+            exercise = ExerciseModel.find_by_id(data.exercise_id)
+            if exercise is None:
+                return ({
+                    "message": "Exercise with the id of {} could not be found".format(data.exercise_id)
+                }, 400)
+        except:
+            return ({
+                "message": "An error occurred during finding between the routine and the exercise"
+            }, 500)
+        routine.exercises.remove(exercise)
+
+        try:
+            routine.save()
+        except:
+            return ({
+                "message": "An error occurred during popping the exercise {} from routine {}".format(exercise_id, routine_id)
+            }, 500)
+
+        return routine.json(), 200
