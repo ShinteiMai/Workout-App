@@ -25,9 +25,6 @@ export const CheckAuthStatus = async ({ setUser, setIsAuth }: Props) => {
       });
     })
     .then((response) => {
-      console.log("User: ");
-      console.log(response);
-      console.log(response.data);
       if (response.data) {
         const user = response.data;
         setUser(user);

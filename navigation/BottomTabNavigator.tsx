@@ -35,6 +35,7 @@ export const fetchRoutines = async (
     });
 
     if (response && response.data) {
+      console.log(response.data.routines);
       setRoutines(response.data.routines);
     }
   } catch (err) {
