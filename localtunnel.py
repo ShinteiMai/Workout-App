@@ -19,7 +19,8 @@ def localtunnel():
             for line in p.stdout:
                 print(line, end='')  # process line here
                 url = re.findall('https://.*', line)[0]
-                with open('localtunnel.json', 'w') as file:
+                with open('./localtunnel.json', 'w') as file:
+                    file.truncate(0)
                     json.dump({
                         "url": url
                     }, file)
@@ -34,8 +35,7 @@ def localtunnel():
 
 
 def backend():
-    os.chdir("./server")
-    os.system("python3 app.py")
+    os.system("python3 ./server/app.py")
 
 
 localtunnelThread = threading.Thread(target=localtunnel)
