@@ -9,8 +9,9 @@ import useColorScheme from "./hooks/useColorScheme";
 import Navigation from "./navigation";
 // import Application from "./navigation/index";
 
-import { UserContext } from "./components/Contexts/UserContext";
-import { isAuthContext } from "./components/Contexts/isAuthContext";
+import { UserContext } from "./Contexts/UserContext";
+import { isAuthContext } from "./Contexts/isAuthContext";
+import { isLoadingContext } from "./Contexts/isLoadingContext";
 import Auth from "./components/Auth/Auth";
 import { CheckAuthStatus } from "./components/Auth/CheckAuth";
 
@@ -18,12 +19,16 @@ export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingMessage, setIsLoadingMessage] = useState(" ");
   const [isAuth, setIsAuth] = useState(false);
   const [user, setUser] = useState({
     id: "",
     email: "",
   });
+
   // const userValues = useMemo(() => ({ user, setUser }), [user, setUser]);
+
   const userValues = {
     ...user,
     setUser,
@@ -33,6 +38,13 @@ export default function App() {
     isAuth,
     setIsAuth,
   };
+
+  const isLoadingValues = {
+    isLoading,
+    isLoadingMessage,
+    setIsLoading,
+    setIsLoadingMessage,
+  }
 
   useEffect(() => {
     const checkAuth = async () => await CheckAuthStatus({ setUser, setIsAuth });
@@ -44,15 +56,17 @@ export default function App() {
   } else {
     return (
       <SafeAreaProvider>
-        <UserContext.Provider value={userValues}>
-          <isAuthContext.Provider value={isAuthValues}>
-            <PaperProvider>
-              <Navigation colorScheme={colorScheme} />
-              {/* <Application /> */}
-              <StatusBar />
-            </PaperProvider>
-          </isAuthContext.Provider>
-        </UserContext.Provider>
+        <isLoadingContext.Provider value={isLoadingValues}>
+
+          <UserContext.Provider value={userValues}>
+            <isAuthContext.Provider value={isAuthValues}>
+              <PaperProvider>
+                <Navigation colorScheme={colorScheme} />
+                <StatusBar />
+              </PaperProvider>
+            </isAuthContext.Provider>
+          </UserContext.Provider>
+        </isLoadingContext.Provider>
       </SafeAreaProvider>
     );
   }

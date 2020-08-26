@@ -19,8 +19,9 @@ import {
 import { Formik } from "formik";
 import * as Yup from "yup";
 
-import { UserContext } from "../Contexts/UserContext";
-import { isAuthContext } from "../Contexts/isAuthContext";
+import { UserContext } from "../../Contexts/UserContext";
+import { isAuthContext } from "../../Contexts/isAuthContext";
+import { isLoadingContext } from "../../Contexts/isLoadingContext";
 import { axios } from "../../axios";
 
 interface values {
@@ -37,6 +38,7 @@ interface Props {
 const Login: React.FC<Props> = ({ navigation }) => {
   const { id, email } = useContext(UserContext);
   const { setIsAuth } = useContext(isAuthContext);
+  const { setIsLoading, setIsLoadingMessage } = useContext(isLoadingContext);
 
   const validateSchema = Yup.object().shape({
     email: Yup.string()
@@ -50,7 +52,8 @@ const Login: React.FC<Props> = ({ navigation }) => {
   });
 
   const submitHandler = (values: values) => {
-    let self = this;
+    setIsLoading(true);
+
     axios({
       method: "POST",
       url: "/login",
@@ -61,6 +64,8 @@ const Login: React.FC<Props> = ({ navigation }) => {
         console.log(res);
         console.log(jwt);
 
+        setIsLoading(false);
+        setIsLoadingMessage("Login Done");
         AsyncStorage.setItem("jwt", jwt);
         if (res && res.data) {
           setIsAuth(true);
@@ -69,6 +74,8 @@ const Login: React.FC<Props> = ({ navigation }) => {
       })
       // .t//   if (res /    props.navigation.navi //; // })
       .catch((err) => {
+        setIsLoading(false);
+        setIsLoadingMessage("Login attempt failed");
         console.log(err);
       });
   };

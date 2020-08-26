@@ -2,8 +2,8 @@ import React, { useState, useContext, useEffect } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { RootStackParamList } from "../../types";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RoutinesContext } from "../../components/Contexts/RoutinesContext";
-import { UserContext } from "../../components/Contexts/UserContext";
+import { RoutinesContext } from "../../Contexts/RoutinesContext";
+import { UserContext } from "../../Contexts/UserContext";
 import {
   Text,
   Title,
@@ -80,22 +80,22 @@ const Home: React.FC<Props> = ({ navigation }) => {
             </View>
           </Surface>
         ) : (
-          <Surface>
-            <Workout
-              routine={routines[selectedRoutine]}
-              finishHandler={() => {
-                setHasWorkoutStarted(false);
-              }}
-            />
-            <Button
-              onPress={() => {
-                setHasWorkoutStarted(false);
-              }}
-            >
-              Back to Home
+            <Surface>
+              <Workout
+                routine={routines[selectedRoutine]}
+                finishHandler={() => {
+                  setHasWorkoutStarted(false);
+                }}
+              />
+              <Button
+                onPress={() => {
+                  setHasWorkoutStarted(false);
+                }}
+              >
+                Back to Home
             </Button>
-          </Surface>
-        )}
+            </Surface>
+          )}
       </Surface>
     </Layout>
   );

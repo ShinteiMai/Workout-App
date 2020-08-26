@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { View } from "../../components/Themed";
-import { RoutinesContext } from "../../components/Contexts/RoutinesContext";
+import { RoutinesContext } from "../../Contexts/RoutinesContext";
 import Layout from "../../components/Layout";
 import RoutineList from "../../components/Routines/RoutineList";
 

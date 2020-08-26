@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Surface, Title, Button, List, Paragraph } from "react-native-paper";
-import { RoutinesContext } from "../Contexts/RoutinesContext";
+import { RoutinesContext } from "../../Contexts/RoutinesContext";
 
-interface Props {}
+interface Props { }
 
 const RoutineList: React.FC<Props> = () => {
   const { routines } = useContext(RoutinesContext);
@@ -23,7 +23,7 @@ const RoutineList: React.FC<Props> = () => {
                 />
               );
             })}
-            <Button onPress={() => {}}>Select {routine.title}</Button>
+            <Button onPress={() => { }}>Select {routine.title}</Button>
           </List.Accordion>
         ))}
       </List.Section>

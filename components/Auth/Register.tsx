@@ -15,7 +15,9 @@ import {
 import { Formik } from "formik";
 import * as Yup from "yup";
 
-import { UserContext } from "../Contexts/UserContext";
+import { UserContext } from "../../Contexts/UserContext";
+import { isLoadingContext } from "../../Contexts/isLoadingContext";
+
 import { axios } from "../../axios";
 
 interface values {
@@ -24,10 +26,11 @@ interface values {
   password: string;
 }
 
-interface Props {}
+interface Props { }
 
 const Register: React.FC<Props> = () => {
   const { id, email } = useContext(UserContext);
+  const { setIsLoading, setIsLoadingMessage } = useContext(isLoadingContext);
 
   const validateSchema = Yup.object().shape({
     // username: Yup.string().label("Username").required("Enter a username"),
@@ -42,15 +45,21 @@ const Register: React.FC<Props> = () => {
   });
 
   const submitHandler = (values: values) => {
+    setIsLoading(true);
+    setIsLoadingMessage("Sending Data");
     axios({
       method: "POST",
       url: "/register",
       data: values,
     })
       .then((res) => {
+        setIsLoading(false);
+        setIsLoadingMessage("Register Done");
         console.log(res);
       })
       .catch((err) => {
+        setIsLoading(false);
+        setIsLoadingMessage("Register attempt failed");
         console.log(err);
       });
   };
