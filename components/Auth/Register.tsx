@@ -45,21 +45,45 @@ const Register: React.FC<Props> = () => {
   });
 
   const submitHandler = (values: values) => {
-    setIsLoading(true);
-    setIsLoadingMessage("Sending Data");
     axios({
       method: "POST",
-      url: "/register",
-      data: values,
+      url: "/ping",
     })
       .then((res) => {
-        setIsLoading(false);
+
+        setIsLoading(true);
+        setIsLoadingMessage("Sending Data");
+
+      })
+      .then((res) => {
+
+        setTimeout(() => { }, 1500);
+
+        return axios({
+          method: "POST",
+          url: "/register",
+          data: values,
+        })
+
+      })
+      .then((res) => {
         setIsLoadingMessage("Register Done");
+        setTimeout(() => {
+          setIsLoadingMessage(" ");
+        }, 3000);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1000);
         console.log(res);
       })
       .catch((err) => {
-        setIsLoading(false);
         setIsLoadingMessage("Register attempt failed");
+        setTimeout(() => {
+          setIsLoadingMessage(" ");
+        }, 3000);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1000);
         console.log(err);
       });
   };

@@ -14,6 +14,7 @@ import { isAuthContext } from "./Contexts/isAuthContext";
 import { isLoadingContext } from "./Contexts/isLoadingContext";
 import Auth from "./components/Auth/Auth";
 import { CheckAuthStatus } from "./components/Auth/CheckAuth";
+import Dummy from "./dummy";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();

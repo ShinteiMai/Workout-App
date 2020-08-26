@@ -18,23 +18,23 @@ const calculateCurrentIndex = (position: number) => {
 
 const MessageModal: React.FC<Props> = ({ }) => {
   const { isLoading, isLoadingMessage } = useContext(isLoadingContext);
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
-  let message;
   useEffect(() => {
     if (isLoading) {
       showModal();
     }
-    message = <Text style={styles.message}>{isLoadingMessage + " "}</Text>
-  }, [])
+    setTimeout(() => { }, 3000);
+
+  }, [showModal]);
 
   return (
     <Provider>
       <Portal>
-        <Modal visible={visible} onDismiss={hideModal}>
+        <Modal visible={visible && isLoading} onDismiss={hideModal}>
           {isLoading ?
             <ActivityIndicator
               animating={isLoading}
@@ -44,7 +44,8 @@ const MessageModal: React.FC<Props> = ({ }) => {
             />
             :
             null}
-          {message}
+          {/* {message} */}
+          <Text style={styles.message}>{isLoadingMessage + " "}</Text>
         </Modal>
       </Portal>
     </Provider>

@@ -52,27 +52,47 @@ const Login: React.FC<Props> = ({ navigation }) => {
   });
 
   const submitHandler = (values: values) => {
-    setIsLoading(true);
 
     axios({
       method: "POST",
-      url: "/login",
-      data: values,
+      url: "/ping",
     })
+      .then((res) => {
+
+        setIsLoading(true);
+        setIsLoadingMessage("Sending Data");
+      })
+      .then((res) => {
+
+        setTimeout(() => { }, 3000);
+
+        return axios({
+          method: "POST",
+          url: "/login",
+          data: values,
+        })
+
+      })
       .then((res) => {
         const jwt = res.data.jwt;
         console.log(res);
         console.log(jwt);
 
-        setIsLoading(false);
+        return AsyncStorage.setItem("jwt", jwt);
+      })
+      .then((res) => {
+
         setIsLoadingMessage("Login Done");
-        AsyncStorage.setItem("jwt", jwt);
-        if (res && res.data) {
+
+        setTimeout(() => {
+          setIsLoading(false);
+          setIsLoadingMessage("");
           setIsAuth(true);
           navigation.navigate("Root");
-        }
+        }, 1500);
+
+
       })
-      // .t//   if (res /    props.navigation.navi //; // })
       .catch((err) => {
         setIsLoading(false);
         setIsLoadingMessage("Login attempt failed");
