@@ -8,7 +8,7 @@ from flask_jwt_extended import JWTManager
 
 from resources.exercise import Exercise, Exercises
 from resources.routine import Routine, Routines, PushExercise, PopExercise
-from resources.user import Register, Login, Logout, Users, User, Me
+from resources.user import Register, Login, Logout, Users, User, Me, Ping
 
 load_dotenv()
 PORT = os.getenv('PORT')
@@ -55,6 +55,8 @@ api.add_resource(Register, '/register')
 api.add_resource(Login, '/login')
 api.add_resource(Logout, '/logout')
 api.add_resource(Me, '/me')
+
+api.add_resource(Ping, '/ping')
 
 api.add_resource(Home, "/")
 

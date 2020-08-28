@@ -20,8 +20,8 @@ import {
 import { Formik } from "formik";
 import * as Yup from "yup";
 
-import { UserContext } from "../Contexts/UserContext";
-import { isAuthContext } from "../Contexts/isAuthContext";
+import { UserContext } from "../../Contexts/UserContext";
+import { isAuthContext } from "../../Contexts/isAuthContext";
 import { axios } from "../../axios";
 
 interface values {

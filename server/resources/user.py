@@ -133,3 +133,7 @@ class Me(Resource):
             }, 500)
 
         return user.json(), 200
+
+class Ping(Resource):
+    def post(self):
+        return ({"message": "[PING]"}, 200)

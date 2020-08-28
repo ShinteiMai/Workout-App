@@ -17,7 +17,7 @@ import NotFoundScreen from "./screens/NotFoundScreen";
 import { AuthParamsList, RootStackParamList } from "../types";
 import BottomTabNavigator from "./BottomTabNavigator";
 import LinkingConfiguration from "./LinkingConfiguration";
-import { isAuthContext } from "../components/Contexts/isAuthContext";
+import { isAuthContext } from "../Contexts/isAuthContext";
 
 // If you are not familiar with React Navigation, we recommend going through the
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
@@ -75,8 +75,8 @@ const RootNavigator: React.FC = () => {
       {isAuth ? (
         <Stack.Screen name="Root" component={BottomTabNavigator} />
       ) : (
-        <Stack.Screen name="Auth" component={AuthScreen} />
-      )}
+          <Stack.Screen name="Auth" component={AuthScreen} />
+        )}
     </Stack.Navigator>
   );
 };

@@ -19,7 +19,7 @@ import {
   ExercisesParamList,
 } from "../types";
 import Routines from "./screens/Routines";
-import { RoutinesContext } from "../components/Contexts/RoutinesContext";
+import { RoutinesContext } from "../Contexts/RoutinesContext";
 import { RoutineProps } from "./screens/Routines";
 import { axios } from "../axios";
 
@@ -58,7 +58,7 @@ export default function BottomTabNavigator() {
     <RoutinesContext.Provider value={routinesValue}>
       <BottomTab.Navigator
         initialRouteName="Home"
-        // tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
+      // tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
       >
         <BottomTab.Screen
           name="Home"

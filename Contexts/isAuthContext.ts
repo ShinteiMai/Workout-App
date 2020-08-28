@@ -7,5 +7,5 @@ interface Props {
 
 export const isAuthContext = createContext<Props>({
   isAuth: false,
-  setIsAuth: () => {},
+  setIsAuth: () => { },
 });

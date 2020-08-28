@@ -15,7 +15,9 @@ import {
 import { Formik } from "formik";
 import * as Yup from "yup";
 
-import { UserContext } from "../Contexts/UserContext";
+import { UserContext } from "../../Contexts/UserContext";
+import { isLoadingContext } from "../../Contexts/isLoadingContext";
+
 import { axios } from "../../axios";
 
 interface values {
@@ -24,10 +26,11 @@ interface values {
   password: string;
 }
 
-interface Props {}
+interface Props { }
 
 const Register: React.FC<Props> = () => {
   const { id, email } = useContext(UserContext);
+  const { setIsLoading, setIsLoadingMessage } = useContext(isLoadingContext);
 
   const validateSchema = Yup.object().shape({
     // username: Yup.string().label("Username").required("Enter a username"),
@@ -44,13 +47,43 @@ const Register: React.FC<Props> = () => {
   const submitHandler = (values: values) => {
     axios({
       method: "POST",
-      url: "/register",
-      data: values,
+      url: "/ping",
     })
       .then((res) => {
+
+        setIsLoading(true);
+        setIsLoadingMessage("Sending Data");
+
+      })
+      .then((res) => {
+
+        setTimeout(() => { }, 1500);
+
+        return axios({
+          method: "POST",
+          url: "/register",
+          data: values,
+        })
+
+      })
+      .then((res) => {
+        setIsLoadingMessage("Register Done");
+        setTimeout(() => {
+          setIsLoadingMessage(" ");
+        }, 3000);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1000);
         console.log(res);
       })
       .catch((err) => {
+        setIsLoadingMessage("Register attempt failed");
+        setTimeout(() => {
+          setIsLoadingMessage(" ");
+        }, 3000);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1000);
         console.log(err);
       });
   };
