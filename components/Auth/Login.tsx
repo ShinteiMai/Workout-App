@@ -19,8 +19,9 @@ import {
 import { Formik } from "formik";
 import * as Yup from "yup";
 
-import { UserContext } from "../Contexts/UserContext";
-import { isAuthContext } from "../Contexts/isAuthContext";
+import { UserContext } from "../../Contexts/UserContext";
+import { isAuthContext } from "../../Contexts/isAuthContext";
+import { isLoadingContext } from "../../Contexts/isLoadingContext";
 import { axios } from "../../axios";
 
 interface values {
@@ -37,6 +38,7 @@ interface Props {
 const Login: React.FC<Props> = ({ navigation }) => {
   const { id, email } = useContext(UserContext);
   const { setIsAuth } = useContext(isAuthContext);
+  const { setIsLoading, setIsLoadingMessage } = useContext(isLoadingContext);
 
   const validateSchema = Yup.object().shape({
     email: Yup.string()
@@ -50,25 +52,50 @@ const Login: React.FC<Props> = ({ navigation }) => {
   });
 
   const submitHandler = (values: values) => {
-    let self = this;
+
     axios({
       method: "POST",
-      url: "/login",
-      data: values,
+      url: "/ping",
     })
+      .then((res) => {
+
+        setIsLoading(true);
+        setIsLoadingMessage("Sending Data");
+      })
+      .then((res) => {
+
+        setTimeout(() => { }, 3000);
+
+        return axios({
+          method: "POST",
+          url: "/login",
+          data: values,
+        })
+
+      })
       .then((res) => {
         const jwt = res.data.jwt;
         console.log(res);
         console.log(jwt);
 
-        AsyncStorage.setItem("jwt", jwt);
-        if (res && res.data) {
+        return AsyncStorage.setItem("jwt", jwt);
+      })
+      .then((res) => {
+
+        setIsLoadingMessage("Login Done");
+
+        setTimeout(() => {
+          setIsLoading(false);
+          setIsLoadingMessage("");
           setIsAuth(true);
           navigation.navigate("Root");
-        }
+        }, 1500);
+
+
       })
-      // .t//   if (res /    props.navigation.navi //; // })
       .catch((err) => {
+        setIsLoading(false);
+        setIsLoadingMessage("Login attempt failed");
         console.log(err);
       });
   };
