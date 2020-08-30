@@ -1,4 +1,4 @@
-node_modules/**/*
+node_modules/
 .expo/*
 npm-debug.*
 *.jks
@@ -16,3 +16,5 @@ web-build/
 venv/
 server/.env
 server/venv/
+__pycache__/
+server/**/__pycache__
