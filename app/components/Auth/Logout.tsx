@@ -1,28 +1,12 @@
-import React, { useState, useContext } from "react";
-import { AsyncStorage } from "react-native";
+import React from "react";
 import { StyleSheet, View } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { useDispatch } from "react-redux";
+import { logout } from "../../features/userSlice";
 
-import Colors from "../../constants/Colors";
 import { RootStackParamList } from "../../types";
 
-import {
-  Button,
-  Modal,
-  Portal,
-  Provider,
-  Surface,
-  Text,
-  TextInput,
-  Title,
-} from "react-native-paper";
-import { Formik } from "formik";
-import * as Yup from "yup";
-
-import { UserContext } from "../../Contexts/UserContext";
-import { isAuthContext } from "../../Contexts/isAuthContext";
-import { axios } from "../../axios";
+import { Button } from "react-native-paper";
 
 interface values {
   email: string;
@@ -36,32 +20,20 @@ interface Props {
 }
 
 const Logout: React.FC<Props> = ({ navigation }) => {
-  const { id, email, setUser } = useContext(UserContext);
-  const { setIsAuth } = useContext(isAuthContext);
-
-  const logoutHandler = () => {
-    AsyncStorage.getItem("jwt")
-      .then((res) => {
-        return axios({
-          method: "GET",
-          url: "/logout",
-          headers: {
-            Authorization: `Bearer ${res}`,
-          },
-        });
-      })
-      .then(async (res) => {
-        await AsyncStorage.removeItem("jwt");
-
-        setUser({ id: "", email: "" });
-        setIsAuth(false);
-        navigation.navigate("Auth");
-      })
-      .catch((err) => console.log(err));
+  const dispatch = useDispatch();
+  const logoutHandler = async () => {
+    dispatch(logout());
+    navigation.navigate("Auth");
   };
-
   return (
     <View>
+      <Button onPress={
+        () => {
+          dispatch(logout());
+        }
+      }>
+        goblok
+      </Button>
       <Button
         icon="account-arrow-left"
         mode="contained"

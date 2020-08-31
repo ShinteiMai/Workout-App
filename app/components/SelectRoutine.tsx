@@ -5,7 +5,8 @@ import { RoutineProps } from "../navigation/screens/Routines";
 import CarouselComponent from "./UI/Carousel";
 
 type Props = {
-  routines: RoutineProps[];
+  routines: any;
+  // routines: RoutineProps[];
   startHandler: (routineIndex: number) => void;
 };
 

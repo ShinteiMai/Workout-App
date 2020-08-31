@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dimensions, StyleSheet, Image, View } from "react-native";
 import {
   Button,
@@ -19,12 +19,15 @@ import { StackScreenProps } from "@react-navigation/stack";
 import Auth from "../../components/Auth/Auth";
 import logo from "../../assets/images/splash2.png";
 
+import { useDispatch } from "react-redux";
+import { login } from "../../features/userSlice";
+
 let width = Dimensions.get("window").width;
 let height = Dimensions.get("window").height;
 
-interface ModalProps {}
+interface ModalProps { }
 
-const MessageModal: React.FC<ModalProps> = ({}) => {
+const MessageModal: React.FC<ModalProps> = ({ }) => {
   const [visible, setVisible] = useState(true);
 
   const showModal = () => setVisible(true);
@@ -48,6 +51,8 @@ interface AuthProps {
 const AuthScreen: React.FC<AuthProps> = ({ navigation }) => {
   const [currentDisplay, setCurrentDisplay] = useState(0);
 
+
+
   return (
     <Layout>
       <View style={styles.container}>
@@ -59,8 +64,8 @@ const AuthScreen: React.FC<AuthProps> = ({ navigation }) => {
           {currentDisplay === 0 ? (
             <Login navigation={navigation} />
           ) : (
-            <Register />
-          )}
+              <Register />
+            )}
           <Button
             onPress={() => {
               setCurrentDisplay(currentDisplay === 0 ? 1 : 0);

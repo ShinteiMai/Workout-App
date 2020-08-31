@@ -1,7 +1,9 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { AsyncStorage } from "react-native";
 import { StyleSheet, View } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { useDispatch } from "react-redux";
+import { login } from "../../features/userSlice";
 
 import Colors from "../../constants/Colors";
 import { RootStackParamList } from "../../types";
@@ -16,13 +18,6 @@ import {
 import { Formik } from "formik";
 import * as Yup from "yup";
 
-import { UserContext } from "../../Contexts/UserContext";
-import { isAuthContext } from "../../Contexts/isAuthContext";
-import { isLoadingContext } from "../../Contexts/isLoadingContext";
-import { axios } from "../../axios";
-import { Message, Timer } from "../../constants/loading";
-import { Route } from "../../constants/Route";
-
 interface values {
   email: string;
   password: string;
@@ -35,9 +30,7 @@ interface Props {
 }
 
 const Login: React.FC<Props> = ({ navigation }) => {
-  const { id, email } = useContext(UserContext);
-  const { setIsAuth } = useContext(isAuthContext);
-  const { setIsLoading, setIsLoadingMessage } = useContext(isLoadingContext);
+  const dispatch = useDispatch();
 
   const validateSchema = Yup.object().shape({
     email: Yup.string()
@@ -50,54 +43,14 @@ const Login: React.FC<Props> = ({ navigation }) => {
       .min(6, "Password must have at least 6 characters"),
   });
 
-  const submitHandler = (values: values) => {
+  const submitHandler = async (values: values) => {
 
-    axios({
-      method: "POST",
-      url: "/ping",
-    })
-      .then((res) => {
+    await dispatch(login({
+      ...values
+    }));
 
-        setIsLoading(true);
-        setIsLoadingMessage(Message.send);
-      })
-      .then((res) => {
+    navigation.navigate("Root");
 
-        setTimeout(() => { }, Timer.long);
-
-        return axios({
-          method: "POST",
-          url: "/login",
-          data: values,
-        })
-
-      })
-      .then((res) => {
-        const jwt = res.data.jwt;
-        console.log(res);
-        console.log(jwt);
-
-        return AsyncStorage.setItem("jwt", jwt);
-      })
-      .then((res) => {
-
-        setIsLoadingMessage(Message.success);
-
-        setTimeout(() => {
-          setIsLoading(false);
-          setIsLoadingMessage(Message.reset);
-          setIsAuth(true);
-          //Warning
-          navigation.navigate(Route.root);
-        }, Timer.medium);
-
-
-      })
-      .catch((err) => {
-        setIsLoading(false);
-        setIsLoadingMessage(Message.error);
-        console.log(err);
-      });
   };
   return (
     <Surface style={styles.container}>
@@ -115,6 +68,12 @@ const Login: React.FC<Props> = ({ navigation }) => {
         >
           {({ values, handleSubmit, handleChange, errors }) => (
             <View style={styles.form}>
+              <Button
+                onPress={() => { values.email = "megumin@gmail.com"; values.password = "1234567" }}
+              >Megumin is flat</Button>
+              <Button
+                onPress={() => { values.email = "Nezuko@Nezuko.com"; values.password = "Nezuko" }}
+              >Dont lewd nezuko bro</Button>
               <TextInput
                 mode="outlined"
                 label="Email"
