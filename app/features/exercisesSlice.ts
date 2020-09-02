@@ -1,63 +1,53 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fromApi } from "../axios";
-import { reduxStatus } from "./routinesSlice";
+import { reduxStatus } from "./types";
 
 export const fetchExercises = createAsyncThunk(
-  'exercises/fetchExercises',
+  "exercises/fetchExercises",
   async () => {
     const data = await fromApi.fetchExercises();
+    console.log(data);
     return data.exercises;
   }
-)
+);
 
 export const fetchExercise = createAsyncThunk(
-  'exercises/fetchExercise',
+  "exercises/fetchExercise",
   async ({ exerciseId }: any) => {
     const data = await fromApi.fetchExercise(exerciseId);
     return data.exercise;
   }
-)
+);
 
 export const addExercise = createAsyncThunk(
-  'exercises/addExercise',
-  async ({
-    name,
-    sets,
-    reps,
-  }: any) => {
+  "exercises/addExercise",
+  async ({ name, sets, reps }: any) => {
     const data = await fromApi.addExercise(name, sets, reps);
     return data.exercise;
   }
-)
+);
 
 export const updateExercise = createAsyncThunk(
-  'exercises/updateExercise',
-  async ({
-    exerciseId,
-    name,
-    sets,
-    reps
-  }: any) => {
+  "exercises/updateExercise",
+  async ({ exerciseId, name, sets, reps }: any) => {
     const data = await fromApi.updateExercise(exerciseId, name, sets, reps);
     return data.exercise;
   }
-)
+);
 
 export const deleteExercise = createAsyncThunk(
-  'exercises/deleteExercise',
-  async ({
-    exerciseId
-  }: any) => {
-    const data = await fromApi.deleteExercise(exerciseId)
+  "exercises/deleteExercise",
+  async ({ exerciseId }: any) => {
+    const data = await fromApi.deleteExercise(exerciseId);
     return data.exercise;
   }
-)
+);
 
 export const exercisesSlice = createSlice({
-  name: 'exercises',
+  name: "exercises",
   initialState: {
     exercises: [],
-    status: reduxStatus.idle
+    status: reduxStatus.idle,
   },
   reducers: {},
   extraReducers: {
@@ -77,7 +67,7 @@ export const exercisesSlice = createSlice({
     [deleteExercise.pending as any]: (state, action) => {
       state.status = reduxStatus.loading;
     },
-    // Rejected 
+    // Rejected
     [fetchExercises.rejected as any]: (state, action) => {
       state.status = reduxStatus.error;
     },
@@ -117,7 +107,7 @@ export const exercisesSlice = createSlice({
       state.exercises.forEach((exercise, index) => {
         if (updatedExercise.id.toString() === exercise.id.toString()) {
           state.exercises[index] = updatedExercise;
-        };
+        }
       });
       state.status = reduxStatus.success;
     },
@@ -126,23 +116,23 @@ export const exercisesSlice = createSlice({
       state.exercises.forEach((exercise, index) => {
         if (deletedExercise.id.toString() === exercise.id.toString()) {
           state.exercises.splice(index, 1);
-        };
+        }
       });
       state.status = reduxStatus.success;
-    }
-  }
+    },
+  },
 });
 
-export const selectExercises = state => {
+export const selectExercises = (state) => {
   return {
-    exercises: state.exercises.exercises
-  }
+    exercises: state.exercises.exercises,
+  };
 };
 
-export const selectExercisesStatus = state => {
+export const selectExercisesStatus = (state) => {
   return {
-    status: state.exercises.status
-  }
+    status: String(state.exercises.status),
+  };
 };
 
 export default exercisesSlice.reducer;

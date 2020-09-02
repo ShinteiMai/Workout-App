@@ -3,21 +3,21 @@ import { Button, List, Paragraph, Card } from "react-native-paper";
 import { Formik } from "formik";
 import { axios } from "../../axios";
 import { ExerciseProps } from "../../types";
-import { useDispatch } from "react-redux";
-import { deleteExercise } from "../../features/exercisesSlice"
+import { useDispatch, useSelector } from "react-redux";
+import { deleteExercise, selectExercises } from "../../features/exercisesSlice";
 
 interface Props {
-  exercises: ExerciseProps[];
   setIsUpdating: React.Dispatch<React.SetStateAction<boolean>>;
   setCurrentExercise: React.Dispatch<React.SetStateAction<ExerciseProps>>;
 }
 
 const ExerciseList: React.FC<Props> = ({
-  exercises,
   setIsUpdating,
   setCurrentExercise,
 }) => {
   const dispatch = useDispatch();
+  const { exercises } = useSelector(selectExercises);
+  console.log(exercises);
   return (
     <List.Section>
       {exercises.map((exercise) => (
@@ -29,17 +29,19 @@ const ExerciseList: React.FC<Props> = ({
           </Card.Content>
           <Button
             onPress={async () => {
-              dispatch(deleteExercise({
-                exerciseId: exercise.id
-              }))
+              dispatch(
+                deleteExercise({
+                  exerciseId: exercise.id,
+                })
+              );
             }}
           >
             Delete Exercise
           </Button>
           <Button
             onPress={() => {
-              setIsUpdating(true);
               setCurrentExercise(exercise);
+              setIsUpdating(true);
             }}
           >
             Update Exercise

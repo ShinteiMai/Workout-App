@@ -13,8 +13,12 @@ import {
 import Login from "./Login";
 import Register from "./Register";
 import Layout from "../Layout";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../../types";
 
-interface Props {}
+interface Props {
+  navigation: StackNavigationProp<RootStackParamList>;
+}
 
 const MessageModal: React.FC<Props> = ({}) => {
   const [visible, setVisible] = useState(true);
@@ -33,16 +37,20 @@ const MessageModal: React.FC<Props> = ({}) => {
   );
 };
 
-const Auth: React.FC<Props> = ({}) => {
+const Auth: React.FC<Props> = ({ navigation }) => {
   const [currentDisplay, setCurrentDisplay] = useState(0);
 
   return (
     <Layout>
       <View>
-        <MessageModal />
+        <MessageModal navigation={navigation} />
       </View>
       <Surface>
-        {currentDisplay === 0 ? <Login /> : <Register />}
+        {currentDisplay === 0 ? (
+          <Login navigation={navigation} />
+        ) : (
+          <Register />
+        )}
         <Button
           onPress={() => {
             setCurrentDisplay(currentDisplay === 0 ? 1 : 0);

@@ -58,6 +58,7 @@ class Exercise(Resource):
 
     def put(self):
         id = request.args["id"]
+        parser = reqparse.RequestParser()
         parser.add_argument('name',
                             type=str,
                             )
@@ -69,7 +70,7 @@ class Exercise(Resource):
                             )
 
         data = parser.parse_args()
-        exercise = ExerciseModel.find_by_id(data.id)
+        exercise = ExerciseModel.find_by_id(id)
         if exercise is not None:
             if data.name:
                 exercise.name = data.name
@@ -92,8 +93,7 @@ class Exercise(Resource):
 
     def delete(self):
         id = request.args["id"]
-        data = parser.parse_args()
-        exercise = ExerciseModel.find_by_id(data.id)
+        exercise = ExerciseModel.find_by_id(id)
 
         if exercise is not None:
             try:

@@ -2,35 +2,29 @@ import React, { useState } from "react";
 import { AsyncStorage } from "react-native";
 import { StyleSheet, View } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { useDispatch } from "react-redux";
-import { login } from "../../features/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { login, selectUserStatus } from "../../features/userSlice";
 
 import Colors from "../../constants/Colors";
 import { RootStackParamList } from "../../types";
 
-import {
-  Button,
-  Surface,
-  Text,
-  TextInput,
-  Title,
-} from "react-native-paper";
+import { Button, Surface, Text, TextInput, Title } from "react-native-paper";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import { reduxStatus } from "../../features/types";
 
 interface values {
   email: string;
   password: string;
 }
 
-type LoginProp = StackNavigationProp<RootStackParamList>;
-
 interface Props {
-  navigation: LoginProp;
+  navigation: StackNavigationProp<RootStackParamList>;
 }
 
 const Login: React.FC<Props> = ({ navigation }) => {
   const dispatch = useDispatch();
+  const { status } = useSelector(selectUserStatus);
 
   const validateSchema = Yup.object().shape({
     email: Yup.string()
@@ -43,14 +37,15 @@ const Login: React.FC<Props> = ({ navigation }) => {
       .min(6, "Password must have at least 6 characters"),
   });
 
-  const submitHandler = async (values: values) => {
-
-    await dispatch(login({
-      ...values
-    }));
-
-    navigation.navigate("Root");
-
+  const submitHandler = (values: values) => {
+    dispatch(
+      login({
+        ...values,
+      })
+    );
+    if (status === reduxStatus.success) {
+      navigation.navigate("Root");
+    }
   };
   return (
     <Surface style={styles.container}>
@@ -69,11 +64,21 @@ const Login: React.FC<Props> = ({ navigation }) => {
           {({ values, handleSubmit, handleChange, errors }) => (
             <View style={styles.form}>
               <Button
-                onPress={() => { values.email = "megumin@gmail.com"; values.password = "1234567" }}
-              >Megumin is flat</Button>
+                onPress={() => {
+                  values.email = "megumin@gmail.com";
+                  values.password = "1234567";
+                }}
+              >
+                Megumin is flat
+              </Button>
               <Button
-                onPress={() => { values.email = "Nezuko@Nezuko.com"; values.password = "Nezuko" }}
-              >Dont lewd nezuko bro</Button>
+                onPress={() => {
+                  values.email = "Nezuko@Nezuko.com";
+                  values.password = "Nezuko";
+                }}
+              >
+                Dont lewd nezuko bro
+              </Button>
               <TextInput
                 mode="outlined"
                 label="Email"

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dimensions, StyleSheet, Image, View } from "react-native";
 import {
   Button,
@@ -18,24 +18,27 @@ import { StackScreenProps } from "@react-navigation/stack";
 import Auth from "../../components/Auth/Auth";
 import logo from "../../assets/images/splash2.png";
 
-import { useDispatch } from "react-redux";
-import { login } from "../../features/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { login, selectUserStatus } from "../../features/userSlice";
 
 let width = Dimensions.get("window").width;
 let height = Dimensions.get("window").height;
 
-interface ModalProps { }
+interface ModalProps {
+  isVisible: boolean;
+  setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-const MessageModal: React.FC<ModalProps> = ({ }) => {
-  const [visible, setVisible] = useState(true);
-
-  const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
-
+const MessageModal: React.FC<ModalProps> = ({ isVisible, setIsVisible }) => {
   return (
     <Provider>
       <Portal>
-        <Modal visible={visible} onDismiss={hideModal}>
+        <Modal
+          visible={isVisible}
+          onDismiss={() => {
+            setIsVisible(false);
+          }}
+        >
           <Text> attempt failed</Text>
         </Modal>
       </Portal>
@@ -48,21 +51,31 @@ interface AuthProps {
 }
 
 const AuthScreen: React.FC<AuthProps> = ({ navigation }) => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentDisplay, setCurrentDisplay] = useState(0);
+  const { status } = useSelector(selectUserStatus);
 
+  useEffect(() => {
+    if (status === "error") {
+      setIsModalVisible(true);
+    }
+  });
   return (
     <Layout>
       <View style={styles.container}>
         <View>
-          <MessageModal />
+          <MessageModal
+            isVisible={isModalVisible}
+            setIsVisible={setIsModalVisible}
+          />
         </View>
         <Image source={logo} style={styles.logo} />
         <Surface style={styles.content}>
           {currentDisplay === 0 ? (
             <Login navigation={navigation} />
           ) : (
-              <Register />
-            )}
+            <Register />
+          )}
           <Button
             onPress={() => {
               setCurrentDisplay(currentDisplay === 0 ? 1 : 0);

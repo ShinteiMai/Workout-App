@@ -1,16 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { fromApi } from "../axios";
-import { RoutineProps, ExerciseProps } from '../types';
-
-export const reduxStatus = {
-  idle: 'idle',
-  loading: 'loading',
-  error: 'error',
-  success: 'success'
-}
+import { RoutineProps, ExerciseProps } from "../types";
+import { reduxStatus } from "./types";
 
 export const fetchRoutines = createAsyncThunk(
-  'routines/fetchRoutines',
+  "routines/fetchRoutines",
   async () => {
     const data = await fromApi.fetchRoutines();
     return data.routines;
@@ -18,7 +12,7 @@ export const fetchRoutines = createAsyncThunk(
 );
 
 export const fetchRoutine = createAsyncThunk(
-  'routines/fetchRoutine',
+  "routines/fetchRoutine",
   async ({ routineId }: any) => {
     const data = await fromApi.fetchRoutine(routineId);
     return data.routine;
@@ -26,55 +20,52 @@ export const fetchRoutine = createAsyncThunk(
 );
 
 export const addRoutine = createAsyncThunk(
-  'routines/addRoutine',
-  async ({
-    title,
-    description,
-    exercises
-  }: RoutineProps) => {
+  "routines/addRoutine",
+  async ({ title, description, exercises }: RoutineProps) => {
     const data = await fromApi.addRoutine(title, description, exercises);
     return data.routine;
   }
 );
 
 export const updateRoutine = createAsyncThunk(
-  'routines/updateRoutine',
+  "routines/updateRoutine",
   async ({
     routineId,
     title,
     description,
-    exercises
+    exercises,
   }: {
     routineId: string;
     title: string;
     description: string;
     exercises: ExerciseProps[];
   }) => {
-    const data = await fromApi.updateRoutine(routineId, title, description, exercises);
+    const data = await fromApi.updateRoutine(
+      routineId,
+      title,
+      description,
+      exercises
+    );
     return data.routine;
   }
 );
 
 export const deleteRoutine = createAsyncThunk(
-  'routines/deleteRoutine',
-  async ({
-    routineId
-  }: any) => {
+  "routines/deleteRoutine",
+  async ({ routineId }: any) => {
     const data = await fromApi.deleteRoutine(routineId);
     return data.routine;
   }
 );
 
-
 export const routinesSlice = createSlice({
-  name: 'routines',
+  name: "routines",
   initialState: {
     routines: [],
     status: reduxStatus.idle,
-    error: null
+    error: null,
   },
-  reducers: {
-  },
+  reducers: {},
   extraReducers: {
     [fetchRoutines.pending as any]: (state, action) => {
       state.status = reduxStatus.loading;
@@ -115,7 +106,7 @@ export const routinesSlice = createSlice({
       state.routines.forEach((routine, index) => {
         if (fetchedRoutine.id.toString() === routine.id.toString()) {
           state.routines[index] = fetchedRoutine;
-        };
+        }
       });
       state.status = reduxStatus.success;
     },
@@ -129,7 +120,7 @@ export const routinesSlice = createSlice({
       state.routines.forEach((routine, index) => {
         if (updatedRoutine.id.toString() === routine.id.toString()) {
           state.routines[index] = updatedRoutine;
-        };
+        }
       });
       state.status = reduxStatus.success;
     },
@@ -139,23 +130,23 @@ export const routinesSlice = createSlice({
         if (deletedRoutine.id.toString() === routine.id.toString()) {
           console.log(routine.id);
           state.routines.splice(index, 1);
-        };
+        }
       });
       state.status = reduxStatus.success;
     },
-  }
+  },
 });
 
-export const selectRoutines = state => {
+export const selectRoutines = (state) => {
   return {
-    routines: state.routines.routines
-  }
-}
+    routines: state.routines.routines,
+  };
+};
 
-export const routinesStatus = state => {
+export const routinesStatus = (state) => {
   return {
-    status: state.routines.status
-  }
-}
+    status: state.routines.status,
+  };
+};
 
 export default routinesSlice.reducer;

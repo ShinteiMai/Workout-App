@@ -14,32 +14,42 @@ import { axios } from "../../axios";
 import ExerciseList from "../../components/Exercises/ExerciseList";
 import AddExercise from "../../components/Exercises/AddExercise";
 import UpdateExercise from "../../components/Exercises/UpdateExercise";
-import { ExerciseProps } from '../../types';
+import { ExerciseProps } from "../../types";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchExercises,
+  selectExercisesStatus,
+} from "../../features/exercisesSlice";
+import { reduxStatus } from "../../features/types";
 
 type ExercisesProps = ExerciseProps[];
 
 interface fetchExercisesProps {
   setExercises: React.Dispatch<React.SetStateAction<ExercisesProps>>;
 }
-
-const fetchExercises = async ({ setExercises }: fetchExercisesProps) => {
-  const response = await axios({
-    method: "GET",
-    url: "/exercises",
-  });
-  if (response && response.data) setExercises(response.data.exercises);
-};
-
 const Exercises: React.FC = () => {
+  const dispatch = useDispatch();
+
   const [currentDisplay, setCurrentDisplay] = useState<number>(0);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [isAdding, setIsAdding] = useState<boolean>(false);
-  const [exercises, setExercises] = useState<ExercisesProps>([]);
   const [currentExercise, setCurrentExercise] = useState<ExerciseProps>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { status } = useSelector(selectExercisesStatus);
 
   useEffect(() => {
-    fetchExercises({ setExercises });
+    if (status === reduxStatus.idle) {
+      dispatch(fetchExercises());
+    }
   }, []);
+
+  if (status === reduxStatus.loading) {
+    return (
+      <Surface>
+        <Paragraph>LOADING</Paragraph>
+      </Surface>
+    );
+  }
 
   let display: JSX.Element;
   if (isUpdating) {
@@ -65,13 +75,12 @@ const Exercises: React.FC = () => {
       </Button>
       {!isUpdating && !isAdding ? (
         <ExerciseList
-          exercises={exercises}
           setIsUpdating={setIsUpdating}
           setCurrentExercise={setCurrentExercise}
         />
       ) : (
-          display
-        )}
+        display
+      )}
     </Layout>
   );
 };

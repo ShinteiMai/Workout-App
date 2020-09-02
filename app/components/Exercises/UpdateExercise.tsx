@@ -24,10 +24,12 @@ const UpdateExercise: React.FC<Props> = ({ exercise, setIsUpdating }) => {
       <Title>Update Exercise: {exercise.name}</Title>
       <Formik
         onSubmit={async (values) => {
-          dispatch({
-            ...values,
-            exerciseId: exercise.id
-          });
+          dispatch(
+            updateExercise({
+              ...values,
+              exerciseId: exercise.id,
+            })
+          );
           setIsUpdating(false);
         }}
         initialValues={{
