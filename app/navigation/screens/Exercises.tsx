@@ -11,18 +11,12 @@ import {
 import { Formik } from "formik";
 import { axios } from "../../axios";
 
-import ExerciseList from "./ExerciseList";
-import AddExercise from "./AddExercise";
-import UpdateExercise from "./UpdateExercise";
+import ExerciseList from "../../components/Exercises/ExerciseList";
+import AddExercise from "../../components/Exercises/AddExercise";
+import UpdateExercise from "../../components/Exercises/UpdateExercise";
+import { ExerciseProps } from '../../types';
 
-export interface ExerciseProps {
-  id: string;
-  name: string;
-  sets: number;
-  reps: number;
-}
-
-export type ExercisesProps = ExerciseProps[];
+type ExercisesProps = ExerciseProps[];
 
 interface fetchExercisesProps {
   setExercises: React.Dispatch<React.SetStateAction<ExercisesProps>>;
@@ -45,7 +39,7 @@ const Exercises: React.FC = () => {
 
   useEffect(() => {
     fetchExercises({ setExercises });
-  }, [isUpdating, isAdding]);
+  }, []);
 
   let display: JSX.Element;
   if (isUpdating) {
@@ -76,8 +70,8 @@ const Exercises: React.FC = () => {
           setCurrentExercise={setCurrentExercise}
         />
       ) : (
-        display
-      )}
+          display
+        )}
     </Layout>
   );
 };

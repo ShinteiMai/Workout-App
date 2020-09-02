@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 
 import logo from "../../assets/images/splash2.png";
-import { isAuthContext } from "../../components/Contexts/isAuthContext";
 
 import {
   ActivityIndicator,

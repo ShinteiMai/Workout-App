@@ -2,10 +2,12 @@ import React from "react";
 import { Button, List, Paragraph, Card } from "react-native-paper";
 import { Formik } from "formik";
 import { axios } from "../../axios";
-import { ExercisesProps, ExerciseProps } from "./Exercises";
+import { ExerciseProps } from "../../types";
+import { useDispatch } from "react-redux";
+import { deleteExercise } from "../../features/exercisesSlice"
 
 interface Props {
-  exercises: ExercisesProps;
+  exercises: ExerciseProps[];
   setIsUpdating: React.Dispatch<React.SetStateAction<boolean>>;
   setCurrentExercise: React.Dispatch<React.SetStateAction<ExerciseProps>>;
 }
@@ -15,6 +17,7 @@ const ExerciseList: React.FC<Props> = ({
   setIsUpdating,
   setCurrentExercise,
 }) => {
+  const dispatch = useDispatch();
   return (
     <List.Section>
       {exercises.map((exercise) => (
@@ -26,21 +29,9 @@ const ExerciseList: React.FC<Props> = ({
           </Card.Content>
           <Button
             onPress={async () => {
-              try {
-                const response = await axios({
-                  method: "DELETE",
-                  url: "/exercise",
-                  data: {
-                    id: exercise.id,
-                  },
-                });
-
-                if (response && response.data) {
-                  console.log(response.data.message);
-                }
-              } catch (err) {
-                console.log(err);
-              }
+              dispatch(deleteExercise({
+                exerciseId: exercise.id
+              }))
             }}
           >
             Delete Exercise

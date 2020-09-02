@@ -1,4 +1,4 @@
-from flask_restful import Resource, reqparse
+from flask_restful import Resource, reqparse, request
 from models.exercise import ExerciseModel
 
 
@@ -11,24 +11,16 @@ class Exercises(Resource):
 
 class Exercise(Resource):
     def get(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('id',
-                            type=str,
-                            required=True,
-                            help="You must provide an exercise id"
-                            )
-
-        data = parser.parse_args()
-
+        id = request.args["id"]
         try:
-            exercise = ExerciseModel.find_by_id(data.id)
+            exercise = ExerciseModel.find_by_id(id)
         except:
             return ({
                 "message": "An error occurred during fetching the exercise"
             }, 500)
 
         if exercise:
-            return exercise.json(), 200
+            return ({"exercise": exercise.json()}, 200)
 
         return ({
             "message": "Exercise was not found"
@@ -62,14 +54,10 @@ class Exercise(Resource):
                 "message": "An error occurred during creating the exercise"
             }, 500)
 
-        return exercise.json(), 201
+        return ({"exercise": exercise.json()}), 201
 
     def put(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('id',
-                            type=str,
-                            help="You must specify the id of the exercise that you want to update"
-                            )
+        id = request.args["id"]
         parser.add_argument('name',
                             type=str,
                             )
@@ -97,19 +85,13 @@ class Exercise(Resource):
                     "message": "An error was occurred during updating the exercise"
                 }, 500)
 
-            return exercise.json(), 201
+            return ({"exercise": exercise.json()}, 201)
         return ({
             "message": "Exercise with the id of {} was not found".format(data.id)
         }, 404)
 
     def delete(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('id',
-                            type=str,
-                            required=True,
-                            help="You must specify an id"
-                            )
-
+        id = request.args["id"]
         data = parser.parse_args()
         exercise = ExerciseModel.find_by_id(data.id)
 
@@ -121,7 +103,7 @@ class Exercise(Resource):
                     "message": "An error occurred during deleting the exercise"
                 }, 500)
 
-            return exercise.json(), 200
+            return ({"exercise": exercise.json()}, 200)
 
         return ({
             "message": "Exercise with the id of {} was not found".format(data.id)

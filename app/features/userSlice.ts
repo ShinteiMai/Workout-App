@@ -20,13 +20,6 @@ export const logout = createAsyncThunk(
   }
 );
 
-export const test = createAsyncThunk(
-  'user/test',
-  async () => {
-    console.log('TEST ANJING BEGO');
-  }
-)
-
 export const register = createAsyncThunk(
   'user/register',
   async ({ email, password }: any) => {

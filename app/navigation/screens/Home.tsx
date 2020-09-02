@@ -18,9 +18,9 @@ import Layout from "../../components/Layout";
 
 import Logout from "../../components/Auth/Logout";
 import { axios } from "../../axios";
-import { RoutineProps } from "./Routines";
+import { RoutineProps } from "../../types";
 import { selectUser } from "../../features/userSlice";
-import { selectRoutine as sr } from "../../features/routineSlice";
+import { selectRoutines } from "../../features/routinesSlice";
 
 type HomeScreenProp = StackNavigationProp<RootStackParamList>;
 
@@ -34,7 +34,7 @@ interface Props {
 const Home: React.FC<Props> = ({ navigation }) => {
 
   const user = useSelector(selectUser);
-  const routineRedux = useSelector(sr);
+  const routine = useSelector(selectRoutines);
 
   let routines = [];
 

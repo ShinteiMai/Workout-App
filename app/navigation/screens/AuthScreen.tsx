@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Dimensions, StyleSheet, Image, View } from "react-native";
 import {
   Button,
@@ -12,7 +12,6 @@ import {
 import Login from "../../components/Auth/Login";
 import Register from "../../components/Auth/Register";
 import Layout from "../../components/Layout";
-import { RootStackParamList } from "../../types";
 import { AuthScreenProp } from "../index";
 import { StackScreenProps } from "@react-navigation/stack";
 
@@ -37,7 +36,7 @@ const MessageModal: React.FC<ModalProps> = ({ }) => {
     <Provider>
       <Portal>
         <Modal visible={visible} onDismiss={hideModal}>
-          <Text>Register attempt failed</Text>
+          <Text> attempt failed</Text>
         </Modal>
       </Portal>
     </Provider>
@@ -50,8 +49,6 @@ interface AuthProps {
 
 const AuthScreen: React.FC<AuthProps> = ({ navigation }) => {
   const [currentDisplay, setCurrentDisplay] = useState(0);
-
-
 
   return (
     <Layout>

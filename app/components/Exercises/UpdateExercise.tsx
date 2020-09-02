@@ -8,7 +8,9 @@ import {
 } from "react-native-paper";
 import { Formik } from "formik";
 import { axios } from "../../axios";
-import { ExerciseProps } from "./Exercises";
+import { ExerciseProps } from "../../types";
+import { useDispatch } from "react-redux";
+import { updateExercise } from "../../features/exercisesSlice";
 
 interface Props {
   exercise: ExerciseProps;
@@ -16,29 +18,17 @@ interface Props {
 }
 
 const UpdateExercise: React.FC<Props> = ({ exercise, setIsUpdating }) => {
+  const dispatch = useDispatch();
   return (
     <Surface>
       <Title>Update Exercise: {exercise.name}</Title>
       <Formik
         onSubmit={async (values) => {
-          console.log(values);
-          try {
-            const response = await axios({
-              method: "PUT",
-              url: "/exercise",
-              data: {
-                ...values,
-                id: exercise.id,
-              },
-            });
-
-            if (response && response.data) {
-              console.log(response.data);
-              setIsUpdating(false);
-            }
-          } catch (err) {
-            console.log(err);
-          }
+          dispatch({
+            ...values,
+            exerciseId: exercise.id
+          });
+          setIsUpdating(false);
         }}
         initialValues={{
           name: exercise.name,

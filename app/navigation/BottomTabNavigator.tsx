@@ -9,7 +9,8 @@ import useColorScheme from "../hooks/useColorScheme";
 
 /* Screens */
 import Home from "./screens/Home";
-import Exercises from "../components/Exercises/Exercises";
+import Routines from "./screens/Routines";
+import Exercises from "./screens/Exercises";
 
 /* Screen Prop Types */
 import {
@@ -18,29 +19,8 @@ import {
   RoutinesParamList,
   ExercisesParamList,
 } from "../types";
-import Routines from "./screens/Routines";
-import { RoutinesContext } from "../Contexts/RoutinesContext";
-import { RoutineProps } from "./screens/Routines";
-import { axios } from "../axios";
 
 const BottomTab = createMaterialBottomTabNavigator<BottomTabParamList>();
-
-export const fetchRoutines = async (
-  setRoutines: React.Dispatch<React.SetStateAction<RoutineProps[]>>
-) => {
-  try {
-    const response = await axios({
-      method: "GET",
-      url: "/routines",
-    });
-
-    if (response && response.data) {
-      setRoutines(response.data.routines);
-    }
-  } catch (err) {
-    console.log(err);
-  }
-};
 
 export default function BottomTabNavigator() {
   const [routines, setRoutines] = useState([]);
@@ -50,45 +30,39 @@ export default function BottomTabNavigator() {
     setRoutines,
   };
 
-  useEffect(() => {
-    fetchRoutines(setRoutines);
-  }, []);
-
   return (
-    <RoutinesContext.Provider value={routinesValue}>
-      <BottomTab.Navigator
-        initialRouteName="Home"
-      // tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
-      >
-        <BottomTab.Screen
-          name="Home"
-          component={Home}
-          options={{
-            tabBarIcon: ({ color }) => (
-              <TabBarIcon name="ios-home" color={color} />
-            ),
-          }}
-        />
-        <BottomTab.Screen
-          name="Routines"
-          component={Routines}
-          options={{
-            tabBarIcon: ({ color }) => (
-              <TabBarIcon name="ios-calendar" color={color} />
-            ),
-          }}
-        />
-        <BottomTab.Screen
-          name="Exercises"
-          component={Exercises}
-          options={{
-            tabBarIcon: ({ color }) => (
-              <TabBarIcon name="ios-calendar" color={color} />
-            ),
-          }}
-        />
-      </BottomTab.Navigator>
-    </RoutinesContext.Provider>
+    <BottomTab.Navigator
+      initialRouteName="Home"
+    // tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
+    >
+      <BottomTab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="ios-home" color={color} />
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="Routines"
+        component={Routines}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="ios-calendar" color={color} />
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="Exercises"
+        component={Exercises}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="ios-calendar" color={color} />
+          ),
+        }}
+      />
+    </BottomTab.Navigator>
   );
 }
 
