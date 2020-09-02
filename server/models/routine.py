@@ -32,7 +32,7 @@ class RoutineModel(db.Model):
         return {
             'id': str(self.id),
             'title': self.title,
-            'desc': self.description,
+            'description': self.description,
             'exercises': list(map(lambda x: x.json(), self.exercises.all()))
         }
 

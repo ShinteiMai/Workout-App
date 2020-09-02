@@ -1,12 +1,11 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { register } from "../../features/userSlice";
 
 import { StyleSheet } from "react-native";
 
 import {
   Button,
-  Modal,
-  Portal,
-  Provider,
   Surface,
   Text,
   TextInput,
@@ -14,12 +13,6 @@ import {
 } from "react-native-paper";
 import { Formik } from "formik";
 import * as Yup from "yup";
-
-import { UserContext } from "../../Contexts/UserContext";
-import { isLoadingContext } from "../../Contexts/isLoadingContext";
-
-import { axios } from "../../axios";
-import { Message, Timer } from "../../constants/loading";
 
 interface values {
   // username: string;
@@ -30,11 +23,9 @@ interface values {
 interface Props { }
 
 const Register: React.FC<Props> = () => {
-  const { id, email } = useContext(UserContext);
-  const { setIsLoading, setIsLoadingMessage } = useContext(isLoadingContext);
+  const dispatch = useDispatch();
 
   const validateSchema = Yup.object().shape({
-    // username: Yup.string().label("Username").required("Enter a username"),
     email: Yup.string()
       .label("Email")
       .email("Enter valid email")
@@ -45,48 +36,8 @@ const Register: React.FC<Props> = () => {
       .min(6, "Password must have at least 6 characters"),
   });
 
-  const submitHandler = (values: values) => {
-    axios({
-      method: "POST",
-      url: "/ping",
-    })
-      .then((res) => {
-
-        setIsLoading(true);
-        setIsLoadingMessage(Message.send);
-
-      })
-      .then((res) => {
-
-        setTimeout(() => { }, Timer.medium);
-
-        return axios({
-          method: "POST",
-          url: "/register",
-          data: values,
-        })
-
-      })
-      .then((res) => {
-        setIsLoadingMessage(Message.success);
-        setTimeout(() => {
-          setIsLoadingMessage(Message.reset);
-        }, Timer.long);
-        setTimeout(() => {
-          setIsLoading(false);
-        }, Timer.short);
-        console.log(res);
-      })
-      .catch((err) => {
-        setIsLoadingMessage(Message.error);
-        setTimeout(() => {
-          setIsLoadingMessage(Message.reset);
-        }, Timer.long);
-        setTimeout(() => {
-          setIsLoading(false);
-        }, Timer.short);
-        console.log(err);
-      });
+  const submitHandler = async (values: values) => {
+    await dispatch(register({ ...values }));
   };
 
   return (

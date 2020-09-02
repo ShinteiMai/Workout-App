@@ -1,9 +1,8 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { RootStackParamList } from "../../types";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RoutinesContext } from "../../Contexts/RoutinesContext";
-import { UserContext } from "../../Contexts/UserContext";
+import { useSelector } from "react-redux";
 import {
   Text,
   Title,
@@ -15,14 +14,13 @@ import {
 } from "react-native-paper";
 import SelectRoutine from "../../components/SelectRoutine";
 import Workout from "../../components/Workout/Workout";
-import CarouselComponent from "../../components/UI/Carousel";
 import Layout from "../../components/Layout";
 
-import Login from "../../components/Auth/Login";
-import Register from "../../components/Auth/Register";
 import Logout from "../../components/Auth/Logout";
 import { axios } from "../../axios";
-import { RoutineProps } from "./Routines";
+import { RoutineProps } from "../../types";
+import { selectUser } from "../../features/userSlice";
+import { selectRoutines } from "../../features/routinesSlice";
 
 type HomeScreenProp = StackNavigationProp<RootStackParamList>;
 
@@ -34,8 +32,11 @@ interface Props {
 }
 
 const Home: React.FC<Props> = ({ navigation }) => {
-  const user = useContext(UserContext);
-  const { routines } = useContext(RoutinesContext);
+
+  const user = useSelector(selectUser);
+  const routine = useSelector(selectRoutines);
+
+  let routines = [];
 
   const [hasWorkoutStarted, setHasWorkoutStarted] = useState<boolean>(false);
   // const [selectedRoutine, setSelectedRoutine] = useState<number>(0);
@@ -47,17 +48,22 @@ const Home: React.FC<Props> = ({ navigation }) => {
       <Surface style={styles.container}>
         <Title>Stronk - Chad Academy</Title>
         <Surface style={styles.profile}>
+          <Button
+            onPress={() => console.log(user)}
+          >fetch users</Button>
           <Text style={{ marginBottom: 10 }}>
-            Your email is: {user ? user.email : "chad"}
+            ID: {user.id}
+          </Text>
+          <Text style={{ marginBottom: 10 }}>
+            Email: {user.email}
           </Text>
           <View style={{ marginBottom: 10 }}>
             <Logout navigation={navigation} />
           </View>
         </Surface>
-        {!hasWorkoutStarted ? (
+        {/* {!hasWorkoutStarted ? (
           <Surface style={styles.dashboard}>
             <Title style={styles.title}>Dashboard</Title>
-            {/* <Divider style={styles.separator} /> */}
             <View>
               <View>
                 <Paragraph> - Workout Summary</Paragraph>
@@ -95,7 +101,7 @@ const Home: React.FC<Props> = ({ navigation }) => {
                 Back to Home
             </Button>
             </Surface>
-          )}
+          )} */}
       </Surface>
     </Layout>
   );

@@ -1,15 +1,19 @@
 import React from "react";
+// import { useSelector } from 'react-redux';
 import { View } from "./Themed";
 import { Paragraph, List, Button } from "react-native-paper";
-import { RoutineProps } from "../navigation/screens/Routines";
+import { RoutineProps } from "../types";
 import CarouselComponent from "./UI/Carousel";
+// import { selectRoutines } from "../features/routinesSlice";
 
 type Props = {
-  routines: RoutineProps[];
+  routines: any;
+  // routines: RoutineProps[];
   startHandler: (routineIndex: number) => void;
 };
 
 const SelectRoutine: React.FC<Props> = ({ routines, startHandler }) => {
+
   return (
     <View>
       <Paragraph>Select your routine</Paragraph>

@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   Button,
   Surface,
@@ -8,31 +9,22 @@ import {
 } from "react-native-paper";
 import { Formik } from "formik";
 import { axios } from "../../axios";
+import { addExercise } from "../../features/exercisesSlice";
+import { useDispatch } from "react-redux";
 
 interface Props {
   setIsAdding: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AddExercise: React.FC<Props> = ({ setIsAdding }) => {
+  const dispatch = useDispatch();
   return (
     <Surface>
       <Title>Add Exercise</Title>
       <Formik
         onSubmit={async (values) => {
-          try {
-            const response = await axios({
-              method: "POST",
-              url: "/exercise",
-              data: values,
-            });
-
-            if (response && response.data) {
-              console.log(response.data);
-              setIsAdding(false);
-            }
-          } catch (err) {
-            console.log(err);
-          }
+          dispatch(addExercise({ ...values }));
+          setIsAdding(false);
         }}
         initialValues={{
           name: "",

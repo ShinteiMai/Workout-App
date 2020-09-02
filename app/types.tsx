@@ -1,7 +1,3 @@
-export type AuthParamsList = {
-  Auth: undefined;
-};
-
 export type RootStackParamList = {
   Root: undefined;
   Auth: undefined;
@@ -40,3 +36,19 @@ export type TabOneParamList = {
 export type TabTwoParamList = {
   TabTwoScreen: undefined;
 };
+
+/* Routines */
+export interface RoutineProps {
+  id?: string;
+  title: string;
+  description: string;
+  exercises: ExerciseProps[];
+}
+
+/* Exercises */
+export interface ExerciseProps {
+  id?: string;
+  name: string;
+  sets: number;
+  reps: number;
+}
