@@ -13,7 +13,6 @@ import Login from "../../components/Auth/Login";
 import Register from "../../components/Auth/Register";
 import Layout from "../../components/Layout";
 import { AuthScreenProp } from "../index";
-import { StackScreenProps } from "@react-navigation/stack";
 
 import Auth from "../../components/Auth/Auth";
 import logo from "../../assets/images/splash2.png";
@@ -74,8 +73,8 @@ const AuthScreen: React.FC<AuthProps> = ({ navigation }) => {
           {currentDisplay === 0 ? (
             <Login navigation={navigation} />
           ) : (
-            <Register />
-          )}
+              <Register />
+            )}
           <Button
             onPress={() => {
               setCurrentDisplay(currentDisplay === 0 ? 1 : 0);

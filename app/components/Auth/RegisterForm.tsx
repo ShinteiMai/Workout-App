@@ -22,7 +22,7 @@ interface values {
 
 interface Props { }
 
-const Register: React.FC<Props> = () => {
+const RegisterForm: React.FC<Props> = () => {
   const dispatch = useDispatch();
 
   const validateSchema = Yup.object().shape({
@@ -42,10 +42,11 @@ const Register: React.FC<Props> = () => {
 
   return (
     <Surface style={styles.container}>
-      <Title style={styles.title}>REGISTER</Title>
+      {/* <Title style={styles.title}>REGISTER</Title */}
       <Surface>
         <Formik
           initialValues={{
+            username: "",
             email: "",
             password: "",
           }}
@@ -65,6 +66,13 @@ const Register: React.FC<Props> = () => {
               <Text>{errors.username}</Text> */}
               <TextInput
                 mode="outlined"
+                label="username"
+                value={values.username}
+                onChangeText={handleChange("username")}
+              />
+              <Text>{errors.username ? errors.username : " "}</Text>
+              <TextInput
+                mode="outlined"
                 label="Email"
                 value={values.email}
                 onChangeText={handleChange("email")}
@@ -81,6 +89,8 @@ const Register: React.FC<Props> = () => {
               <Button
                 icon="account-plus"
                 mode="contained"
+                color={errors ? "#888888" : "#7ac7bf"}
+                labelStyle={{ color: "#ffffff" }}
                 onPress={handleSubmit}
               >
                 Register
@@ -96,6 +106,7 @@ const Register: React.FC<Props> = () => {
 const styles = StyleSheet.create({
   container: {
     // backgroundColor: "#fff",
+    marginHorizontal: 20,
   },
   title: {
     // left: 10,
@@ -107,4 +118,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Register;
+export default RegisterForm;

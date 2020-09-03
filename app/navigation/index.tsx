@@ -10,9 +10,16 @@ import {
 import React, { useState } from "react";
 import { ColorSchemeName } from "react-native";
 
+// Screens
 import SplashScreen from "./screens/SplashScreen";
 import AuthScreen from "./screens/AuthScreen";
 import NotFoundScreen from "./screens/NotFoundScreen";
+// New Screens
+import LoginAndRegisterScreen from "./screens/LoginAndRegister";
+import RegisterScreen from "./screens/RegisterScreen";
+import LoginScreen from "./screens/LoginScreen";
+import EmailVerificationScreen from "./screens/EmailVerificationScreen";
+
 import { RootStackParamList } from "../types";
 import BottomTabNavigator from "./BottomTabNavigator";
 import LinkingConfiguration from "./LinkingConfiguration";
@@ -54,7 +61,11 @@ const RootNavigator: React.FC = () => {
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Auth" component={AuthScreen} />
+      <Stack.Screen name="Auth" component={LoginAndRegisterScreen} />
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Register" component={RegisterScreen} />
+      <Stack.Screen name="EmailVerification" component={EmailVerificationScreen} />
+      {/* <Stack.Screen name="Auth" component={AuthScreen} /> */}
       <Stack.Screen name="Root" component={BottomTabNavigator} />
     </Stack.Navigator>
   );

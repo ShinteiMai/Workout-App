@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { AsyncStorage } from "react-native";
 import { StyleSheet, View } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,7 +21,7 @@ interface Props {
   navigation: StackNavigationProp<RootStackParamList>;
 }
 
-const Login: React.FC<Props> = ({ navigation }) => {
+const LoginForm: React.FC<Props> = ({ navigation }) => {
   const dispatch = useDispatch();
   const { status } = useSelector(selectUserStatus);
 
@@ -49,7 +48,7 @@ const Login: React.FC<Props> = ({ navigation }) => {
   };
   return (
     <Surface style={styles.container}>
-      <Title style={styles.title}>LOGIN</Title>
+      {/* <Title style={styles.title}>LOGIN</Title> */}
       <View>
         <Formik
           initialValues={{
@@ -98,6 +97,8 @@ const Login: React.FC<Props> = ({ navigation }) => {
               <Text>{errors.password ? errors.password : " "}</Text>
               <Button
                 icon="account-arrow-left"
+                color={errors ? "#888888" : "#7ac7bf"}
+                labelStyle={{ color: "#ffffff" }}
                 mode="contained"
                 onPress={handleSubmit}
               >
@@ -128,4 +129,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default LoginForm;
