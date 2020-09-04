@@ -53,17 +53,6 @@ const LoginAndRegisterScreen: React.FC<AuthProps> = ({ navigation }) => {
                 labelStyle={styles.buttonText1}
                 onPress={() => { }}
               >
-                Continue with Facebook
-              </Button>
-            </View>
-            <View style={styles.margin}>
-              <Button
-                mode="contained"
-                color={"#7ac7bf"}
-                contentStyle={styles.buttonBody}
-                labelStyle={styles.buttonText1}
-                onPress={() => { }}
-              >
                 Use Email Address
               </Button>
             </View>
