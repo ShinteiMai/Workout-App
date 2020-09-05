@@ -1,28 +1,36 @@
 version: "3.7"
 
 services:
-  db:
-    image: postgres
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_HOSTNAME: ${POSTGRES_HOSTNAME}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    ports:
-      - 5432
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+  # db:
+  #   image: postgres
+  #   environment:
+  #     POSTGRES_DB: ${POSTGRES_DB}
+  #     POSTGRES_USER: ${POSTGRES_USER}
+  #     POSTGRES_HOSTNAME: ${POSTGRES_HOSTNAME}
+  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  #   ports:
+  #     - 5432
+  #   volumes:
+  #     - pgdata:/var/lib/postgresql/data
 
   api:
     build: ./api
     container_name: api
     restart: always
-    environment:
-      DB: asd
-    expose:
-      - 5000
-    depends_on:
-      - db
+    # expose:
+    #   - 8080
+    ports:
+      - 8080:8080
+    # depends_on:
+    #   - nginx
+
+  # nginx:
+  #   build: ./nginx
+  #   container_name: nginx
+  #   restart: always
+  #   ports:
+  #     # HOST:CONTAINER
+  #     - "5000:80"
 
 volumes:
   pgdata:

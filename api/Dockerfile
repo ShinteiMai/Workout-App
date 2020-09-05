@@ -10,9 +10,10 @@ ADD . /app
 RUN make install
 
 # 3. Migrate with the database
-RUN make migrate
+# RUN make migrate
 
 # 4. Run the server
 RUN make production
+
 
 
