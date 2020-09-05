@@ -20,5 +20,8 @@ server/venv/
 __pycache__/
 server/**/__pycache__
 
+migrations/
+api/migrations/
+
 .expo-shared/
 .vscode/

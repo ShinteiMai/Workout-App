@@ -1,26 +1,28 @@
 version: "3.7"
 
 services:
-    db:
-        image: postgres
-        environment:
-            POSTGRES_DB: stronk
-            POSTGRES_USER: postgres
-            POSTGRES_HOSTNAME: stronk
-            POSTGRES_PASSWORD: 
-        ports:
-            - 5432
-        volumes:
-            - pgdata:/var/lib/postgresql/data
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_HOSTNAME: ${POSTGRES_HOSTNAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - 5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
 
-    api:
-        build: ./api
-        container_name: api
-        restart: always
-        expose:
-            - 5000
-        depends_on:
-            - db
-    
+  api:
+    build: ./api
+    container_name: api
+    restart: always
+    environment:
+      DB: asd
+    expose:
+      - 5000
+    depends_on:
+      - db
+
 volumes:
-    pgdata:
+  pgdata:
