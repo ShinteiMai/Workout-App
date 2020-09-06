@@ -32,6 +32,6 @@ production:
 	. venv/bin/activate; \
 	uwsgi -s /tmp/wsgi.sock --ini wsgi.ini 
 
-all: clean install runr
+all: clean install run
 
 

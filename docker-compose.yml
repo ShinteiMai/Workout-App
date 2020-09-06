@@ -17,20 +17,26 @@ services:
     build: ./api
     container_name: api
     restart: always
-    # expose:
-    #   - 8080
+    expose:
+      - 8080
     ports:
-      - 8080:8080
-    # depends_on:
-    #   - nginx
+      - "8080:8080"
+    networks:
+      - stronk
+    depends_on:
+      - nginx 
+    
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    restart: always
+    expose:
+      - 80
+    ports:
+      - "8080:80"
+    networks:
+      - stronk
 
-  # nginx:
-  #   build: ./nginx
-  #   container_name: nginx
-  #   restart: always
-  #   ports:
-  #     # HOST:CONTAINER
-  #     - "5000:80"
-
-volumes:
-  pgdata:
+networks:
+  stronk:
+    external: true
