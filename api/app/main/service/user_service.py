@@ -29,7 +29,6 @@ class UserService(Response):
             # return self.UserAlreadyExists()
 
     def get_users(self):
-        print('asd2')
         users = list(map(lambda x: x.json(), User.query.all()))
         return users
         # return {"test": "test"}
