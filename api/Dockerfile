@@ -11,11 +11,6 @@ RUN pip install virtualenv
 
 RUN . venv/bin/activate
 RUN pip install -r requirements.txt
-
-# 3. Migrate with the database
-# RUN make migrate
-
-# 4. Run the server
-
 EXPOSE 8080
-CMD ["uwsgi", "wsgi.ini"]
+# 4. Run the server
+CMD ["make", "production"]

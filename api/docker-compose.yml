@@ -16,7 +16,7 @@ services:
       - "api.network"
 
   api:
-    build: "./api"
+    build: "."
     restart: always
     ports:
       - "8080:8080"
@@ -38,3 +38,6 @@ services:
 
 networks:
   api.network:
+
+volumes:
+  pgdata:

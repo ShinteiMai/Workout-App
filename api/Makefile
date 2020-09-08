@@ -1,17 +1,12 @@
 .ONESHELL:
 
 .PHONY: clean install run all freeze migrate
-DATABASE_URL := postgres://postgres:@localhost:5432/stronk
-test:
-	echo $(DATABASE_URL); \
-
 freeze:
 	pip freeze > requirements.txt
 
-migrate: test
+migrate:
 	. venv/bin/activate; \
-	python3 manage.py db init;
-	# python3 manage.py db makemigrations;
+	python3 manage.py db init; \
 	python3 manage.py db migrate --message "database migrated"; \
 	python3 manage.py db upgrade;
 
@@ -30,7 +25,10 @@ run:
 
 production:
 	. venv/bin/activate; \
-	uwsgi -s /tmp/wsgi.sock --ini wsgi.ini 
+	python3 manage.py db init; \
+	python3 manage.py db migrate --message "database migrated"; \
+	python3 manage.py db upgrade; \
+	uwsgi wsgi.ini 
 
 all: clean install run
 

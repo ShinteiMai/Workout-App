@@ -2,6 +2,11 @@ from .. import db, flask_bcrypt
 from ..config import key
 from .blacklist import BlacklistToken
 from .base_table import BaseTable
+# from .utils.types import UUID, id_column_name
+from sqlalchemy.dialects.postgresql import UUID
+from ..utils.generate_uuid import generate_uuid
+from sqlalchemy_utils import *
+import uuid
 import datetime
 import jwt
 
@@ -9,16 +14,24 @@ import jwt
 class User(db.Model, BaseTable):
     __tablename__ = "user"
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(UUID(as_uuid=True),
+                   primary_key=True, default=generate_uuid)
     email = db.Column(db.String(255), unique=True, nullable=False)
     username = db.Column(db.String(255), unique=True)
     password_hash = db.Column(db.String(100))
-    registered_on = db.Column(db.DateTime, nullable=False)
+    registered_on = db.Column(
+        db.DateTime, nullable=False, default=datetime.datetime.utcnow())
     is_verified = db.Column(db.Boolean, nullable=False, default=False)
+
+    def __init__(self, email, username, password):
+        self.email = email
+        self.username = username
+        self.password = password
+        # self.registered_on = datetime.datetime.utcnow()
 
     def json(self):
         return {
-            "id": self.id,
+            "id": str(self.id),
             "email": self.email,
             "username": self.username,
             "is_verified": self.is_verified,

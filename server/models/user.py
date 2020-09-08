@@ -12,7 +12,7 @@ def generate_uuid():
 class UserModel(db.Model):
     __tablename__ = 'users'
     id = db.Column(UUIDType(binary=False),
-                   primary_key=True, default=generate_uuid)
+                   primary_key=True, default=self.generate_uuid)
     email = db.Column(db.String(255))
     password = db.Column(db.Text)
 

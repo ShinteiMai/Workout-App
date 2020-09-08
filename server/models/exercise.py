@@ -10,7 +10,7 @@ def generate_uuid():
 class ExerciseModel(db.Model):
     __tablename__ = 'exercises'
     id = db.Column(UUIDType(binary=False),
-                   primary_key=True, default=generate_uuid, unique=True)
+                   primary_key=True, default=self.generate_uuid, unique=True)
     name = db.Column(db.String(255), nullable=False)
     sets = db.Column(db.Integer, nullable=False)
     reps = db.Column(db.Integer, nullable=False)
