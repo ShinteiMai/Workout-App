@@ -27,15 +27,14 @@ class User(db.Model, BaseTable):
         self.email = email
         self.username = username
         self.password = password
-        # self.registered_on = datetime.datetime.utcnow()
 
     def json(self):
         return {
             "id": str(self.id),
             "email": self.email,
             "username": self.username,
-            "is_verified": self.is_verified,
-            "registered_on": str(self.registered_on)
+            "registered_on": str(self.registered_on),
+            "is_verified": self.is_verified
         }
 
     @property

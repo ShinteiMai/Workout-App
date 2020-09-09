@@ -1,10 +1,14 @@
-from db import db
-from sqlalchemy_utils import *
+from .. import db, flask_bcrypt
+from ..config import key
+from .blacklist import BlacklistToken
 from .base_table import BaseTable
 # from .utils.types import UUID, id_column_name
 from sqlalchemy.dialects.postgresql import UUID
 from ..utils.generate_uuid import generate_uuid
+from sqlalchemy_utils import *
 import uuid
+import datetime
+import jwt
 
 
 class ExerciseModel(db.Model, BaseTable):
