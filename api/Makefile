@@ -1,6 +1,6 @@
 .ONESHELL:
 
-.PHONY: clean install run all freeze migrate
+.PHONY: clean install run all freeze migrate stop
 freeze:
 	pip freeze > requirements.txt
 
@@ -29,6 +29,9 @@ production:
 	python3 manage.py db migrate --message "database migrated"; \
 	python3 manage.py db upgrade; \
 	uwsgi wsgi.ini 
+
+stop: 
+	docker stop $(docker ps -a -q);
 
 all: clean install run
 

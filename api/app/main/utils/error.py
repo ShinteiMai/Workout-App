@@ -9,14 +9,17 @@ class Error():
 
 
 class AuthError(Error):
-    def auth_is_invalid(self):
-        abort(409, "Authentication failed, please check your email/password")
-
     def user_already_exists(self):
         abort(409, "User with the specified email already exists")
 
     def user_not_found(self):
         abort(404, "User with the specified id is not found")
+
+    def token_not_provided(self):
+        abort(401, "Authentication token is not provided")
+
+    def auth_is_invalid(self):
+        abort(409, "Authentication failed, please check your email/password")
 
 
 class RoutineError(Error):

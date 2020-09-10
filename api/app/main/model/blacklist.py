@@ -1,10 +1,11 @@
 from .. import db
 # from .utils.types import UUID, id_column_name
 from sqlalchemy.dialects.postgresql import UUID
+from .base_table import BaseTable
 import datetime
 
 
-class BlacklistToken(db.Model):
+class BlacklistToken(db.Model, BaseTable):
 
     __tablename__ = 'blacklist_tokens'
 
@@ -23,7 +24,7 @@ class BlacklistToken(db.Model):
     @staticmethod
     def check_blacklist(auth_token):
         # check whether auth token has been blacklisted
-        res = BlacklistToken.query.filter_by(token=str(auth_token).first(()))
+        res = BlacklistToken.query.filter_by(token=str(auth_token)).first()
         if res:
             return True
         else:

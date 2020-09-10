@@ -56,19 +56,21 @@ class User(db.Model, BaseTable):
     def encode_auth_token(user_id):
         try:
             payload = {
-                'expired': datetime.datetime.utcnow() + datetime.timedelta(days=1,  seconds=5),
-                'start': datetime.datetime.utcnow(),
-                'id': user_id
+                'expired': str(datetime.datetime.utcnow() + datetime.timedelta(days=1,  seconds=5)),
+                'start': str(datetime.datetime.utcnow()),
+                'id': str(user_id)
             }
-            return jwt.encode(
+            encoded = jwt.encode(
                 payload,
                 key,
                 algorithm='HS256'
             )
+            decoded = encoded.decode('utf-8')
+            return decoded
         except Exception as e:
             return e
 
-    @staticmethod
+    @ staticmethod
     def decode_auth_token(auth_token):
         try:
             payload = jwt.decode(auth_token, key)

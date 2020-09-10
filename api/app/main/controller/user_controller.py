@@ -3,6 +3,7 @@ from flask_restx import Resource, Namespace, fields, reqparse
 
 # from app.main.utils.decorator import admin_token_required
 from ..service.user_service import UserService
+from ..utils.decorator import auth_required
 from flask_jwt_extended import jwt_required
 
 api = Namespace('user', description="User related operations")
@@ -10,14 +11,14 @@ _user = api.model('user', {
     'id': fields.String(required=True, description="User ID"),
     'email': fields.String(required=True, description="Email Address"),
     'username': fields.String(required=True, description="Username"),
-    'registered_on': fields.DateTime(required=True, description="Registered at"),
+    'registered_on': fields.String(required=True, description="Registered at"),
     'is_verified': fields.Boolean(required=True, description="User Verificiation Stats")
 })
 
 _jwt = api.model('jwt', {
     'user': fields.Nested(_user),
     'jwt': fields.String(required=True, description="Jwt"),
-    'refresh_jwt': fields.String(required=True, description='Refresh_Jwt')
+    # 'refresh_jwt': fields.String(required=True, description='Refresh_Jwt')
 })
 
 service = UserService()
@@ -74,6 +75,7 @@ class Login(Resource):
         parser.add_argument('password', type=str)
 
         args = parser.parse_args()
+        # print(args)
         response = service.login(args)
         return response
 
@@ -81,13 +83,23 @@ class Login(Resource):
 @api.route('/logout')
 @api.response(200, 'User logged out')
 class Logout(Resource):
-    @jwt_required
     @api.marshal_with(_user)
-    def post(self):
-        auth_header = request.headers.get('Authorization')
-        if auth_header:
-            auth_token = auth_header.split(" ")[1]
-        else:
-            auth_token = ""
-        response = service.logout(auth_token)
-        return response
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('Authorization', location='headers')
+        args = parser.parse_args()
+        print(args.Authorization)
+        if args.Authorization:
+            response = service.logout(args.Authorization)
+            return response
+        # Token is not provided
+
+        # if args.Authorization:
+
+        # if auth_header:
+        #     auth_token = auth_header.split(" ")[1]
+        # else:
+        #     auth_token = ""
+        # print(auth_token, " test")
+        # response = eservice.logout(auth_token)
+        # return respons

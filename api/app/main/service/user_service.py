@@ -1,16 +1,19 @@
 import uuid
 import datetime
+import jwt
 
 from app.main.utils.response import Response
 from app.main.utils.error import AuthError
 from app.main import db
 from app.main.model.user import User
+from app.main.model.blacklist import BlacklistToken
 
 from flask_jwt_extended import (
     get_raw_jwt,
     create_access_token,
     create_refresh_token,
-    get_jwt_identity
+    get_jwt_identity,
+    decode_token
 )
 
 error = AuthError()
@@ -62,12 +65,26 @@ class UserService(Response):
         else:
             error.auth_is_invalid()
 
-    @staticmethod
-    def logout(self, token):
-        if token:
-            pass
-        else:
-            pass
+    @ staticmethod
+    def check_auth(req):
+        # 1. Get the JWT token
+        auth_header = req.headers.get('Authorization')
+        # token = req.headers.get('Authorization')
+        if auth_header:
+            token = auth_header.split(" ")[1]
+            print(token)
+            # 2. Decode the JWT token -> returns back user id
+            user_id = User.decode_auth_token(token)
+            print(user_id)
+            if user_id:
+                # 3. Check if the user really exists
+                user = User.find_by_id(user_id)
+                print(user)
+                return user
+            # 4. Not authenticated error
+            error.auth_is_invalid()
+        # 5. No token provided error
+        error.token_not_provided()
 
     # @static_method
     # def generate_token(self, user):
@@ -76,3 +93,24 @@ class UserService(Response):
     #         return user
     #     except Exception as e:
     #         return user
+    @staticmethod
+    def logout(token):
+        if token:
+            user_id = User.decode_auth_token(token)
+            try:
+                user = User.find_by_id(user_id)
+                print(user)
+                if user:
+                    try:
+                        print("test")
+                        new_blacklist = BlacklistToken({
+                            'token': token,
+                        })
+                        print(new_blacklist)
+                        new_blacklist.save()
+                    except:
+                        pass
+            except:
+                pass
+        else:
+            pass

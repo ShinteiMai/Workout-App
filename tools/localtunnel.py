@@ -13,7 +13,7 @@ from subprocess import Popen, CalledProcessError, PIPE
 
 
 def localtunnel():
-    command = ['lt', '-h', 'http://serverless.social', '-p', '4000']
+    command = ['lt', '-h', 'http://serverless.social', '-p', '8080']
     try:
         with Popen(command, stdout=PIPE, bufsize=1, universal_newlines=True) as p:
             for line in p.stdout:
@@ -33,15 +33,5 @@ def localtunnel():
         sys.exit()
 
 
-def backend():
-    os.chdir("../server")
-    os.system("python3 app.py")
-
-
 localtunnelThread = threading.Thread(target=localtunnel)
-backendThread = threading.Thread(target=backend)
-
 localtunnelThread.start()
-time.sleep(5)
-# backendThread.start()
-backend()

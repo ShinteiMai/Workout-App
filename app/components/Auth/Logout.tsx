@@ -22,8 +22,11 @@ interface Props {
 const Logout: React.FC<Props> = ({ navigation }) => {
   const dispatch = useDispatch();
   const logoutHandler = async () => {
-    dispatch(logout());
-    navigation.navigate("Auth");
+    const response = await dispatch(logout());
+    // console.log(response)
+    if (response) {
+      navigation.navigate("Auth");
+    }
   };
   return (
     <View>

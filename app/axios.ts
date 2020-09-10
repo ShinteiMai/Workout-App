@@ -20,6 +20,7 @@ export const stronkJWTKeyname = "jwt";
 
 export const createAxiosRequest = async (method: httpMethodTypes, url: string, data: any): Promise<any> => {
   const token = await AsyncStorage.getItem(stronkJWTKeyname);
+  console.log("[token]: ", token);
   try {
     const response = await axios({
       method,
@@ -28,6 +29,7 @@ export const createAxiosRequest = async (method: httpMethodTypes, url: string, d
         "Content-Type": "application/json",
         Accept: "application/json",
         Authorization: `Bearer ${token}`
+        // Authorization: token
       },
       data
     });
@@ -51,21 +53,21 @@ class SendApiRequest {
   async login(email: string, password: string) {
     return createAxiosRequest(
       "POST",
-      "/login",
+      "/user/login",
       { email, password },
     )
   };
   async register(email: string, password: string) {
     return createAxiosRequest(
       "POST",
-      "/register",
+      "/user/register",
       { email, password }
     )
   };
   async logout() {
     return createAxiosRequest(
       "GET",
-      "/logout",
+      "/user/logout",
       {}
     )
   };

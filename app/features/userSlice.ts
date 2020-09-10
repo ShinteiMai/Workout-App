@@ -7,6 +7,10 @@ export const login = createAsyncThunk(
   "user/login",
   async ({ email, password }: any) => {
     const data = await fromApi.login(email, password);
+    console.log(data.jwt);
+    const jwt = JSON.stringify(data.jwt);
+    console.log(data);
+    console.log(jwt);
     await AsyncStorage.setItem(stronkJWTKeyname, data.jwt);
     return data.user;
   }
@@ -15,7 +19,7 @@ export const login = createAsyncThunk(
 export const logout = createAsyncThunk("user/logout", async () => {
   const data = await fromApi.logout();
   await AsyncStorage.removeItem(stronkJWTKeyname);
-  return data;
+  // return data;
 });
 
 export const register = createAsyncThunk(
