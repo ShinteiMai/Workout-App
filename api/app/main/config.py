@@ -1,25 +1,27 @@
 import os
-
-# uncomment the line below for postgres database url from environment variable
-# postgres_local_base = os.environ['DATABASE_URL']
-# postgres_local_base = "postgres://stronk:password@db:5432/stronk"
-postgres_local_base = "postgres://stronk:@localhost/stronk"
+from dotenv import load_dotenv
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+envdir = os.path.abspath(os.path.dirname(__file__) + "../../../.env")
+load_dotenv(dotenv_path=envdir)
+
+POSTGRES_DB = os.getenv("POSTGRES_DB")
+POSTGRES_HOST = os.getenv("POSTGRES_HOSTNAME")
+POSTGRES_USER = os.getenv("POSTGRES_USER")
+POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
+postgres_uri = "postgres://{}:{}@{}:5432/{}".format(
+    POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_HOST, POSTGRES_DB)
 
 
 class Config:
-    SECRET_KEY = os.getenv('SECRET_KEY', 'my_precious_secret_key')
+    SECRET_KEY = os.getenv('SECRET_KEY', 'default')
     DEBUG = False
 
 
 class DevelopmentConfig(Config):
-    # uncomment the line below to use postgres
-    SQLALCHEMY_DATABASE_URI = postgres_local_base
     DEBUG = True
-    # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + \
-    #     os.path.join(basedir, 'flask_boilerplate_main.db')
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
+    SQLALCHEMY_DATABASE_URI = postgres_uri
 
 
 class TestingConfig(Config):
@@ -33,8 +35,9 @@ class TestingConfig(Config):
 
 class ProductionConfig(Config):
     DEBUG = False
+    SQLALCHEMY_DATABASE_URI = postgres_uri
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     # uncomment the line below to use postgres
-    # SQLALCHEMY_DATABASE_URI = postgres_local_base
 
 
 config_by_name = dict(

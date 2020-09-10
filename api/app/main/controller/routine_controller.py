@@ -5,58 +5,80 @@ from flask_restx import Resource, Namespace, fields, reqparse
 from ..service.routine_service import RoutineService
 
 api = Namespace('routine', description="Routines related operations")
-_routine = api.model('routine', {
+_routineModel = api.model('routine', {
     'id': fields.String(required=True, description="User ID"),
     'title': fields.String(required=True, description="title of the routine"),
     'description': fields.String(required=True, description="description of the routine"),
     'exercises': fields.String(description="list of the exercises")
 })
 
-service = RoutineService()
+_routinesResponse = api.model('routinesResponse', {
+    'routines': fields.Nested(_routineModel),
+    'message': fields.String(required=True, description="message")
+})
+
+_routineResponse = api.model('routineResponse', {
+    'routine': fields.Nested(_routineModel),
+    'message': fields.String(required=True, description="message")
+})
+
+routineService = RoutineService()
 
 
 @api.route('/')
 class Routines(Resource):
     @api.doc('Get list of routines')
-    @api.marshal_list_with(_routine, envelope='routines')
+    @api.marshal_list_with(_routineResponse, envelope='routines')
     def get(self):
-        routines = service.get_routines()
-        return routines
+        routines = routineService.get_routines()
+        return {
+            'routines': routines,
+            'message': 'Fetched a list of routines'
+        }
 
     @api.doc('create a new routine')
-    @api.marshal_with(_routine)
+    @api.marshal_with(_routineResponse)
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('title', type=str)
         parser.add_argument('description', type=str)
         parser.add_argument('exercises', type=str)
         args = parser.parse_args()
-        response = service.create_routine(args)
-        return response
+        response = routineService.create_routine(args)
+        return {
+            'routine': routine,
+            'message': 'Created a new routine'
+        }
 
 
 @api.route('/<id>')
 @api.param('id', 'The Routine identifier')
-@api.response(404, 'Routineot found.')
+@api.response(404, 'Routine not found.')
 class Routine(Resource):
-    @api.doc('get a user')
-    @api.marshal_with(_routine)
+    @api.doc('get a routine')
+    @api.marshal_with(_routineResponse)
     def get(self, id):
-        routine = service.get_routine(id)
-        return routine
+        routine = routineService.get_routine(id)
+        return {
+            'routine': routine,
+            'message': 'Fetched a routine with an id of {}'.format(id)
+        }
 
     @ api.doc('Update a routine ')
-    @api.marshal_with(_routine)
+    @api.marshal_with(_routineResponse)
     def put(self, id):
         parser = reqparse.RequestParser()
         parser.add_argument('title', type=str)
         parser.add_argument('description', type=str)
         args = parser.parse_args()
-        response = service.update_routine(id, args)
-        return response
+        updatedRoutine = routineService.update_routine(id, args)
+        return {
+            'routine': updatedRoutine,
+            'message': 'Updated a routine with an id of {}'.format(id)
+        }
 
     @ api.doc('Delete a routine')
-    @api.marshal_with(_routine)
+    @api.marshal_with(_routineResponse)
     def delete(self, id):
-        response = service.delete_routine(id)
+        response = routineService.delete_routine(id)
         return response

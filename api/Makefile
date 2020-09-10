@@ -4,9 +4,13 @@
 freeze:
 	pip freeze > requirements.txt
 
-migrate:
+initial-migrate:
 	. venv/bin/activate; \
 	python3 manage.py db init; \
+	python3 manage.py db migrate --message "database migrated"; \
+	python3 manage.py db upgrade;
+
+migrate:
 	python3 manage.py db migrate --message "database migrated"; \
 	python3 manage.py db upgrade;
 

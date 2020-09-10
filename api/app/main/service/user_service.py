@@ -21,9 +21,14 @@ error = AuthError()
 
 class UserService(Response):
     @staticmethod
-    def get_users():
+    def get_users(limit, sort_by, username_contains):
         try:
-            users = list(map(lambda x: x.json(), User.query.all()))
+            search = "%{}%".format(username_contains)
+            query = User.query.filter(User.username.like(
+                search)) if username_contains else User.query
+            users = list(
+                map(lambda user: user.json(),
+                    query.order_by(User.username).limit(int(limit) if limit else 25).all()))
         except:
             error.server_error()
         return users
@@ -31,9 +36,9 @@ class UserService(Response):
     @staticmethod
     def get_user(id):
         try:
-            user = User.query.filter_by(id=id).first()
+            user = User.query.filter(User.id == id).first()
         except:
-            error.server_error()
+            error.user_not_found(id)
         return user
 
     @staticmethod
@@ -48,6 +53,14 @@ class UserService(Response):
             return new_user
         else:
             error.user_already_exists()
+
+    @staticmethod
+    def update_user(data):
+        pass
+
+    @staticmethod
+    def delete_user(data):
+        pass
 
     @staticmethod
     def login(data):
@@ -65,7 +78,7 @@ class UserService(Response):
         else:
             error.auth_is_invalid()
 
-    @ staticmethod
+    @staticmethod
     def check_auth(req):
         # 1. Get the JWT token
         auth_header = req.headers.get('Authorization')
@@ -86,13 +99,6 @@ class UserService(Response):
         # 5. No token provided error
         error.token_not_provided()
 
-    # @static_method
-    # def generate_token(self, user):
-    #     try:
-    #         auth_token = User.encode_auth_token()
-    #         return user
-    #     except Exception as e:
-    #         return user
     @staticmethod
     def logout(token):
         if token:

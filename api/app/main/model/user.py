@@ -1,14 +1,16 @@
+import uuid
+import datetime
+import jwt
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy_utils import *
+from marshmallow_jsonapi import Schema, fields
+from marshmallow import validate
+
 from .. import db, flask_bcrypt
 from ..config import key
 from .blacklist import BlacklistToken
 from .base_table import BaseTable
-# from .utils.types import UUID, id_column_name
-from sqlalchemy.dialects.postgresql import UUID
 from ..utils.generate_uuid import generate_uuid
-from sqlalchemy_utils import *
-import uuid
-import datetime
-import jwt
 
 
 class User(db.Model, BaseTable):
@@ -21,7 +23,14 @@ class User(db.Model, BaseTable):
     password_hash = db.Column(db.String(100))
     registered_on = db.Column(
         db.DateTime, nullable=False, default=datetime.datetime.utcnow())
+    # confirmed_at: datetime
     is_verified = db.Column(db.Boolean, nullable=False, default=False)
+    #current_ip_address: ipaddress
+    #last_ip_address: ipaddress
+    #last_login_at: datetime
+    #current_login_at: datetime
+    #active: boolean
+    # google id or idk
 
     def __init__(self, email, username, password):
         self.email = email
@@ -84,3 +93,24 @@ class User(db.Model, BaseTable):
             return 'Signature expired. Please log in again'
         except jwt.InvalidTokenError:
             return 'Invalid token. Please log in again.'
+
+
+class UserSchema(Schema):
+    id = fields.UUID(dump_only=True)
+    email = fields.Email(required=True)
+    username = fields.String(
+        required=True, validate=validate.Range(min=2, max=255))
+    password = fields.String(
+        load_only=True, required=True, validate=validate.Range(min=3, max=255))
+
+    def get_link(self, data, is_many):
+        if is_many:
+            self._link = "/user"
+        else:
+            self._link = "/user/{}".format(id)
+        return {
+            "link": self._link
+        }
+
+    class Meta:
+        type_ = 'user'
