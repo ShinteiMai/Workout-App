@@ -1,13 +1,7 @@
 import uuid
 import datetime
 import jwt
-
-from app.main.utils.response import Response
-from app.main.utils.error import AuthError
-from app.main import db
-from app.main.model.user import User
-from app.main.model.blacklist import BlacklistToken
-
+from sqlalchemy.exc import SQLAlchemyError
 from flask_jwt_extended import (
     get_raw_jwt,
     create_access_token,
@@ -16,6 +10,13 @@ from flask_jwt_extended import (
     decode_token
 )
 
+from app.main.utils.response import Response
+from app.main.utils.error import AuthError
+from app.main import db
+from app.main.model.user import User, UserSchema
+from app.main.model.blacklist import BlacklistToken
+
+user_schema = UserSchema()
 error = AuthError()
 
 
@@ -26,20 +27,21 @@ class UserService(Response):
             search = "%{}%".format(username_contains)
             query = User.query.filter(User.username.like(
                 search)) if username_contains else User.query
-            users = list(
-                map(lambda user: user.json(),
-                    query.order_by(User.username).limit(int(limit) if limit else 25).all()))
-        except:
+            users = query.order_by(User.username).limit(
+                int(limit) if limit else 25).all()
+            return users
+        except SQLAlchemyError as err:
             error.server_error()
-        return users
 
     @staticmethod
     def get_user(id):
         try:
             user = User.query.filter(User.id == id).first()
-        except:
-            error.user_not_found(id)
-        return user
+            if not user:
+                error.user_not_found(id)
+            return user
+        except SQLAlchemyError as err:
+            error.server_error()
 
     @staticmethod
     def register(data):
@@ -48,25 +50,44 @@ class UserService(Response):
             new_user = User(**data)
             try:
                 new_user.save()
-            except:
+            except SQLAlchemyError as err:
                 error.server_error()
             return new_user
         else:
             error.user_already_exists()
 
     @staticmethod
-    def update_user(data):
-        pass
+    def update_user(id, data):
+        try:
+            user = User.query.filter(User.id == id).first()
+            if user:
+                user.email = data["email"]
+                user.username = data["username"]
+                user.password = User.hash_password(data["password"])
+
+                user.commit()
+                return user
+            else:
+                error.user_not_found(id)
+        except SQLAlchemyError as err:
+            error.server_error()
 
     @staticmethod
-    def delete_user(data):
-        pass
+    def delete_user(id):
+        try:
+            user = User.query.filter(User.id == id).first()
+            user.delete()
+            return user
+        except SQLAlchemyError as err:
+            error.user_not_found(id)
 
     @staticmethod
     def login(data):
         try:
             user = User.query.filter_by(email=data['email']).first()
-        except:
+            if not user:
+                error.user_not_found(data["email"])
+        except SQLAlchemyError as err:
             error.user_not_found()
 
         if user and user.check_password(data['password']):

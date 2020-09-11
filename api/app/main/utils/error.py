@@ -6,6 +6,10 @@ class Error():
     def server_error():
         abort(500, "Server error :(")
 
+    @staticmethod
+    def validation_error(messages):
+        abort(403, messages)
+
 
 class AuthError(Error):
     @staticmethod

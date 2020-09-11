@@ -7,12 +7,15 @@ class BaseTable():
         db.session.query(model).filter(model.id == id).update(data)
         db.session.commit()
 
-    def save(self):
+    def add(self):
         db.session.add(self)
         db.session.commit()
 
     def delete(self):
         db.session.delete(self)
+        db.session.commit()
+
+    def commit(self):
         db.session.commit()
 
     @classmethod

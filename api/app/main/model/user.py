@@ -19,7 +19,7 @@ class User(db.Model, BaseTable):
     id = db.Column(UUID(as_uuid=True),
                    primary_key=True, default=generate_uuid)
     email = db.Column(db.String(255), unique=True, nullable=False)
-    username = db.Column(db.String(255), unique=True)
+    username = db.Column(db.String(255))
     password_hash = db.Column(db.String(100))
     registered_on = db.Column(
         db.DateTime, nullable=False, default=datetime.datetime.utcnow())
@@ -37,29 +37,20 @@ class User(db.Model, BaseTable):
         self.username = username
         self.password = password
 
-    def json(self):
-        return {
-            "id": str(self.id),
-            "email": self.email,
-            "username": self.username,
-            "registered_on": str(self.registered_on),
-            "is_verified": self.is_verified
-        }
-
     @property
     def password(self):
         raise AttributeError('password: write-only field')
 
     @password.setter
     def password(self, password):
-        print('hi')
-        print(password)
-        self.password_hash = flask_bcrypt.generate_password_hash(
-            password).decode('utf-8')
-        return
+        self.password_hash = User.hash_password(password)
 
     def check_password(self,  password):
         return flask_bcrypt.check_password_hash(self.password_hash, password)
+
+    @staticmethod
+    def hash_password(password):
+        return flask_bcrypt.generate_password_hash(password).decode('utf-8')
 
     @staticmethod
     def encode_auth_token(user_id):
@@ -97,11 +88,11 @@ class User(db.Model, BaseTable):
 
 class UserSchema(Schema):
     id = fields.UUID(dump_only=True)
-    email = fields.Email(required=True)
-    username = fields.String(
-        required=True, validate=validate.Range(min=2, max=255))
-    password = fields.String(
-        load_only=True, required=True, validate=validate.Range(min=3, max=255))
+    email = fields.Email(required=True, error="Email can't be undefined")
+    username = fields.String(required=True, validate=validate.Length(
+        min=3), error="Username must be 3 characters minimum")
+    password = fields.String(required=True, load_only=True, validate=validate.Length(
+        min=3), error="Password must be 3 characters minimum")
 
     def get_link(self, data, is_many):
         if is_many:
