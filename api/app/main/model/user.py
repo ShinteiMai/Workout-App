@@ -18,7 +18,7 @@ error = AuthError()
 
 
 class User(db.Model, BaseTable):
-    __tablename__ = "user"
+    __tablename__ = "users"
 
     id = db.Column(UUID(as_uuid=True),
                    primary_key=True, default=generate_uuid)
@@ -34,7 +34,7 @@ class User(db.Model, BaseTable):
     #last_login_at: datetime
     #current_login_at: datetime
     #active: boolean
-    # google id or idk
+    # google id for google auth
 
     def __init__(self, email, username, password):
         self.email = email
@@ -91,7 +91,7 @@ class User(db.Model, BaseTable):
 
 
 class UserSchema(Schema):
-    id = fields.UUID(dump_only=True, required=False)
+    id = fields.UUID(dump_only=True)
     email = fields.Email(required=True, error="Email can't be undefined")
     username = fields.String(required=True, validate=validate.Length(
         min=3), error="Username must be 3 characters minimum")

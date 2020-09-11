@@ -1,84 +1,85 @@
 from flask import request
 from flask_restx import Resource, Namespace, fields, reqparse
+from marshmallow import ValidationError
 
-# from app.main.utils.decorator import admin_token_required
+from ..model.routine import RoutineSchema
 from ..service.routine_service import RoutineService
+from app.main.utils.error import RoutineError
+
+
+routine_service = RoutineService()
+routine_schema = RoutineSchema()
+error = RoutineError()
 
 api = Namespace('routine', description="Routines related operations")
-_routineModel = api.model('routine', {
-    'id': fields.String(required=True, description="User ID"),
-    'title': fields.String(required=True, description="title of the routine"),
-    'description': fields.String(required=True, description="description of the routine"),
-    'exercises': fields.String(description="list of the exercises")
-})
-
-_routinesResponse = api.model('routinesResponse', {
-    'routines': fields.Nested(_routineModel),
-    'message': fields.String(required=True, description="message")
-})
-
-_routineResponse = api.model('routineResponse', {
-    'routine': fields.Nested(_routineModel),
-    'message': fields.String(required=True, description="message")
-})
-
-routineService = RoutineService()
 
 
 @api.route('/')
 class Routines(Resource):
     @api.doc('Get list of routines')
-    @api.marshal_list_with(_routineResponse, envelope='routines')
     def get(self):
-        routines = routineService.get_routines()
-        return {
+        limit = request.args.get('limit') or ''
+        sort_by = request.args.get('sort_by') or ''
+        routine_contains = request.args.get('routine_contains') or ''
+
+        routines = routine_service.get_routines(
+            limit, sort_by, routine_contains)
+        data = routine_schema.dump(routines, many=True)["data"]
+        return ({
             'routines': routines,
             'message': 'Fetched a list of routines'
-        }
+        }, 200)
 
-    @api.doc('create a new routine')
-    @api.marshal_with(_routineResponse)
+    @api.doc('Create a new routine')
     def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('title', type=str)
-        parser.add_argument('description', type=str)
-        parser.add_argument('exercises', type=str)
-        args = parser.parse_args()
-        response = routineService.create_routine(args)
-        return {
-            'routine': routine,
-            'message': 'Created a new routine'
-        }
+        body = request.get_json(force=True)
+        try:
+            routine_schema.load(body)
+
+            new_routine = routine_service.create_routine(
+                body["data"]["attributes"])
+            data = routine_service.dump(new_routine)["data"]
+            return ({
+                "data": data,
+                "message": "Created a new routine with the id of '{}'".format(new_routine.id)
+            }, 201)
+        except ValidationError as err:
+            error.validation_error(err.messages["errors"])
 
 
 @api.route('/<id>')
-@api.param('id', 'The Routine identifier')
-@api.response(404, 'Routine not found.')
+@api.param('id', 'Routine ID')
 class Routine(Resource):
-    @api.doc('get a routine')
-    @api.marshal_with(_routineResponse)
+    @api.doc('Fetach a single rooutine with the specified id')
     def get(self, id):
-        routine = routineService.get_routine(id)
-        return {
+        routine = routine_service.get_routine(id)
+        data = routine_schema.dump(routine)['data']
+        return ({
             'routine': routine,
             'message': 'Fetched a routine with an id of {}'.format(id)
-        }
+        }, 200)
 
-    @ api.doc('Update a routine ')
-    @api.marshal_with(_routineResponse)
+    @api.doc('Update a routine ')
     def put(self, id):
-        parser = reqparse.RequestParser()
-        parser.add_argument('title', type=str)
-        parser.add_argument('description', type=str)
-        args = parser.parse_args()
-        updatedRoutine = routineService.update_routine(id, args)
-        return {
-            'routine': updatedRoutine,
-            'message': 'Updated a routine with an id of {}'.format(id)
-        }
+        body = request.get_json(force=True)
+        try:
+            routine_schema.load(body)
 
-    @ api.doc('Delete a routine')
-    @api.marshal_with(_routineResponse)
+            routine = routine_service.update_routine(
+                id, body["data"]["attributes"])
+            data = routine_schema.dump(routine)["data"]
+            return ({
+                "data": data,
+                "message": "Updated an routine with the id of '{}'".format(id)
+            })
+        except ValidationError as err:
+            error.validation_error(err.messages["errors"])
+
+    @api.doc('Delete a routine with the specified id')
     def delete(self, id):
-        response = routineService.delete_routine(id)
-        return response
+        routine = routine_service.delete_routine(id)
+        data = routine_schema.dump(routine)['data']
+        return ({
+            "data": data,
+            "message": "Deleted an routine with the id of '{}'".format(id)
+        }, 200)

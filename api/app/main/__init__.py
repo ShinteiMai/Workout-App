@@ -10,6 +10,9 @@ jwt = JWTManager()
 db = SQLAlchemy()
 flask_bcrypt = Bcrypt()
 
+# constants
+DEFAULT_LIMIT = 25
+
 
 def create_app(config_name):
     app = Flask(__name__)

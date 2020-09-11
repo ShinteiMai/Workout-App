@@ -2,7 +2,6 @@ from .. import db
 
 
 class BaseTable():
-
     def update_and_save(self, model, id, data):
         db.session.query(model).filter(model.id == id).update(data)
         db.session.commit()

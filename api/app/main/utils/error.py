@@ -35,11 +35,11 @@ class AuthError(Error):
 
 class RoutineError(Error):
     @staticmethod
-    def routine_not_found():
-        abort(404, "Routine with the specified id is not found")
+    def routine_not_found(id):
+        abort(404, "Routine with the specified id of {} was not found".format(id))
 
 
 class ExerciseError(Error):
     @staticmethod
-    def exercise_not_found():
-        abort(404, "Exercise with the specified id is not found")
+    def exercise_not_found(id):
+        abort(404, "Exercise with the specified id of {} was not found".format(id))

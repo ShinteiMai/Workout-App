@@ -1,60 +1,69 @@
 import uuid
 import datetime
+from sqlalchemy.exc import SQLAlchemyError
+from marshmallow import ValidationError
 
-from app.main.utils.response import Response
-from app.main import db
-from app.main.model.exercise import ExerciseModel
+from app.main import db, DEFAULT_LIMIT
+from app.main.model.exercise import Exercise, ExerciseSchema
+from app.main.utils.error import ExerciseError
 
-from flask_jwt_extended import (
-    jwt_required,
-    get_jwt_identity
-)
+Error = ExerciseError()
 
 
-class ExerciseService(Response):
-
-    def get_exercises(self):
-        exercises = list(map(lambda x: x.json(), ExerciseModel.query.all()))
-        return exercises
-
-    def get_exercise(self, id):
+class ExerciseService():
+    @staticmethod
+    def get_exercises(limit, sort_by, title_contains):
         try:
-            exercise = ExerciseModel.query.filter_by(id=id).first()
-        except:
-            return None
-        return exercise
+            search_query = "%{}%".format(title_contains)
+            query = Exercise.query.filter(Exercise.title.like(
+                search_query)) if title_contains else Exercise.query
+            # same problem idk how to sort_by conditionally
+            exercises = query.order_by(Exercise.title).limit(
+                int(limit) if limit else DEFAULT_LIMIT).all()
+            return exercises
+        except SQLAlchemyError as err:
+            Error.server_error()
 
-    def create_exercise(self, data):
-        exercise = ExerciseModel(**data)
+    @staticmethod
+    def get_exercise(id):
         try:
-            exercise.save()
-        except:
-            return None
+            exercise = Exercise.query.filter(Exercise.id == id).first()
+            if not exercise:
+                Error.exercise_not_found(id)
+            return exercise
+        except SQLAlchemyError as err:
+            Error.server_error()
 
-        return exercise
-
-    def update_exercise(self, id, data):
+    @staticmethod
+    def create_exercise(data):
+        new_exercise = Exercise(**data)
         try:
-            exercise = self.get_exercise(id)
-            exercise.name = data['name']
-            exercise.reps = data['reps']
-            exercise.sets = data['sets']
+            new_exercise.add()
+        except SQLAlchemyError as err:
+            Error.server_error()
+
+        return new_exercise
+
+    @staticmethod
+    def update_exercise(id, data):
+        query = Exercise.query.filter(Exercise.id == id)
+        try:
+            query.update(data)
             db.session.commit()
-            # exercise.update_and_save(ExerciseModel, id, data)
-        except:
-            return None
 
+            exercise = query.first()
+            return exercise
+        except SQLAlchemyError as err:
+            Error.server_error()
         return exercise
 
-    def delete_exercise(self, id):
-        exercise = self.get_exercise(id)
-
-        if exercise == None:
-            return None
-        else:
-            try:
-                exercise.delete()
-            except:
-                return None
-
+    @staticmethod
+    def delete_exercise(id):
+        try:
+            exercise = Exercise.query.filter(Exercise.id == id).first()
+            if not exercise:
+                Error.exercise_not_found(id)
+            exercise.delete()
+        except SQLAlchemyError as err:
+            Error.server_error()
         return exercise

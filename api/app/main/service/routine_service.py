@@ -1,59 +1,71 @@
 import uuid
 import datetime
 
-from app.main.utils.response import Response
-from app.main import db
-from app.main.model.routine import RoutineModel
+from sqlalchemy.exc import SQLAlchemyError
 
-from flask_jwt_extended import (
-    jwt_required,
-    get_jwt_identity
-)
+from app.main.utils.response import Response
+from app.main import db, DEFAULT_LIMIT
+from app.main.model.routine import Routine, RoutineSchema
+from app.main.model.day import Day
+from app.main.utils.error import RoutineError
+
+Error = RoutineError()
 
 
 class RoutineService(Response):
-
-    def get_routines(self):
-        routines = list(map(lambda x: x.json(), RoutineModel.query.all()))
-        return routines
-
-    def get_routine(self, id):
+    @staticmethod
+    def get_routines(limit, sort_by, title_contains):
         try:
-            routine = RoutineModel.query.filter_by(id=id).first()
-        except:
-            return None
-        return routine
+            search = "%{}%".format(title_contains)
+            query = Routine.query.filter(Routine.title.like(
+                search)) if title_contains else Routine.query
+            routines = query.order_by(Routine.title).limit(
+                int(limit) if limit else DEFAULT_LIMIT).all()
 
-    def create_routine(self, data):
-        routine = RoutineModel(**data)
+            return routines
+        except SQLAlchemyError as err:
+            Error.server_error()
+
+    @staticmethod
+    def get_routine(id):
         try:
-            routine.save()
-        except:
-            return None
+            routine = Routine.query.filter(Routine.id == id).first()
+            if not routine:
+                Error.routine_not_found(id)
+            return routine
+        except SQLAlchemyError as err:
+            Error.server_error()
 
-        return routine
-
-    def update_routine(self, id, data):
+    @staticmethod
+    def create_routine(self):
+        new_routine = Routine(**data)
         try:
-            routine = self.get_routine(id)
-            routine.title = data['title']
-            routine.description = data['description']
-            # routine.exercises = data['exercises']
-            db.session.commit()
-        except:
-            return None
+            new_routine.save()
+        except SQLAlchemyError as err:
+            Error.server_error()
 
+        return new_routine
+
+    @staticmethod
+    def update_routine(id):
+        try:
+            routine = Routine.query.filter(Routine.id == id).first()
+            if routine:
+
+                routine.commit()
+                return routine
+            else:
+                Error.routine_not_found(id)
+        except SQLAlchemyError as err:
+            Error.server_error()
+
+    @staticmethod
+    def delete_routine(id):
+        try:
+            routine = Routine.query.filter(Routine.id == id).first()
+            if not routine:
+                Error.routine_not_found(id)
+            routine.delete()
+        except SQLAlchemyError as err:
+            Error.server_error()
         return routine
-
-    def delete_routine(self, id):
-        routine = self.get_routine(id)
-
-        if routine == None:
-            return {'message': 'Not Found'}
-        else:
-            try:
-                routine.delete()
-            except:
-                return None
-
-        return {'message': 'Operation Succeeded'}

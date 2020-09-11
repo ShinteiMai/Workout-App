@@ -10,7 +10,7 @@ from app.main.model.user import User, UserSchema
 from app.main.model.blacklist import BlacklistToken
 
 user_schema = UserSchema()
-error = AuthError()
+Error = AuthError()
 
 
 class UserService(Response):
@@ -23,20 +23,20 @@ class UserService(Response):
             query = User.query.filter(User.username.like(
                 search)) if username_contains else User.query
             users = query.order_by(User.username).limit(
-                int(limit) if limit else 25).all()
+                int(limit) if limit else DEFAULT_LIMIT).all()
             return users
         except SQLAlchemyError as err:
-            error.server_error()
+            Error.server_error()
 
     @staticmethod
     def get_user(id):
         try:
             user = User.query.filter(User.id == id).first()
             if not user:
-                error.user_not_found(id)
+                Error.user_not_found(id)
             return user
         except SQLAlchemyError as err:
-            error.server_error()
+            Error.server_error()
 
     @staticmethod
     def register(data):
@@ -46,10 +46,10 @@ class UserService(Response):
             try:
                 new_user.add()
             except SQLAlchemyError as err:
-                error.server_error()
+                Error.server_error()
             return new_user
         else:
-            error.user_already_exists()
+            Error.user_already_exists()
 
     @staticmethod
     def update_user(id, data):
@@ -63,27 +63,29 @@ class UserService(Response):
                 user.commit()
                 return user
             else:
-                error.user_not_found(id)
+                Error.user_not_found(id)
         except SQLAlchemyError as err:
-            error.server_error()
+            Error.server_error()
 
     @staticmethod
     def delete_user(id):
         try:
             user = User.query.filter(User.id == id).first()
+            if not user:
+                Error.user_not_found(id)
             user.delete()
-            return user
         except SQLAlchemyError as err:
-            error.user_not_found(id)
+            Error.server_error()
+        return user
 
     @staticmethod
     def login(data):
         try:
             user = User.query.filter_by(email=data['email']).first()
             if not user:
-                error.user_not_found(data["email"])
+                Error.user_not_found(data["email"])
         except SQLAlchemyError as err:
-            error.user_not_found()
+            Error.user_not_found()
 
         if user and user.check_password(data['password']):
             access_token = User.encode_auth_token(user.id)
@@ -92,7 +94,7 @@ class UserService(Response):
                 'jwt': access_token,
             }
         else:
-            error.auth_is_invalid()
+            Error.auth_is_invalid()
 
     @staticmethod
     def check_auth(req):
@@ -104,26 +106,25 @@ class UserService(Response):
                 user = User.find_by_id(user_id)
                 return user
             else:
-                error.auth_is_invalid()
+                Error.auth_is_invalid()
         else:
-            error.token_not_provided()
+            Error.token_not_provided()
 
     @staticmethod
     def logout(token):
         user_id = User.decode_auth_token(token)
         if not user_id:
-            error.token_is_blacklisted()
-
+            Error.token_is_blacklisted()
         try:
             user = User.find_by_id(user_id)
             if not user:
-                error.user_not_found(user_id)
+                Error.user_not_found(user_id)
         except SQLAlchemyError as err:
-            error.server_error()
+            Error.server_error()
 
         blacklist = BlacklistToken(token=token)
         try:
             blacklist.add()
         except SQLAlchemyError as err:
-            error.server_error()
+            Error.server_error()
         return user
