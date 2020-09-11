@@ -5,12 +5,16 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy_utils import *
 from marshmallow_jsonapi import Schema, fields
 from marshmallow import validate
+from marshmallow import Schema as BaseSchema
 
 from .. import db, flask_bcrypt
 from ..config import key
 from .blacklist import BlacklistToken
 from .base_table import BaseTable
 from ..utils.generate_uuid import generate_uuid
+from ..utils.error import AuthError
+
+error = AuthError()
 
 
 class User(db.Model, BaseTable):
@@ -70,13 +74,13 @@ class User(db.Model, BaseTable):
         except Exception as e:
             return e
 
-    @ staticmethod
+    @staticmethod
     def decode_auth_token(auth_token):
         try:
             payload = jwt.decode(auth_token, key)
             is_blacklisted_token = BlacklistToken.check_blacklist(auth_token)
             if is_blacklisted_token:
-                return 'Token blacklisted. Please log in again.'
+                error.token_is_blacklisted()
             else:
                 return payload['id']
 
@@ -87,7 +91,7 @@ class User(db.Model, BaseTable):
 
 
 class UserSchema(Schema):
-    id = fields.UUID(dump_only=True)
+    id = fields.UUID(dump_only=True, required=False)
     email = fields.Email(required=True, error="Email can't be undefined")
     username = fields.String(required=True, validate=validate.Length(
         min=3), error="Username must be 3 characters minimum")
@@ -105,3 +109,9 @@ class UserSchema(Schema):
 
     class Meta:
         type_ = 'user'
+
+
+class AuthSchema(BaseSchema):
+    email = fields.Email(required=True, error="Provide a valid email address")
+    password = fields.String(required=True, validate=validate.Length(
+        min=3), error="Username must be minimum 3 characters")

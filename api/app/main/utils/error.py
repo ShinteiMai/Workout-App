@@ -28,6 +28,10 @@ class AuthError(Error):
     def auth_is_invalid():
         abort(409, "Authentication failed, please check your email/password")
 
+    @staticmethod
+    def token_is_blacklisted():
+        abort(409, "Authentication failed, please log in again")
+
 
 class RoutineError(Error):
     @staticmethod

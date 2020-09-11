@@ -2,13 +2,6 @@ import uuid
 import datetime
 import jwt
 from sqlalchemy.exc import SQLAlchemyError
-from flask_jwt_extended import (
-    get_raw_jwt,
-    create_access_token,
-    create_refresh_token,
-    get_jwt_identity,
-    decode_token
-)
 
 from app.main.utils.response import Response
 from app.main.utils.error import AuthError
@@ -23,6 +16,8 @@ error = AuthError()
 class UserService(Response):
     @staticmethod
     def get_users(limit, sort_by, username_contains):
+        # sort_by is still hardcoded we need to find a nice way
+        # to do this thing
         try:
             search = "%{}%".format(username_contains)
             query = User.query.filter(User.username.like(
@@ -49,7 +44,7 @@ class UserService(Response):
         if not user:
             new_user = User(**data)
             try:
-                new_user.save()
+                new_user.add()
             except SQLAlchemyError as err:
                 error.server_error()
             return new_user
@@ -93,7 +88,7 @@ class UserService(Response):
         if user and user.check_password(data['password']):
             access_token = User.encode_auth_token(user.id)
             return {
-                'user': user.json(),
+                'user': user,
                 'jwt': access_token,
             }
         else:
@@ -101,43 +96,34 @@ class UserService(Response):
 
     @staticmethod
     def check_auth(req):
-        # 1. Get the JWT token
         auth_header = req.headers.get('Authorization')
-        # token = req.headers.get('Authorization')
         if auth_header:
             token = auth_header.split(" ")[1]
-            print(token)
-            # 2. Decode the JWT token -> returns back user id
             user_id = User.decode_auth_token(token)
-            print(user_id)
             if user_id:
-                # 3. Check if the user really exists
                 user = User.find_by_id(user_id)
-                print(user)
                 return user
-            # 4. Not authenticated error
-            error.auth_is_invalid()
-        # 5. No token provided error
-        error.token_not_provided()
+            else:
+                error.auth_is_invalid()
+        else:
+            error.token_not_provided()
 
     @staticmethod
     def logout(token):
-        if token:
-            user_id = User.decode_auth_token(token)
-            try:
-                user = User.find_by_id(user_id)
-                print(user)
-                if user:
-                    try:
-                        print("test")
-                        new_blacklist = BlacklistToken({
-                            'token': token,
-                        })
-                        print(new_blacklist)
-                        new_blacklist.save()
-                    except:
-                        pass
-            except:
-                pass
-        else:
-            pass
+        user_id = User.decode_auth_token(token)
+        if not user_id:
+            error.token_is_blacklisted()
+
+        try:
+            user = User.find_by_id(user_id)
+            if not user:
+                error.user_not_found(user_id)
+        except SQLAlchemyError as err:
+            error.server_error()
+
+        blacklist = BlacklistToken(token=token)
+        try:
+            blacklist.add()
+        except SQLAlchemyError as err:
+            error.server_error()
+        return user
