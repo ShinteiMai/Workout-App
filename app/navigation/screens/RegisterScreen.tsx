@@ -1,29 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { Dimensions, StyleSheet, Image, View } from "react-native";
-import {
-  Button,
-  Surface,
-  Text,
-  Title,
-} from "react-native-paper";
+import React from "react";
+import { Dimensions, StyleSheet, View } from "react-native";
+import { Button, Surface, Title } from "react-native-paper";
 
 import RegisterForm from "../../components/Auth/RegisterForm";
 import Layout from "../../components/Layout";
 import { AuthScreenProp } from "../index";
 
-import Auth from "../../components/Auth/Auth";
-import logo from "../../assets/images/splash2.png";
-
-import { useDispatch, useSelector } from "react-redux";
-import { login, selectUserStatus } from "../../features/userSlice";
+import { useSelector } from "react-redux";
+import { selectUserStatus } from "../../features/userSlice";
 
 let width = Dimensions.get("window").width;
 let height = Dimensions.get("window").height;
-
-interface ModalProps {
-  isVisible: boolean;
-  setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
-}
 
 interface AuthProps {
   navigation: AuthScreenProp;
@@ -37,15 +24,17 @@ const RegisterScreen: React.FC<AuthProps> = ({ navigation }) => {
       <View style={styles.container}>
         <Surface style={styles.content}>
           <View style={styles.titleContainer}>
-            <Title >Hi!</Title>
+            <Title>Hi!</Title>
             <Title>Sign Up to get started here!</Title>
           </View>
-          <RegisterForm />
+          <RegisterForm navigation={navigation} />
           <View style={styles.margin}>
             <Button
               contentStyle={styles.buttonBody}
               labelStyle={styles.buttonText2}
-              onPress={() => { navigation.navigate("Login") }}
+              onPress={() => {
+                navigation.navigate("Login");
+              }}
             >
               Already have an account? Login here
             </Button>
@@ -98,7 +87,7 @@ const styles = StyleSheet.create({
   margin: {
     marginVertical: 10,
     marginHorizontal: width / 10,
-  }
+  },
   //   title: {
   //     fontSize: 20,
   //     fontWeight: "bold",

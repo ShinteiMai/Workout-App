@@ -5,7 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from app.main.utils.response import Response
 from app.main.utils.error import AuthError
-from app.main import db
+from app.main import db, DEFAULT_LIMIT
 from app.main.model.user import User, UserSchema
 from app.main.model.blacklist import BlacklistToken
 

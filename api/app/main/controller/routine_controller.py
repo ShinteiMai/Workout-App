@@ -14,19 +14,58 @@ error = RoutineError()
 api = Namespace('routine', description="Routines related operations")
 
 
-@api.route('/')
+@api.route('/exercise')
+class RoutineExerciseRelationship(Resource):
+    @api.doc('Add exercises to routines')
+    def post(self):
+        routine_id = request.args.get('routine_id') or ''
+        exercise_id = request.args.get('exercise_id') or ''
+        if not routine_id or not exercise_id:
+            error.validation_error(
+                "You have to specify both routine_id and exercise_id")
+
+        routine = routine_service.add_exercise_to_routine(
+            routine_id, exercise_id)
+        data = routine_schema.dump(routine)["data"]
+
+        return ({
+            "data": data,
+            "message": "Added an exercise with the id of {} to a routine with the id of {}".format(exercise_id, routine_id)
+        }, 201)
+
+    @api.doc('Delete exercises from routines')
+    def delete(self):
+        routine_id = request.args.get('routine_id') or ''
+        exercise_id = request.args.get('exercise_id') or ''
+
+        if not routine_id or not exercise_id:
+            error.validation_error(
+                "You have to specify both routine_id and exercise_id"
+            )
+
+        routine = routine_service.remove_exercise_from_routine(
+            routine_id, exercise_id)
+        data = routine_schema.dump(routine)["data"]
+
+        return ({
+            "data": data,
+            "message": "Deleted an exercise with the id of {} from a rotuine with the id of {}".format(exercise_id, routine_id)
+        }, 200)
+
+
+@api.route('')
 class Routines(Resource):
     @api.doc('Get list of routines')
     def get(self):
         limit = request.args.get('limit') or ''
         sort_by = request.args.get('sort_by') or ''
-        routine_contains = request.args.get('routine_contains') or ''
+        title_contains = request.args.get('title_contains') or ''
 
         routines = routine_service.get_routines(
-            limit, sort_by, routine_contains)
+            limit, sort_by, title_contains)
         data = routine_schema.dump(routines, many=True)["data"]
         return ({
-            'routines': routines,
+            'data': data,
             'message': 'Fetched a list of routines'
         }, 200)
 
@@ -38,7 +77,7 @@ class Routines(Resource):
 
             new_routine = routine_service.create_routine(
                 body["data"]["attributes"])
-            data = routine_service.dump(new_routine)["data"]
+            data = routine_schema.dump(new_routine)["data"]
             return ({
                 "data": data,
                 "message": "Created a new routine with the id of '{}'".format(new_routine.id)
@@ -50,12 +89,12 @@ class Routines(Resource):
 @api.route('/<id>')
 @api.param('id', 'Routine ID')
 class Routine(Resource):
-    @api.doc('Fetach a single rooutine with the specified id')
+    @api.doc('Fetch a single rooutine with the specified id')
     def get(self, id):
         routine = routine_service.get_routine(id)
         data = routine_schema.dump(routine)['data']
         return ({
-            'routine': routine,
+            'data': data,
             'message': 'Fetched a routine with an id of {}'.format(id)
         }, 200)
 

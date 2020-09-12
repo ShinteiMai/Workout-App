@@ -19,21 +19,27 @@ import {
   RoutinesParamList,
   ExercisesParamList,
 } from "../types";
+import { useSelector } from "react-redux";
+import { selectUser, selectUserStatus } from "../features/userSlice";
+import { RootScreenProp } from ".";
 
 const BottomTab = createMaterialBottomTabNavigator<BottomTabParamList>();
 
-export default function BottomTabNavigator() {
-  const [routines, setRoutines] = useState([]);
-  const colorScheme = useColorScheme();
-  const routinesValue = {
-    routines,
-    setRoutines,
-  };
+type Prop = {
+  navigation: RootScreenProp;
+};
+
+const BottomTabNavigator: React.FC<Prop> = ({ navigation }) => {
+  const user = useSelector(selectUser);
+
+  if (user.id && user.email) {
+    navigation.navigate("Root");
+  }
 
   return (
     <BottomTab.Navigator
       initialRouteName="Home"
-    // tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
+      // tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
     >
       <BottomTab.Screen
         name="Home"
@@ -64,7 +70,7 @@ export default function BottomTabNavigator() {
       />
     </BottomTab.Navigator>
   );
-}
+};
 
 // You can explore the built-in icon families and icons on the web at:
 // https://icons.expo.fyi/
@@ -114,3 +120,5 @@ function HomeNavigator() {
     </HomeStack.Navigator>
   );
 }
+
+export default BottomTabNavigator;

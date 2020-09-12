@@ -11,6 +11,7 @@ initial-migrate:
 	python3 manage.py db upgrade;
 
 migrate:
+	. venv/bin/activate; \
 	python3 manage.py db migrate --message "database migrated"; \
 	python3 manage.py db upgrade;
 

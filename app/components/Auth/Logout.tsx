@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { useDispatch } from "react-redux";
-import { logout } from "../../features/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, selectUserStatus } from "../../features/userSlice";
 
 import { RootStackParamList } from "../../types";
 
 import { Button } from "react-native-paper";
+import { reduxStatus } from "../../features/types";
 
 interface values {
   email: string;
@@ -21,22 +22,20 @@ interface Props {
 
 const Logout: React.FC<Props> = ({ navigation }) => {
   const dispatch = useDispatch();
-  const logoutHandler = async () => {
-    const response = await dispatch(logout());
-    // console.log(response)
-    if (response) {
+  const { status } = useSelector(selectUserStatus);
+
+  useEffect(() => {
+    if (status === `logout/${reduxStatus.success}`) {
       navigation.navigate("Auth");
     }
+  });
+
+  const logoutHandler = () => {
+    dispatch(logout());
   };
+
   return (
     <View>
-      <Button onPress={
-        () => {
-          dispatch(logout());
-        }
-      }>
-        goblok
-      </Button>
       <Button
         icon="account-arrow-left"
         mode="contained"

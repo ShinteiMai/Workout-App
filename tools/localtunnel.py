@@ -8,30 +8,21 @@ import threading
 import time
 from subprocess import Popen, CalledProcessError, PIPE
 
-# port = int(input('[port] enter your flask API port: '))
-# command = ['lt', '-h', 'http://serverless.social', '-p', str(port)]
-
 
 def localtunnel():
     command = ['lt', '-h', 'http://serverless.social', '-p', '8080']
+    path = os.path.abspath(os.path.dirname(__file__) + "/../app/buffer/localtunnel.json")
     try:
         with Popen(command, stdout=PIPE, bufsize=1, universal_newlines=True) as p:
             for line in p.stdout:
                 print(line, end='')  # process line here
                 url = re.findall('https://.*', line)[0]
-                with open('../app/tools-buffer/localtunnel.json', 'w') as file:
+                with open(path, 'w') as file:
                     json.dump({
                         "url": url
                     }, file)
-                print(
-                    "[sys] localtunnel url: {} was written into ./localtunnel.json".format(url))
-
         if p.returncode != 0:
             raise CalledProcessError(p.returncode, p.args)
     except KeyboardInterrupt:
-        print('\n[sys] exiting localtunnel server')
+        print('\nExiting localtunnel server')
         sys.exit()
-
-
-localtunnelThread = threading.Thread(target=localtunnel)
-localtunnelThread.start()

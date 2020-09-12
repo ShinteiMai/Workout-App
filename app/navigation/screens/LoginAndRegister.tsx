@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Dimensions, StyleSheet, Image, View } from "react-native";
-import {
-  Button,
-  Surface,
-  Title,
-  Text,
-} from "react-native-paper";
+import { Button, Surface, Title, Text } from "react-native-paper";
 
 import Layout from "../../components/Layout";
 import { AuthScreenProp } from "../index";
@@ -40,10 +35,10 @@ const LoginAndRegisterScreen: React.FC<AuthProps> = ({ navigation }) => {
                 color={"#7ac7bf"}
                 contentStyle={styles.buttonBody}
                 labelStyle={styles.buttonText1}
-                onPress={() => { }}
+                onPress={() => {}}
               >
                 Continue with Google
-            </Button>
+              </Button>
             </View>
             <View style={styles.margin}>
               <Button
@@ -51,7 +46,7 @@ const LoginAndRegisterScreen: React.FC<AuthProps> = ({ navigation }) => {
                 color={"#7ac7bf"}
                 contentStyle={styles.buttonBody}
                 labelStyle={styles.buttonText1}
-                onPress={() => { }}
+                onPress={() => navigation.navigate("Register")}
               >
                 Use Email Address
               </Button>
@@ -60,10 +55,12 @@ const LoginAndRegisterScreen: React.FC<AuthProps> = ({ navigation }) => {
               <Button
                 contentStyle={styles.buttonBody}
                 labelStyle={styles.buttonText2}
-                onPress={() => { navigation.navigate("Register") }}
+                onPress={() => {
+                  navigation.navigate("Login");
+                }}
               >
                 Already have an account? Login here
-            </Button>
+              </Button>
             </View>
           </View>
         </Surface>
@@ -110,7 +107,8 @@ const styles = StyleSheet.create({
   buttonBody: {
     // marginHorizontal: 0,
     // paddingVertical: 10
-  }, buttonText1: {
+  },
+  buttonText1: {
     // marginVertical: 10,
     color: "#ffffff",
     fontSize: 12,
@@ -121,7 +119,7 @@ const styles = StyleSheet.create({
   },
   margin: {
     marginVertical: 10,
-  }
+  },
 
   //   title: {
   //     fontSize: 20,

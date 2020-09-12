@@ -38,6 +38,11 @@ class RoutineError(Error):
     def routine_not_found(id):
         abort(404, "Routine with the specified id of {} was not found".format(id))
 
+    @staticmethod
+    def exercise_already_exists(routine_id, exercise_id):
+        abort(409, "Exercise of id {} already exists in routine with the id of {}".format(
+            exercise_id, routine_id))
+
 
 class ExerciseError(Error):
     @staticmethod

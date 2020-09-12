@@ -1,18 +1,15 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { register } from "../../features/userSlice";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { register, selectUserStatus } from "../../features/userSlice";
 
 import { StyleSheet } from "react-native";
 
-import {
-  Button,
-  Surface,
-  Text,
-  TextInput,
-  Title,
-} from "react-native-paper";
+import { Button, Surface, Text, TextInput, Title } from "react-native-paper";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import { reduxStatus } from "../../features/types";
+import { RootStackParamList } from "../../types";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 interface values {
   // username: string;
@@ -20,10 +17,19 @@ interface values {
   password: string;
 }
 
-interface Props { }
+interface Props {
+  navigation: StackNavigationProp<RootStackParamList>;
+}
 
-const RegisterForm: React.FC<Props> = () => {
+const RegisterForm: React.FC<Props> = ({ navigation }) => {
   const dispatch = useDispatch();
+  const { status } = useSelector(selectUserStatus);
+
+  useEffect(() => {
+    if (status === `register/${reduxStatus.success}`) {
+      navigation.navigate("Login");
+    }
+  }, [status]);
 
   const validateSchema = Yup.object().shape({
     email: Yup.string()
@@ -36,8 +42,8 @@ const RegisterForm: React.FC<Props> = () => {
       .min(6, "Password must have at least 6 characters"),
   });
 
-  const submitHandler = async (values: values) => {
-    await dispatch(register({ ...values }));
+  const submitHandler = (values: values) => {
+    dispatch(register({ ...values }));
   };
 
   return (
@@ -52,21 +58,15 @@ const RegisterForm: React.FC<Props> = () => {
           }}
           validationSchema={validateSchema}
           onSubmit={(values) => {
+            console.log("test");
             submitHandler(values);
           }}
         >
           {({ values, handleSubmit, handleChange, errors }) => (
             <Surface style={styles.form}>
-              {/* <TextInput
-                mode="outlined"
-                label="Username"
-                value={values.username}
-                onChangeText={handleChange("username")}
-              />
-              <Text>{errors.username}</Text> */}
               <TextInput
                 mode="outlined"
-                label="username"
+                label="Username"
                 value={values.username}
                 onChangeText={handleChange("username")}
               />

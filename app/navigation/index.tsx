@@ -7,12 +7,11 @@ import {
   createStackNavigator,
   StackNavigationProp,
 } from "@react-navigation/stack";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ColorSchemeName } from "react-native";
 
 // Screens
 import SplashScreen from "./screens/SplashScreen";
-import AuthScreen from "./screens/AuthScreen";
 import NotFoundScreen from "./screens/NotFoundScreen";
 // New Screens
 import LoginAndRegisterScreen from "./screens/LoginAndRegister";
@@ -23,6 +22,8 @@ import EmailVerificationScreen from "./screens/EmailVerificationScreen";
 import { RootStackParamList } from "../types";
 import BottomTabNavigator from "./BottomTabNavigator";
 import LinkingConfiguration from "./LinkingConfiguration";
+import { useSelector } from "react-redux";
+import { selectUser } from "../features/userSlice";
 
 // If you are not familiar with React Navigation, we recommend going through the
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
@@ -64,8 +65,10 @@ const RootNavigator: React.FC = () => {
       <Stack.Screen name="Auth" component={LoginAndRegisterScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Register" component={RegisterScreen} />
-      <Stack.Screen name="EmailVerification" component={EmailVerificationScreen} />
-      {/* <Stack.Screen name="Auth" component={AuthScreen} /> */}
+      <Stack.Screen
+        name="EmailVerification"
+        component={EmailVerificationScreen}
+      />
       <Stack.Screen name="Root" component={BottomTabNavigator} />
     </Stack.Navigator>
   );

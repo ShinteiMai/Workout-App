@@ -19,6 +19,7 @@ class Register(Resource):
     @api.doc('Create a new user')
     def post(self):
         body = request.get_json(force=True)
+        print(body)
         try:
             user_schema.load(body)
 
@@ -40,9 +41,9 @@ class Login(Resource):
         try:
             AuthSchema().load(body)
 
-            auth = user_service.login(body)
+            auth = user_service.login(body["data"]["attributes"])
             data = user_schema.dump(auth["user"])["data"]
-            data["jwt"] = auth["jwt"]
+            data["attributes"]["jwt"] = auth["jwt"]
             return ({
                 "data": data,
                 "message": "Successfully login as an user with the id of '{}'".format(auth["user"].id)

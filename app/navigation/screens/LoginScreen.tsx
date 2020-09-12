@@ -1,17 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Dimensions, StyleSheet, Image, View } from "react-native";
-import {
-  Button,
-  Surface,
-  Text,
-  Title,
-} from "react-native-paper";
+import { Button, Surface, Text, Title } from "react-native-paper";
 
 import LoginForm from "../../components/Auth/LoginForm";
 import Layout from "../../components/Layout";
 import { AuthScreenProp } from "../index";
-
-import Auth from "../../components/Auth/Auth";
 
 import { useDispatch, useSelector } from "react-redux";
 import { login, selectUserStatus } from "../../features/userSlice";
@@ -36,14 +29,16 @@ const LoginScreen: React.FC<AuthProps> = ({ navigation }) => {
       <View style={styles.container}>
         <Surface style={styles.content}>
           <View style={styles.titleContainer}>
-            <Title >Welcome Back!</Title>
+            <Title>Welcome Back!</Title>
           </View>
           <LoginForm navigation={navigation} />
           <View style={styles.margin}>
             <Button
               contentStyle={styles.buttonBody}
               labelStyle={styles.buttonText2}
-              onPress={() => { navigation.navigate("Register") }}
+              onPress={() => {
+                navigation.navigate("Register");
+              }}
             >
               Don't have an account ? Signup
             </Button>
@@ -96,7 +91,7 @@ const styles = StyleSheet.create({
   margin: {
     marginVertical: 10,
     marginHorizontal: width / 10,
-  }
+  },
   //   title: {
   //     fontSize: 20,
   //     fontWeight: "bold",

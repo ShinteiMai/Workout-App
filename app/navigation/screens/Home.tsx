@@ -3,22 +3,10 @@ import { Dimensions, StyleSheet, View } from "react-native";
 import { RootStackParamList } from "../../types";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useSelector } from "react-redux";
-import {
-  Text,
-  Title,
-  Paragraph,
-  Surface,
-  Divider,
-  Card,
-  Button,
-} from "react-native-paper";
-import SelectRoutine from "../../components/SelectRoutine";
-import Workout from "../../components/Workout/Workout";
+import { Text, Title, Surface } from "react-native-paper";
 import Layout from "../../components/Layout";
 
 import Logout from "../../components/Auth/Logout";
-import { axios } from "../../axios";
-import { RoutineProps } from "../../types";
 import { selectUser } from "../../features/userSlice";
 import { selectRoutines } from "../../features/routinesSlice";
 
@@ -32,15 +20,8 @@ interface Props {
 }
 
 const Home: React.FC<Props> = ({ navigation }) => {
-
   const user = useSelector(selectUser);
-  const routine = useSelector(selectRoutines);
-
-  let routines = [];
-
   const [hasWorkoutStarted, setHasWorkoutStarted] = useState<boolean>(false);
-  // const [selectedRoutine, setSelectedRoutine] = useState<number>(0);
-
   const [selectedRoutine, setSelectedRoutine] = useState<number>(0);
 
   return (
@@ -48,15 +29,8 @@ const Home: React.FC<Props> = ({ navigation }) => {
       <Surface style={styles.container}>
         <Title>Stronk - Chad Academy</Title>
         <Surface style={styles.profile}>
-          <Button
-            onPress={() => console.log(user)}
-          >fetch users</Button>
-          <Text style={{ marginBottom: 10 }}>
-            ID: {user.id}
-          </Text>
-          <Text style={{ marginBottom: 10 }}>
-            Email: {user.email}
-          </Text>
+          <Text style={{ marginBottom: 10 }}>ID: {user.id}</Text>
+          <Text style={{ marginBottom: 10 }}>Email: {user.email}</Text>
           <View style={{ marginBottom: 10 }}>
             <Logout navigation={navigation} />
           </View>

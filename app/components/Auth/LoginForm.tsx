@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,6 +25,12 @@ const LoginForm: React.FC<Props> = ({ navigation }) => {
   const dispatch = useDispatch();
   const { status } = useSelector(selectUserStatus);
 
+  useEffect(() => {
+    if (status === `login/${reduxStatus.success}`) {
+      navigation.navigate("Root");
+    }
+  }, [status]);
+
   const validateSchema = Yup.object().shape({
     email: Yup.string()
       .label("Email")
@@ -42,9 +48,6 @@ const LoginForm: React.FC<Props> = ({ navigation }) => {
         ...values,
       })
     );
-    if (status === reduxStatus.success) {
-      navigation.navigate("Root");
-    }
   };
   return (
     <Surface style={styles.container}>

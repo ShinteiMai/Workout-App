@@ -41,20 +41,16 @@ class Routine(db.Model, BaseTable):
     # difficulty = Enum -> easy, medium, hard (for now)
     # creator = relationship with user
 
-    # this is many to many rel example routines and exercises
-    # exercise_identifier is like an intermediate table
-    # for connecting between routine and exercise (i think so)
-    # its up there ^^^
-
     exercises = db.relationship(
         'Exercise', secondary=exercise_identifier, lazy='dynamic')
 
     frequency = db.relationship(
         'Day', secondary=day_identifier, lazy="dynamic")
 
-    def __init__(self, title, description, exercises):
+    def __init__(self, title, description, duration):
         self.title = title
         self.description = description
+        self.duration = duration
 
 
 class RoutineSchema(Schema):
@@ -63,6 +59,12 @@ class RoutineSchema(Schema):
         max=255), error="Title of a routine must be under 255 characters")
     description = fields.String()
     duration = fields.Integer()
+    exercises = fields.Relationship(
+        many=True,
+        include_resource_linkage=True,
+        type_='exercise',
+        schema='ExerciseSchema'
+    )
     # frequency
     # difficulty
     # creator

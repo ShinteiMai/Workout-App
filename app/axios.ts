@@ -1,6 +1,6 @@
 import Axios from "axios";
 import { AsyncStorage } from "react-native";
-import * as data from "./tools-buffer/localtunnel.json";
+import * as data from "./buffer/localtunnel.json";
 import { ExerciseProps, RoutineProps } from "./types";
 
 export const axios = Axios.create({
@@ -21,10 +21,10 @@ export const stronkJWTKeyname = "jwt";
 export const createAxiosRequest = async (
   method: httpMethodTypes,
   url: string,
-  data: any
+  data: any,
+  type: string
 ): Promise<any> => {
   const token = await AsyncStorage.getItem(stronkJWTKeyname);
-  console.log("[token]: ", token);
   try {
     const response = await axios({
       method,
@@ -33,16 +33,31 @@ export const createAxiosRequest = async (
         "Content-Type": "application/json",
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
-        // Authorization: token
       },
-      data,
+      data: {
+        data: {
+          attributes: data,
+          type,
+        },
+      },
     });
-    return response.data;
-    console.log(response.data);
+
+    const responseObject = response.data.data;
+    const relationships =
+      Object.keys(responseObject.relationships).map((relationship) => {
+        return relationship;
+      }) || {};
+    console.log(responseObject);
+    return {
+      ...responseObject.attributes,
+      // ...relationships,
+      id: responseObject.id,
+    };
   } catch (err) {
-    // Hello, error handling we never cared about you
-    // and its time for you to hit us :(
-    throw new Error();
+    return {
+      statusCode: err.response.status,
+      message: err.response.data.message,
+    };
   }
 };
 
@@ -51,27 +66,37 @@ class SendApiRequest {
    * Authentication
    */
   async me() {
-    return createAxiosRequest("GET", "/me", null);
+    return createAxiosRequest("GET", "/me", null, "user");
   }
   async login(email: string, password: string) {
-    return createAxiosRequest("POST", "/user/login", { email, password });
+    return createAxiosRequest(
+      "POST",
+      "/user/login",
+      { email, password },
+      "auth"
+    );
   }
-  async register(email: string, password: string) {
-    return createAxiosRequest("POST", "/user/register", { email, password });
+  async register(email: string, username: string, password: string) {
+    return createAxiosRequest(
+      "POST",
+      "/user/register",
+      { email, username, password },
+      "user"
+    );
   }
   async logout() {
-    return createAxiosRequest("GET", "/user/logout", {});
+    return createAxiosRequest("GET", "/user/logout", {}, "user");
   }
 
   /**
    * Routines
    */
   async fetchRoutines() {
-    return createAxiosRequest("GET", "/routines", {});
+    return createAxiosRequest("GET", "/routine", {}, "routine");
   }
 
   async fetchRoutine(routineId: string) {
-    return createAxiosRequest("GET", `/routine?id=${routineId}`, {});
+    return createAxiosRequest("GET", `/routine?id=${routineId}`, {}, "routine");
   }
 
   async addRoutine(
@@ -79,61 +104,96 @@ class SendApiRequest {
     description: string,
     exercises: ExerciseProps[]
   ) {
-    return createAxiosRequest("POST", "/routine", {
-      title,
-      description,
-      // exercises
-    });
+    return createAxiosRequest(
+      "POST",
+      "/routine",
+      {
+        title,
+        description,
+        // exercises
+      },
+      "routine"
+    );
   }
 
   async updateRoutine(
     routineId: string,
     title?: string,
-    description?: string,
-    exercises?: ExerciseProps[]
+    description?: string
+    // exercises?: ExerciseProps[]
   ) {
-    return createAxiosRequest("PUT", `/routine?id=${routineId}`, {
-      title,
-      description,
-      exercises,
-    });
+    return createAxiosRequest(
+      "PUT",
+      `/routine?id=${routineId}`,
+      {
+        title,
+        description,
+        // exercises,
+      },
+      "routine"
+    );
   }
 
   async deleteRoutine(routineId: string) {
-    return createAxiosRequest("DELETE", `/routine?id=${routineId}`, {});
+    return createAxiosRequest(
+      "DELETE",
+      `/routine?id=${routineId}`,
+      {},
+      "routine"
+    );
   }
 
   async pushExerciseIntoRoutine(routineId: string, exerciseId: string) {
-    return createAxiosRequest("POST", ``, {
-      routineId,
-      exerciseId,
-    });
+    return createAxiosRequest(
+      "POST",
+      ``,
+      {
+        routineId,
+        exerciseId,
+      },
+      "routine"
+    );
   }
 
   async popExerciseFromRoutine(routineId: string, exerciseId: string) {
-    return createAxiosRequest("POST", ``, {
-      routineId,
-      exerciseId,
-    });
+    return createAxiosRequest(
+      "POST",
+      ``,
+      {
+        routineId,
+        exerciseId,
+      },
+      "routine"
+    );
   }
 
   /**
    * Exercises
    */
   async fetchExercises() {
-    return createAxiosRequest("GET", "/exercises", {});
+    return createAxiosRequest("GET", "/exercises", {}, "exercise");
   }
 
   async fetchExercise(exerciseId: string) {
-    return createAxiosRequest("GET", `/exercise?id=${exerciseId}`, {});
+    return createAxiosRequest(
+      "GET",
+      `/exercise?id=${exerciseId}`,
+      {},
+      "exercise"
+    );
   }
 
   async addExercise(name: string, sets: number, reps: number) {
-    return createAxiosRequest("POST", "/exercise", {
-      name,
-      sets,
-      reps,
-    });
+    return createAxiosRequest(
+      "POST",
+      "/exercise",
+      {
+        name,
+        sets,
+        reps,
+      },
+      "exercise"
+    );
   }
 
   async updateExercise(
@@ -142,15 +202,25 @@ class SendApiRequest {
     sets?: number,
     reps?: number
   ) {
-    return createAxiosRequest("PUT", `/exercise?id=${exerciseId}`, {
-      name,
-      sets,
-      reps,
-    });
+    return createAxiosRequest(
+      "PUT",
+      `/exercise?id=${exerciseId}`,
+      {
+        name,
+        sets,
+        reps,
+      },
+      "exercise"
+    );
   }
 
   async deleteExercise(exerciseId: string) {
-    return createAxiosRequest("DELETE", `/exercise?id=${exerciseId}`, {});
+    return createAxiosRequest(
+      "DELETE",
+      `/exercise?id=${exerciseId}`,
+      {},
+      "exercise"
+    );
   }
 }
 

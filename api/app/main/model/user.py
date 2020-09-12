@@ -111,7 +111,11 @@ class UserSchema(Schema):
         type_ = 'user'
 
 
-class AuthSchema(BaseSchema):
+class AuthSchema(Schema):
+    id = fields.UUID(dump_only=True)
     email = fields.Email(required=True, error="Provide a valid email address")
     password = fields.String(required=True, validate=validate.Length(
         min=3), error="Username must be minimum 3 characters")
+    
+    class Meta:
+        type_ = "auth"

@@ -7,25 +7,23 @@ export const login = createAsyncThunk(
   "user/login",
   async ({ email, password }: any) => {
     const data = await fromApi.login(email, password);
-    console.log(data.jwt);
-    const jwt = JSON.stringify(data.jwt);
-    console.log(data);
-    console.log(jwt);
     await AsyncStorage.setItem(stronkJWTKeyname, data.jwt);
-    return data.user;
+    return data;
   }
 );
 
 export const logout = createAsyncThunk("user/logout", async () => {
   const data = await fromApi.logout();
+  console.log("logging out");
   await AsyncStorage.removeItem(stronkJWTKeyname);
-  // return data;
+  return data;
 });
 
 export const register = createAsyncThunk(
   "user/register",
-  async ({ email, password }: any) => {
-    const data = await fromApi.register(email, password);
+  async ({ email, username, password }: any) => {
+    const data = await fromApi.register(email, username, password);
+    return data;
   }
 );
 
@@ -39,19 +37,38 @@ export const userSlice = createSlice({
   reducers: {},
   extraReducers: {
     [login.pending as any]: (state, action) => {
-      state.status = reduxStatus.loading;
+      state.status = `login/${reduxStatus.loading}`;
+    },
+    [register.pending as any]: (state, action) => {
+      state.status = `register/${reduxStatus.loading}`;
+    },
+    [logout.pending as any]: (state, action) => {
+      state.status = `logout/${reduxStatus.loading}`;
     },
     [login.fulfilled as any]: (state, action) => {
       const { id, email } = action.payload;
       state.id = id;
       state.email = email;
-      state.status = reduxStatus.success;
+
+      state.status = `login/${reduxStatus.success}`;
     },
-    [login.rejected as any]: (state, action) => {
-      state.status = reduxStatus.error;
+    [register.fulfilled as any]: (state, action) => {
+      state.status = `register/${reduxStatus.success}`;
     },
     [logout.fulfilled as any]: (state, action) => {
-      state.status = reduxStatus.success;
+      state.id = null;
+      state.email = null;
+
+      state.status = `logout/${reduxStatus.success}`;
+    },
+    [login.rejected as any]: (state, action) => {
+      state.status = `login/${reduxStatus.error}`;
+    },
+    [register.rejected as any]: (state, action) => {
+      state.status = `register/${reduxStatus.error}`;
+    },
+    [logout.rejected as any]: (state, action) => {
+      state.status = `logout/${reduxStatus.error}`;
     },
   },
 });
