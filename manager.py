@@ -14,7 +14,6 @@ def react_native():
 
 def flask():
     commands = [
-        ["make", "install"],
         ["make", "run"]
     ]
     os.chdir(os.path.abspath(os.path.dirname(__file__) + "api"))

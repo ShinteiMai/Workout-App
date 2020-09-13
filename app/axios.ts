@@ -43,17 +43,41 @@ export const createAxiosRequest = async (
     });
 
     const responseObject = response.data.data;
-    const relationships =
-      Object.keys(responseObject.relationships).map((relationship) => {
-        return relationship;
-      }) || {};
-    console.log(responseObject);
+
+    /**
+     * when fetching data from database you also have relationships key
+     * so overall it looks like this
+     * data: {
+     *  attributes: {
+     *      title: "",
+     *      description: "",
+     *        ....
+     * },
+     * relationships: {
+     *   exercises: {
+     *      data: {
+     *        ...
+     * }
+     * }
+     * }
+     * }
+     *
+     * so what we have to do is to like move everything in relationships
+     * to exercises, i think i will just do this in the backend, in the next PR
+     * lets solve this issue
+     */
+    // const relationships =
+    //   Object.keys(responseObject.relationships).map((relationship) => {
+    //     return relationship;
+    //   }) || {};
+    // console.log(responseObject);
     return {
       ...responseObject.attributes,
-      // ...relationships,
       id: responseObject.id,
     };
   } catch (err) {
+    // return the statusCode and the message of the error
+    // from the error response object.
     return {
       statusCode: err.response.status,
       message: err.response.data.message,

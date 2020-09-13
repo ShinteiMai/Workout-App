@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Button } from "react-native-paper";
+import { Button, Title } from "react-native-paper";
 import { View, Text } from "../../components/Themed";
 import Layout from "../../components/Layout";
 import {
@@ -54,13 +54,6 @@ const Routines: React.FC = () => {
 
   return (
     <Layout>
-      <Button
-        onPress={() => {
-          dispatch(fetchRoutines());
-        }}
-      >
-        Fetch Routines
-      </Button>
       <View>
         {status === "loading" ? (
           <View>
@@ -68,6 +61,9 @@ const Routines: React.FC = () => {
           </View>
         ) : (
           <View>
+            <View>
+              <Title>ROUTINES WIP (WORK IN PROGRESS)</Title>
+            </View>
             <Button
               onPress={() => {
                 setIsAdding(true);

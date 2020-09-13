@@ -55,21 +55,34 @@ export type AuthScreenProp = StackNavigationProp<RootStackParamList, "Auth">;
 export type RootScreenProp = StackNavigationProp<RootStackParamList, "Root">;
 const RootNavigator: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const user = useSelector(selectUser);
 
   if (!isLoaded) {
     return <SplashScreen setIsLoaded={setIsLoaded} />;
   }
 
+  /**
+   *   With redux persist, we can cache the user.id && user.email
+   *   even after the app is closed and opened again,
+   *   that means if user.id && user.email still exists,
+   *   user has loggedin at sometime and haven't loggedout yet.
+   */
+  const isUserLoggedIn = user.id && user.email;
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Auth" component={LoginAndRegisterScreen} />
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Register" component={RegisterScreen} />
-      <Stack.Screen
-        name="EmailVerification"
-        component={EmailVerificationScreen}
-      />
-      <Stack.Screen name="Root" component={BottomTabNavigator} />
+      {isUserLoggedIn ? (
+        <Stack.Screen name="Root" component={BottomTabNavigator} />
+      ) : (
+        <>
+          <Stack.Screen name="Auth" component={LoginAndRegisterScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Register" component={RegisterScreen} />
+          <Stack.Screen
+            name="EmailVerification"
+            component={EmailVerificationScreen}
+          />
+        </>
+      )}
     </Stack.Navigator>
   );
 };
