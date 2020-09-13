@@ -10,8 +10,9 @@ from subprocess import Popen, CalledProcessError, PIPE
 
 
 def localtunnel():
+    print('[localtunnel] starting localtunnel script...')
     command = ['lt', '-h', 'http://serverless.social', '-p', '8080']
-    path = os.path.abspath(os.path.dirname(__file__) + "/../app/buffer/localtunnel.json")
+    path = os.path.abspath(os.path.dirname(__file__) + "../app/buffer/localtunnel.json")
     try:
         with Popen(command, stdout=PIPE, bufsize=1, universal_newlines=True) as p:
             for line in p.stdout:
@@ -21,8 +22,11 @@ def localtunnel():
                     json.dump({
                         "url": url
                     }, file)
+                print('[localtunnel] written url into ./app/buffer/localtunnel.json')
         if p.returncode != 0:
             raise CalledProcessError(p.returncode, p.args)
     except KeyboardInterrupt:
-        print('\nExiting localtunnel server')
+        print('\n[localtunnel] exiting localtunnel server')
         sys.exit()
+
+localtunnel()
