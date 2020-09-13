@@ -51,21 +51,21 @@ const Exercises: React.FC = () => {
     );
   }
 
-  let display: JSX.Element;
-  if (isUpdating) {
-    display = (
-      <UpdateExercise
-        exercise={currentExercise}
-        setIsUpdating={setIsUpdating}
-      />
-    );
-  } else if (isAdding) {
-    display = <AddExercise setIsAdding={setIsAdding} />;
-  }
+  // let display: JSX.Element;
+  // if (isUpdating) {
+  //   display = (
+  //     <UpdateExercise
+  //       exercise={currentExercise}
+  //       setIsUpdating={setIsUpdating}
+  //     />
+  //   );
+  // } else if (isAdding) {
+  //   display = <AddExercise setIsAdding={setIsAdding} />;
+  // }
 
   return (
     <Layout>
-      <Title>Exercises</Title>
+      <Title>Exercises WIP (WORK IN PROGRESS)</Title>
       <Button
         onPress={() => {
           setIsAdding(true);
@@ -73,14 +73,14 @@ const Exercises: React.FC = () => {
       >
         Add a new exercise
       </Button>
-      {!isUpdating && !isAdding ? (
+      {/* {!isUpdating && !isAdding ? (
         <ExerciseList
           setIsUpdating={setIsUpdating}
           setCurrentExercise={setCurrentExercise}
         />
       ) : (
         display
-      )}
+      )} */}
     </Layout>
   );
 };

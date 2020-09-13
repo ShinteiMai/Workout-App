@@ -7,6 +7,7 @@ export const fetchRoutines = createAsyncThunk(
   "routines/fetchRoutines",
   async () => {
     const data = await fromApi.fetchRoutines();
+    console.log(data);
     return data.routines;
   }
 );
@@ -40,12 +41,7 @@ export const updateRoutine = createAsyncThunk(
     description: string;
     exercises: ExerciseProps[];
   }) => {
-    const data = await fromApi.updateRoutine(
-      routineId,
-      title,
-      description,
-      exercises
-    );
+    const data = await fromApi.updateRoutine(routineId, title, description);
     return data.routine;
   }
 );
@@ -68,38 +64,39 @@ export const routinesSlice = createSlice({
   reducers: {},
   extraReducers: {
     [fetchRoutines.pending as any]: (state, action) => {
-      state.status = reduxStatus.loading;
+      state.status = `fetchRoutines/${reduxStatus.loading}`;
     },
     [fetchRoutine.pending as any]: (state, action) => {
-      state.status = reduxStatus.loading;
+      state.status = `fetchRoutine/${reduxStatus.loading}`;
     },
     [addRoutine.pending as any]: (state, action) => {
-      state.status = reduxStatus.loading;
+      state.status = `addRoutine/${reduxStatus.loading}`;
     },
     [updateRoutine.pending as any]: (state, action) => {
-      state.status = reduxStatus.loading;
+      state.status = `updateRoutine/${reduxStatus.loading}`;
     },
     [deleteRoutine.pending as any]: (state, action) => {
-      state.status = reduxStatus.loading;
+      state.status = `deleteRoutine/${reduxStatus.loading}`;
     },
     [fetchRoutines.rejected as any]: (state, action) => {
-      state.status = reduxStatus.error;
+      state.status = `fetchRoutines/${reduxStatus.error}`;
     },
     [fetchRoutine.rejected as any]: (state, action) => {
-      state.status = reduxStatus.error;
+      state.status = `fetchRoutine/${reduxStatus.error}`;
     },
     [addRoutine.rejected as any]: (state, action) => {
-      state.status = reduxStatus.error;
+      state.status = `addRoutine/${reduxStatus.error}`;
     },
     [updateRoutine.rejected as any]: (state, action) => {
-      state.status = reduxStatus.success;
+      state.status = `updateRoutine/${reduxStatus.error}`;
     },
     [deleteRoutine.rejected as any]: (state, action) => {
-      state.status = reduxStatus.error;
+      state.status = `deleteRoutine/${reduxStatus.error}`;
     },
     [fetchRoutines.fulfilled as any]: (state, action) => {
+      console.log(action.payload);
       state.routines = action.payload;
-      state.status = reduxStatus.success;
+      state.status = `fetchRoutines/${reduxStatus.success}`;
     },
     [fetchRoutine.fulfilled as any]: (state, action) => {
       const fetchedRoutine = action.payload;
@@ -108,12 +105,12 @@ export const routinesSlice = createSlice({
           state.routines[index] = fetchedRoutine;
         }
       });
-      state.status = reduxStatus.success;
+      state.status = `fetchRoutine/${reduxStatus.success}`;
     },
     [addRoutine.fulfilled as any]: (state, action) => {
       const addedRoutine = action.payload;
       state.routines.push(addedRoutine);
-      state.status = reduxStatus.success;
+      state.status = `addRoutine/${reduxStatus.success}`;
     },
     [updateRoutine.fulfilled as any]: (state, action) => {
       const updatedRoutine = action.payload;
@@ -122,17 +119,16 @@ export const routinesSlice = createSlice({
           state.routines[index] = updatedRoutine;
         }
       });
-      state.status = reduxStatus.success;
+      state.status = `updateRoutine/${reduxStatus.success}`;
     },
     [deleteRoutine.fulfilled as any]: (state, action) => {
       const deletedRoutine = action.payload;
       state.routines.forEach((routine, index) => {
         if (deletedRoutine.id.toString() === routine.id.toString()) {
-          console.log(routine.id);
           state.routines.splice(index, 1);
         }
       });
-      state.status = reduxStatus.success;
+      state.status = `deleteRoutine/${reduxStatus.success}`;
     },
   },
 });

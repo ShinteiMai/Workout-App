@@ -15,10 +15,13 @@ web-build/
 
 .env
 venv/
-server/.env
-server/venv/
+api/.env
+api/venv/
 __pycache__/
 server/**/__pycache__
+
+# migrations/
+# api/migrations/
 
 .expo-shared/
 .vscode/
