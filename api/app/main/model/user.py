@@ -22,13 +22,15 @@ class User(db.Model, BaseTable):
 
     id = db.Column(UUID(as_uuid=True),
                    primary_key=True, default=generate_uuid)
+    googleId = db.Column(db.String(255), unique=True, nullable=True)
     email = db.Column(db.String(255), unique=True, nullable=False)
-    username = db.Column(db.String(255))
-    password_hash = db.Column(db.String(100))
+    username = db.Column(db.String(255), nullable=True)
+    password_hash = db.Column(db.String(100), nullable=True)
     registered_on = db.Column(
         db.DateTime, nullable=False, default=datetime.datetime.utcnow())
     # confirmed_at: datetime
-    is_verified = db.Column(db.Boolean, nullable=False, default=False)
+    photoUrl = db.Column(db.String, nullable=True)
+    is_verified = db.Column(db.Boolean, nullable=False)
     #current_ip_address: ipaddress
     #last_ip_address: ipaddress
     #last_login_at: datetime
@@ -36,10 +38,18 @@ class User(db.Model, BaseTable):
     #active: boolean
     # google id for google auth
 
-    def __init__(self, email, username, password):
+    # def __init__(self, email, username, password):
+    def __init__(self, email, is_verified=False, username=None, password=None, googleId=None, photoUrl=None):
         self.email = email
-        self.username = username
-        self.password = password
+        self.is_verified = is_verified
+        if username:
+            self.username = username
+        if password:
+            self.password = password
+        if googleId:
+            self.googleId = googleId
+        if photoUrl:
+            self.photoUrl = photoUrl
 
     @property
     def password(self):
@@ -116,6 +126,6 @@ class AuthSchema(Schema):
     email = fields.Email(required=True, error="Provide a valid email address")
     password = fields.String(required=True, validate=validate.Length(
         min=3), error="Username must be minimum 3 characters")
-    
+
     class Meta:
         type_ = "auth"

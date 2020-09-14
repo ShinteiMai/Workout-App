@@ -2,6 +2,16 @@ import Axios from "axios";
 import { AsyncStorage } from "react-native";
 import * as data from "./buffer/localtunnel.json";
 import { ExerciseProps, RoutineProps } from "./types";
+import * as Google from 'expo-google-app-auth';
+import * as env from './.env.json';
+
+const googleConfig = {
+  expoClientId: (<any>env).web_client_id,
+  iosClientId: (<any>env).ios_client_id,
+  androidClientId: (<any>env).android_client_id,
+  iosStandaloneAppClientId: (<any>env).ios_client_id,
+  androidStandaloneAppClientId: (<any>env).android_client_id,
+};
 
 export const axios = Axios.create({
   baseURL: (<any>data).url,
@@ -92,6 +102,7 @@ class SendApiRequest {
   async me() {
     return createAxiosRequest("GET", "/me", null, "user");
   }
+
   async login(email: string, password: string) {
     return createAxiosRequest(
       "POST",
@@ -100,6 +111,7 @@ class SendApiRequest {
       "auth"
     );
   }
+
   async register(email: string, username: string, password: string) {
     return createAxiosRequest(
       "POST",
@@ -108,8 +120,20 @@ class SendApiRequest {
       "user"
     );
   }
+
   async logout() {
     return createAxiosRequest("GET", "/user/logout", {}, "user");
+  }
+
+  async googleAuth() {
+    const response = await Google.logInAsync(googleConfig);
+    return createAxiosRequest(
+      "POST",
+      "/user/google/authorize",
+      { ...response },
+      "auth"
+    );
+
   }
 
   /**

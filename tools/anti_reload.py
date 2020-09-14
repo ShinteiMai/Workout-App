@@ -5,7 +5,8 @@ import sys
 
 
 def antiReload():
-    dummy = open("../app/tools-buffer/dummy.tsx", "ab")
+    print("[anti_reload] Adding new line to dummmy.tsx")
+    dummy = open("../app/buffer/dummy.tsx", "ab")
     dummy.write(bytes("//dummyline \n", "utf-8"))
     dummy.close()
 
@@ -15,7 +16,6 @@ if __name__ == "__main__":
     try:
         while True:
             time.sleep(60)
-            print("[anti_reload] Adding new line to dummmy.tsx")
             antiReload()
 
     except KeyboardInterrupt:
