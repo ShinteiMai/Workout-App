@@ -38,9 +38,7 @@ class Google_Auth(Resource):
         body = request.get_json(force=True)
         try:
             # AuthSchema().load(body)
-
             auth = user_service.google_auth(body["data"]["attributes"])
-            print(auth)
             data = user_schema.dump(auth["user"])["data"]
             data["attributes"]["jwt"] = auth["jwt"]
             return ({

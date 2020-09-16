@@ -118,7 +118,6 @@ class UserService(Response):
                 }
             else:
                 Error.user_not_found()
-
         except:
             new_user = User(**{
                 'googleId': userData['id'],
@@ -131,9 +130,13 @@ class UserService(Response):
             except SQLAlchemyError as err:
                 Error.server_error()
 
-            return new_user
+            access_token = data["accessToken"]
+            return {
+                'user': new_user,
+                'jwt': access_token
+            }
 
-    @staticmethod
+    @ staticmethod
     def logout(token):
         user_id = User.decode_auth_token(token)
         if not user_id:
