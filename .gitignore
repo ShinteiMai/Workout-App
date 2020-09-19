@@ -20,8 +20,10 @@ api/venv/
 __pycache__/
 server/**/__pycache__
 
-# migrations/
-# api/migrations/
+app/.env.json
+
+migrations/
+api/migrations/
 
 .expo-shared/
 .vscode/

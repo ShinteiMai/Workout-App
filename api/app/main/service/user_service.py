@@ -97,20 +97,46 @@ class UserService(Response):
             Error.auth_is_invalid()
 
     @staticmethod
-    def check_auth(req):
-        auth_header = req.headers.get('Authorization')
-        if auth_header:
-            token = auth_header.split(" ")[1]
-            user_id = User.decode_auth_token(token)
-            if user_id:
-                user = User.find_by_id(user_id)
-                return user
-            else:
-                Error.auth_is_invalid()
-        else:
-            Error.token_not_provided()
+    def google_auth(data):
+        userData = data['user']
+        try:
+            print(1)
+            print(userData)
+            user = User.query.filter_by(email=userData['email']).first()
 
-    @staticmethod
+            if user:
+                if not user.googleId or not user.is_verified:
+                    user.googleId = userData['id']
+                    user.is_verified = True
+                    # Gambar entar dulu, tunggu ada photo controller buat delete previous photo
+                    user.commit()
+
+                access_token = data['accessToken']
+                return {
+                    'user': user,
+                    'jwt': access_token,
+                }
+            else:
+                Error.user_not_found()
+        except:
+            new_user = User(**{
+                'googleId': userData['id'],
+                'email': userData['email'],
+                'photoUrl': userData['photoUrl'],
+                'is_verified': True,
+            })
+            try:
+                new_user.add()
+            except SQLAlchemyError as err:
+                Error.server_error()
+
+            access_token = data["accessToken"]
+            return {
+                'user': new_user,
+                'jwt': access_token
+            }
+
+    @ staticmethod
     def logout(token):
         user_id = User.decode_auth_token(token)
         if not user_id:
