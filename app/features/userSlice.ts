@@ -14,7 +14,6 @@ export const login = createAsyncThunk(
 
 export const logout = createAsyncThunk("user/logout", async () => {
   const data = await fromApi.logout();
-  console.log("logging out");
   await AsyncStorage.removeItem(stronkJWTKeyname);
   return data;
 });

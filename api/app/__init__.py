@@ -5,6 +5,8 @@ from .main.controller.user_controller import api as user_ns
 from .main.controller.routine_controller import api as routine_ns
 from .main.controller.exercise_controller import api as exercise_ns
 
+from .main.controller.file_controller import api as file_ns
+
 blueprint = Blueprint('api', __name__)
 
 api = Api(blueprint,
@@ -16,3 +18,5 @@ api = Api(blueprint,
 api.add_namespace(user_ns, path='/user')
 api.add_namespace(routine_ns, path='/routine')
 api.add_namespace(exercise_ns, path='/exercise')
+
+api.add_namespace(file_ns, path='/file/image')

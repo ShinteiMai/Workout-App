@@ -6,7 +6,6 @@ export const fetchExercises = createAsyncThunk(
   "exercises/fetchExercises",
   async () => {
     const data = await fromApi.fetchExercises();
-    console.log(data);
     return data.exercises;
   }
 );

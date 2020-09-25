@@ -45,7 +45,7 @@ const UserProfile: React.FC<Props> = ({ navigation }) => {
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       base64: true,
-      quality: 1,
+      quality: 0.1,
     });
     // console.log(pickerResult);
 
@@ -73,14 +73,18 @@ const UserProfile: React.FC<Props> = ({ navigation }) => {
         "name": filename,
         "type": type,
       });
+      // const formData = {
+      //   "picture": String(base64)
+      // }
       // console.log(formData);
 
       try {
-        const res = await dispatch(uploadImage(localUri));
+        const res = await dispatch(uploadImage(formData));
+        // const res = await dispatch(uploadImage(localUri));
         // const res = await dispatch(uploadImage(formData));
-        console.log(res);
+        // console.log(res);
       } catch (err) {
-        console.log(err);
+        // console.log(err);
 
       }
     }

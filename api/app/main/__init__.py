@@ -14,11 +14,13 @@ flask_bcrypt = Bcrypt()
 oauth = OAuth()
 
 # constants
-DEFAULT_LIMIT = 25
+DEFAULT_LIMIT = 16 * 1024 * 1024
 
 
 def create_app(config_name):
     app = Flask(__name__)
+    app.config["MAX_CONTENT_LENGTH"] = DEFAULT_LIMIT
+
     CORS(app)
     app.config.from_object(config_by_name[config_name])
     db.init_app(app)

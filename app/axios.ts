@@ -40,6 +40,7 @@ export const createAxiosRequest = async (
 ): Promise<any> => {
   const token = await AsyncStorage.getItem(stronkJWTKeyname);
   try {
+    console.log('checkpoint 1');
     const response = await axios({
       method,
       url,
@@ -56,6 +57,7 @@ export const createAxiosRequest = async (
       },
     });
 
+    console.log('checkpoint success');
     const responseObject = response.data.data;
 
     /**
@@ -92,6 +94,8 @@ export const createAxiosRequest = async (
   } catch (err) {
     // return the statusCode and the message of the error
     // from the error response object.
+    console.log(err);
+    console.log('checkpoint failed');
     return {
       statusCode: err.response.status,
       message: err.response.data.message,
@@ -287,9 +291,9 @@ class SendApiRequest {
     )
   }
 
-  async uploadImage(fileUri: string) {
-    // async uploadImage(image: any) {
-    const token = await AsyncStorage.getItem(stronkJWTKeyname);
+  // async uploadImage(fileUri: string) {
+  async uploadImage(image: any) {
+    // const token = await AsyncStorage.getItem(stronkJWTKeyname);
     // const response = await axios({
     //   method,
     //   url,
@@ -305,27 +309,42 @@ class SendApiRequest {
     //     },
     //   },
     // });
-    return FileSystem.uploadAsync(
-      baseUrl + "/file/image",
-      fileUri,
-      {
-        "headers": {
-          "Content-Type": "image/jpeg",
-          // "Content-Type": "application/json",
-          "Accept": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-        "httpMethod": "POST",
-        "sessionType": FileSystem.FileSystemSessionType.BACKGROUND,
-        "uploadType": FileSystem.FileSystemUploadType.BINARY_CONTENT,
-      }
-    )
+    // return FileSystem.uploadAsync(
+    //   baseUrl + "/file/image",
+    //   fileUri,
+    //   {
+    //     "headers": {
+    //       "Content-Type": "image/jpeg",
+    //       // "Content-Type": "application/json",
+    //       "Accept": "application/json",
+    //       "Authorization": `Bearer ${token}`,
+    //     },
+    //     "httpMethod": "POST",
+    //     "sessionType": FileSystem.FileSystemSessionType.BACKGROUND,
+    //     "uploadType": FileSystem.FileSystemUploadType.BINARY_CONTENT,
+    //   }
+    // )
     // return createAxiosRequest(
     //   "POST",
     //   "/file/image",
     //   { image },
     //   "image"
-    // )
+    // );
+    console.log('asd');
+    try {
+      const response = await axios({
+        url: "/file/image",
+        method: "POST",
+        headers: {
+          "Content-Type": "multipart/form-data"
+        },
+        data: { image },
+      })
+    } catch (err) {
+      console.log(err);
+    }
+    console.log('asd1');
+
   }
 
   async deleteImage(imageId: string) {

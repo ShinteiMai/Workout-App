@@ -6,18 +6,19 @@ export const fetchImage = createAsyncThunk(
   "image/fetchImage",
   async ({ imageId }: any) => {
     const data = await fromApi.fetchImage(imageId);
-    console.log(data);
+    // console.log(data);
     return data.image;
   }
 );
 
 export const uploadImage = createAsyncThunk(
   "image/uploadImage",
-  // async (image: any) => {
-  async (fileUri: any) => {
-    // const data = await fromApi.uploadImage(image);
-    const data = await fromApi.uploadImage(fileUri);
-    return data.image;
+  async (image: any) => {
+    // async (fileUri: any) => {
+    console.log(String(image.picture).length);
+    const data = await fromApi.uploadImage(image);
+    // const data = await fromApi.uploadImage(fileUri);
+    // return data.image;
   }
 );
 
