@@ -22,6 +22,7 @@ import {
 import { useSelector } from "react-redux";
 import { selectUser, selectUserStatus } from "../features/userSlice";
 import { RootScreenProp } from ".";
+import UserProfile from "./screens/UserProfile";
 
 const BottomTab = createMaterialBottomTabNavigator<BottomTabParamList>();
 
@@ -30,23 +31,15 @@ type Prop = {
 };
 
 const BottomTabNavigator: React.FC<Prop> = ({ navigation }) => {
-  const user = useSelector(selectUser);
-
-  if (user.id && user.email) {
-    navigation.navigate("Root");
-  }
 
   return (
-    <BottomTab.Navigator
-      initialRouteName="Home"
-      // tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
-    >
+    <BottomTab.Navigator >
       <BottomTab.Screen
         name="Home"
         component={Home}
         options={{
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="ios-home" color={color} />
+            < TabBarIcon name="ios-home" color={color} />
           ),
         }}
       />
@@ -55,7 +48,7 @@ const BottomTabNavigator: React.FC<Prop> = ({ navigation }) => {
         component={Routines}
         options={{
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="ios-calendar" color={color} />
+            < TabBarIcon name="ios-calendar" color={color} />
           ),
         }}
       />
@@ -64,7 +57,16 @@ const BottomTabNavigator: React.FC<Prop> = ({ navigation }) => {
         component={Exercises}
         options={{
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="ios-calendar" color={color} />
+            < TabBarIcon name="ios-calendar" color={color} />
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="User Profile"
+        component={UserProfile}
+        options={{
+          tabBarIcon: ({ color }) => (
+            < TabBarIcon name="ios-calendar" color={color} />
           ),
         }}
       />

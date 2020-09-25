@@ -2,8 +2,12 @@ import Axios from "axios";
 import { AsyncStorage } from "react-native";
 import * as data from "./buffer/localtunnel.json";
 import { ExerciseProps, RoutineProps } from "./types";
+import * as FileSystem from "expo-file-system";
 import * as Google from 'expo-google-app-auth';
 import * as env from './.env.json';
+
+const baseUrl = (<any>data).url;
+// const baseUrl = "http://localhost:8080";
 
 const googleConfig = {
   expoClientId: (<any>env).web_client_id,
@@ -14,7 +18,7 @@ const googleConfig = {
 };
 
 export const axios = Axios.create({
-  baseURL: (<any>data).url,
+  baseURL: baseUrl,
 });
 
 export const HTTP_METHODS = {
@@ -62,14 +66,14 @@ export const createAxiosRequest = async (
      *      title: "",
      *      description: "",
      *        ....
-     * },
-     * relationships: {
-     *   exercises: {
-     *      data: {
-     *        ...
-     * }
-     * }
-     * }
+     *  },
+     *  relationships: {
+     *    exercises: {
+     *       data: {
+     *         ...
+     *       }
+     *    }
+     *  }
      * }
      *
      * so what we have to do is to like move everything in relationships
@@ -270,6 +274,69 @@ class SendApiRequest {
       "exercise"
     );
   }
+
+  /*
+   * Images
+   */
+  async fetchImage(imageId: string) {
+    return createAxiosRequest(
+      "POST",
+      `/file/image?id=${imageId}`,
+      {},
+      "image"
+    )
+  }
+
+  async uploadImage(fileUri: string) {
+    // async uploadImage(image: any) {
+    const token = await AsyncStorage.getItem(stronkJWTKeyname);
+    // const response = await axios({
+    //   method,
+    //   url,
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Accept: "application/json",
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    //   data: {
+    //     data: {
+    //       attributes: data,
+    //       type,
+    //     },
+    //   },
+    // });
+    return FileSystem.uploadAsync(
+      baseUrl + "/file/image",
+      fileUri,
+      {
+        "headers": {
+          "Content-Type": "image/jpeg",
+          // "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        "httpMethod": "POST",
+        "sessionType": FileSystem.FileSystemSessionType.BACKGROUND,
+        "uploadType": FileSystem.FileSystemUploadType.BINARY_CONTENT,
+      }
+    )
+    // return createAxiosRequest(
+    //   "POST",
+    //   "/file/image",
+    //   { image },
+    //   "image"
+    // )
+  }
+
+  async deleteImage(imageId: string) {
+    return createAxiosRequest(
+      "DELETE",
+      `/file/image?id=${imageId}`,
+      {},
+      "image"
+    )
+  }
+
 }
 
 export const fromApi = new SendApiRequest();
