@@ -8,7 +8,7 @@ import { AuthScreenProp } from "../index";
 import logo from "../../assets/images/splash2.png";
 
 import { useDispatch, useSelector } from "react-redux";
-import { login, selectUserStatus } from "../../features/userSlice";
+import { login, googleAuth, selectUserStatus } from "../../features/userSlice";
 
 let width = Dimensions.get("window").width;
 let height = Dimensions.get("window").height;
@@ -18,6 +18,7 @@ interface AuthProps {
 }
 
 const LoginAndRegisterScreen: React.FC<AuthProps> = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [currentDisplay, setCurrentDisplay] = useState(0);
   const { status } = useSelector(selectUserStatus);
 
@@ -35,7 +36,7 @@ const LoginAndRegisterScreen: React.FC<AuthProps> = ({ navigation }) => {
                 color={"#7ac7bf"}
                 contentStyle={styles.buttonBody}
                 labelStyle={styles.buttonText1}
-                onPress={() => {}}
+                onPress={() => dispatch(googleAuth())}
               >
                 Continue with Google
               </Button>

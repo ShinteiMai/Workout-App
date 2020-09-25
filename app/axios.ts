@@ -2,9 +2,23 @@ import Axios from "axios";
 import { AsyncStorage } from "react-native";
 import * as data from "./buffer/localtunnel.json";
 import { ExerciseProps, RoutineProps } from "./types";
+import * as FileSystem from "expo-file-system";
+import * as Google from 'expo-google-app-auth';
+import * as env from './.env.json';
+
+const baseUrl = (<any>data).url;
+// const baseUrl = "http://localhost:8080";
+
+const googleConfig = {
+  expoClientId: (<any>env).web_client_id,
+  iosClientId: (<any>env).ios_client_id,
+  androidClientId: (<any>env).android_client_id,
+  iosStandaloneAppClientId: (<any>env).ios_client_id,
+  androidStandaloneAppClientId: (<any>env).android_client_id,
+};
 
 export const axios = Axios.create({
-  baseURL: (<any>data).url,
+  baseURL: baseUrl,
 });
 
 export const HTTP_METHODS = {
@@ -26,6 +40,7 @@ export const createAxiosRequest = async (
 ): Promise<any> => {
   const token = await AsyncStorage.getItem(stronkJWTKeyname);
   try {
+    console.log('checkpoint 1');
     const response = await axios({
       method,
       url,
@@ -42,6 +57,7 @@ export const createAxiosRequest = async (
       },
     });
 
+    console.log('checkpoint success');
     const responseObject = response.data.data;
 
     /**
@@ -52,14 +68,14 @@ export const createAxiosRequest = async (
      *      title: "",
      *      description: "",
      *        ....
-     * },
-     * relationships: {
-     *   exercises: {
-     *      data: {
-     *        ...
-     * }
-     * }
-     * }
+     *  },
+     *  relationships: {
+     *    exercises: {
+     *       data: {
+     *         ...
+     *       }
+     *    }
+     *  }
      * }
      *
      * so what we have to do is to like move everything in relationships
@@ -78,6 +94,8 @@ export const createAxiosRequest = async (
   } catch (err) {
     // return the statusCode and the message of the error
     // from the error response object.
+    console.log(err);
+    console.log('checkpoint failed');
     return {
       statusCode: err.response.status,
       message: err.response.data.message,
@@ -92,6 +110,7 @@ class SendApiRequest {
   async me() {
     return createAxiosRequest("GET", "/me", null, "user");
   }
+
   async login(email: string, password: string) {
     return createAxiosRequest(
       "POST",
@@ -100,6 +119,7 @@ class SendApiRequest {
       "auth"
     );
   }
+
   async register(email: string, username: string, password: string) {
     return createAxiosRequest(
       "POST",
@@ -108,8 +128,20 @@ class SendApiRequest {
       "user"
     );
   }
+
   async logout() {
     return createAxiosRequest("GET", "/user/logout", {}, "user");
+  }
+
+  async googleAuth() {
+    const response = await Google.logInAsync(googleConfig);
+    return createAxiosRequest(
+      "POST",
+      "/user/google/authorize",
+      { ...response },
+      "auth"
+    );
+
   }
 
   /**
@@ -246,6 +278,84 @@ class SendApiRequest {
       "exercise"
     );
   }
+
+  /*
+   * Images
+   */
+  async fetchImage(imageId: string) {
+    return createAxiosRequest(
+      "POST",
+      `/file/image?id=${imageId}`,
+      {},
+      "image"
+    )
+  }
+
+  // async uploadImage(fileUri: string) {
+  async uploadImage(image: any) {
+    // const token = await AsyncStorage.getItem(stronkJWTKeyname);
+    // const response = await axios({
+    //   method,
+    //   url,
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Accept: "application/json",
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    //   data: {
+    //     data: {
+    //       attributes: data,
+    //       type,
+    //     },
+    //   },
+    // });
+    // return FileSystem.uploadAsync(
+    //   baseUrl + "/file/image",
+    //   fileUri,
+    //   {
+    //     "headers": {
+    //       "Content-Type": "image/jpeg",
+    //       // "Content-Type": "application/json",
+    //       "Accept": "application/json",
+    //       "Authorization": `Bearer ${token}`,
+    //     },
+    //     "httpMethod": "POST",
+    //     "sessionType": FileSystem.FileSystemSessionType.BACKGROUND,
+    //     "uploadType": FileSystem.FileSystemUploadType.BINARY_CONTENT,
+    //   }
+    // )
+    // return createAxiosRequest(
+    //   "POST",
+    //   "/file/image",
+    //   { image },
+    //   "image"
+    // );
+    console.log('asd');
+    try {
+      const response = await axios({
+        url: "/file/image",
+        method: "POST",
+        headers: {
+          "Content-Type": "multipart/form-data"
+        },
+        data: { image },
+      })
+    } catch (err) {
+      console.log(err);
+    }
+    console.log('asd1');
+
+  }
+
+  async deleteImage(imageId: string) {
+    return createAxiosRequest(
+      "DELETE",
+      `/file/image?id=${imageId}`,
+      {},
+      "image"
+    )
+  }
+
 }
 
 export const fromApi = new SendApiRequest();

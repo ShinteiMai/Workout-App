@@ -29,7 +29,6 @@ const Routines: React.FC = () => {
 
   useEffect(() => {
     if (status === `fetchRoutines/${reduxStatus.success}`) {
-      console.log(routines);
     }
   }, [status]);
   // let display = (
@@ -60,20 +59,20 @@ const Routines: React.FC = () => {
             <Text>asd</Text>
           </View>
         ) : (
-          <View>
             <View>
-              <Title>ROUTINES WIP (WORK IN PROGRESS)</Title>
-            </View>
-            <Button
-              onPress={() => {
-                setIsAdding(true);
-              }}
-            >
-              Add a new routine
+              <View>
+                <Title>ROUTINES WIP (WORK IN PROGRESS)</Title>
+              </View>
+              <Button
+                onPress={() => {
+                  setIsAdding(true);
+                }}
+              >
+                Add a new routine
             </Button>
-            {/* {display} */}
-          </View>
-        )}
+              {/* {display} */}
+            </View>
+          )}
       </View>
     </Layout>
   );
