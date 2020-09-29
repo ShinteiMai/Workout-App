@@ -10,20 +10,13 @@ import {
   selectRoutines,
 } from "../../features/routinesSlice";
 
-import { RoutineProps } from "../../types";
-import RoutineList from "../../components/Routines/RoutineList";
-import AddRoutine from "../../components/Routines/AddRoutines";
-import UpdateRoutine from "../../components/Routines/UpdateRoutine";
 import { reduxStatus } from "../../features/types";
 
 const Routines: React.FC = () => {
   const dispatch = useDispatch();
   const { status } = useSelector(routinesStatus);
 
-  const [currentRoutine, setCurrentRoutine] = useState<RoutineProps>();
-  const [currentDisplay, setCurrentDisplay] = useState<number>(0);
   const [isAdding, setIsAdding] = useState<boolean>(false);
-  const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
   const { routines } = useSelector(selectRoutines);
 

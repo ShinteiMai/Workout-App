@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RoutineProps } from "../../../types";
-import { deleteRoutine, selectRoutines } from "../../../features/routinesSlice";
+import { deleteRoutine, selectRoutines } from "../../features/routinesSlice";
 import { Surface, Title, Button, List, Paragraph } from "react-native-paper";
 
 interface Props {

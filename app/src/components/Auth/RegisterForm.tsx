@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View } from "react-native";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { useDispatch, useSelector } from "react-redux";
-import { login, selectUserStatus } from "../../../features/userSlice";
+import { register, selectUserStatus } from "../../features/userSlice";
 
-import Colors from "../../constants/Colors";
-import { RootStackParamList } from "../../../types";
+import { StyleSheet } from "react-native";
 
 import { Button, Surface, Text, TextInput, Title } from "react-native-paper";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { reduxStatus } from "../../../features/types";
+import { reduxStatus } from "../../features/types";
+import { RootStackParamList } from "../../../types";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 interface values {
+  // username: string;
   email: string;
   password: string;
 }
@@ -21,13 +21,13 @@ interface Props {
   navigation: StackNavigationProp<RootStackParamList>;
 }
 
-const LoginForm: React.FC<Props> = ({ navigation }) => {
+const RegisterForm: React.FC<Props> = ({ navigation }) => {
   const dispatch = useDispatch();
   const { status } = useSelector(selectUserStatus);
 
   useEffect(() => {
-    if (status === `login/${reduxStatus.success}`) {
-      navigation.navigate("Root");
+    if (status === `register/${reduxStatus.success}`) {
+      navigation.navigate("Login");
     }
   }, [status]);
 
@@ -43,50 +43,39 @@ const LoginForm: React.FC<Props> = ({ navigation }) => {
   });
 
   const submitHandler = (values: values) => {
-    dispatch(
-      login({
-        ...values,
-      })
-    );
+    dispatch(register({ ...values }));
   };
+
   return (
     <Surface style={styles.container}>
-      {/* <Title style={styles.title}>LOGIN</Title> */}
-      <View>
+      {/* <Title style={styles.title}>REGISTER</Title */}
+      <Surface>
         <Formik
           initialValues={{
+            username: "",
             email: "",
             password: "",
           }}
           validationSchema={validateSchema}
           onSubmit={(values) => {
+            console.log("test");
             submitHandler(values);
           }}
         >
           {({ values, handleSubmit, handleChange, errors }) => (
-            <View style={styles.form}>
-              <Button
-                onPress={() => {
-                  values.email = "megumin@gmail.com";
-                  values.password = "1234567";
-                }}
-              >
-                Megumin is flat
-              </Button>
-              <Button
-                onPress={() => {
-                  values.email = "Nezuko@Nezuko.com";
-                  values.password = "Nezuko";
-                }}
-              >
-                Dont lewd nezuko bro
-              </Button>
+            <Surface style={styles.form}>
+              <TextInput
+                mode="outlined"
+                label="Username"
+                value={values.username}
+                onChangeText={handleChange("username")}
+              />
+              <Text>{errors.username ? errors.username : " "}</Text>
               <TextInput
                 mode="outlined"
                 label="Email"
                 value={values.email}
                 onChangeText={handleChange("email")}
-                style={styles.input}
               />
               <Text>{errors.email ? errors.email : " "}</Text>
               <TextInput
@@ -95,22 +84,21 @@ const LoginForm: React.FC<Props> = ({ navigation }) => {
                 value={values.password}
                 secureTextEntry={true}
                 onChangeText={handleChange("password")}
-                style={styles.input}
               />
               <Text>{errors.password ? errors.password : " "}</Text>
               <Button
-                icon="account-arrow-left"
+                icon="account-plus"
+                mode="contained"
                 color={errors ? "#888888" : "#7ac7bf"}
                 labelStyle={{ color: "#ffffff" }}
-                mode="contained"
                 onPress={handleSubmit}
               >
-                Login
+                Register
               </Button>
-            </View>
+            </Surface>
           )}
         </Formik>
-      </View>
+      </Surface>
     </Surface>
   );
 };
@@ -118,6 +106,7 @@ const LoginForm: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     // backgroundColor: "#fff",
+    marginHorizontal: 20,
   },
   title: {
     // left: 10,
@@ -127,9 +116,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     paddingVertical: 10,
   },
-  input: {
-    // paddingBottom: 15,
-  },
 });
 
-export default LoginForm;
+export default RegisterForm;

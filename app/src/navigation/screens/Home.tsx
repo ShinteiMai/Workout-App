@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { RootStackParamList } from "../../types";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -8,11 +8,9 @@ import Layout from "../../components/Layout";
 
 import Logout from "../../components/Auth/Logout";
 import { selectUser } from "../../features/userSlice";
-import { selectRoutines } from "../../features/routinesSlice";
 
 type HomeScreenProp = StackNavigationProp<RootStackParamList>;
 
-let width = Dimensions.get("window").width;
 let height = Dimensions.get("window").height;
 
 interface Props {
@@ -21,8 +19,6 @@ interface Props {
 
 const Home: React.FC<Props> = ({ navigation }) => {
   const user = useSelector(selectUser);
-  const [hasWorkoutStarted, setHasWorkoutStarted] = useState<boolean>(false);
-  const [selectedRoutine, setSelectedRoutine] = useState<number>(0);
 
   return (
     <Layout>

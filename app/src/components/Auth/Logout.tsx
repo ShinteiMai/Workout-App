@@ -2,12 +2,12 @@ import React, { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useDispatch, useSelector } from "react-redux";
-import { logout, selectUserStatus } from "../../../features/userSlice";
+import { logout, selectUserStatus } from "../../features/userSlice";
 
 import { RootStackParamList } from "../../../types";
 
 import { Button } from "react-native-paper";
-import { reduxStatus } from "../../../features/types";
+import { reduxStatus } from "../../features/types";
 
 interface values {
   email: string;

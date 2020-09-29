@@ -9,7 +9,7 @@ import {
 } from "react-native-paper";
 import { Formik } from "formik";
 import { axios } from "../../../axios";
-import { addExercise } from "../../../features/exercisesSlice";
+import { addExercise } from "../../features/exercisesSlice";
 import { useDispatch } from "react-redux";
 
 interface Props {

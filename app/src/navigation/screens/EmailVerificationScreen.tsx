@@ -1,46 +1,39 @@
-import React, { useState, useEffect } from "react";
-import { Dimensions, StyleSheet, Image, View } from "react-native";
-import { Button, Surface, Text, Title } from "react-native-paper";
+import React from "react";
+import { Dimensions, StyleSheet, View } from "react-native";
+import { Button, Surface, Title } from "react-native-paper";
 
-import LoginForm from "../../components/Auth/LoginForm";
 import Layout from "../../components/Layout";
 import { AuthScreenProp } from "../index";
 
-import { useDispatch, useSelector } from "react-redux";
-import { login, selectUserStatus } from "../../features/userSlice";
-
 let width = Dimensions.get("window").width;
 let height = Dimensions.get("window").height;
-
-interface ModalProps {
-  isVisible: boolean;
-  setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
-}
 
 interface AuthProps {
   navigation: AuthScreenProp;
 }
 
-const LoginScreen: React.FC<AuthProps> = ({ navigation }) => {
-  const { status } = useSelector(selectUserStatus);
-
+const EmailVerificationScreen: React.FC<AuthProps> = ({ navigation }) => {
   return (
     <Layout>
       <View style={styles.container}>
         <Surface style={styles.content}>
           <View style={styles.titleContainer}>
-            <Title>Welcome Back!</Title>
+            <Title>
+              Congrats! Please check your email to verify registration and
+              sign-in
+            </Title>
           </View>
-          <LoginForm navigation={navigation} />
           <View style={styles.margin}>
             <Button
+              mode="contained"
+              color={"#7ac7bf"}
               contentStyle={styles.buttonBody}
-              labelStyle={styles.buttonText2}
+              labelStyle={styles.buttonText1}
               onPress={() => {
-                navigation.navigate("Register");
+                navigation.navigate("Login");
               }}
             >
-              Don't have an account ? Signup
+              Sign in
             </Button>
           </View>
         </Surface>
@@ -62,13 +55,15 @@ const styles = StyleSheet.create({
     flex: 1,
     // alignItems: "center",
     justifyContent: "center",
-    paddingTop: height / 7,
-    paddingBottom: height / 3.5,
+    paddingVertical: height / 2.9,
+    // paddingTop: height / 3.5,
+    // paddingBottom: height / 3.5,
   },
   titleContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    marginHorizontal: width / 5,
     marginBottom: height / 7,
   },
   buttonContainer: {
@@ -89,8 +84,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   margin: {
+    marginHorizontal: width / 5,
     marginVertical: 10,
-    marginHorizontal: width / 10,
   },
   //   title: {
   //     fontSize: 20,
@@ -106,4 +101,4 @@ const styles = StyleSheet.create({
   //   },
 });
 
-export default LoginScreen;
+export default EmailVerificationScreen;

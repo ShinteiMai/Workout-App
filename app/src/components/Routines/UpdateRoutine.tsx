@@ -6,28 +6,30 @@ import {
   TextInput,
   Title,
 } from "react-native-paper";
+import { useSelector, useDispatch } from "react-redux";
 import { Formik } from "formik";
+import { RoutineProps } from "../../../types";
 import { axios, fromApi } from "../../../axios";
-import { useDispatch } from "react-redux";
-import { addRoutine } from "../../../features/routinesSlice";
+import { updateRoutine } from "../../features/routinesSlice";
 
 interface Props {
-  setIsAdding: React.Dispatch<React.SetStateAction<boolean>>;
+  routine: RoutineProps;
+  setIsUpdating: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AddRoutine: React.FC<Props> = ({ setIsAdding }) => {
+const UpdateRoutine: React.FC<Props> = ({ routine, setIsUpdating }) => {
   const dispatch = useDispatch();
   return (
     <Surface>
-      <Title>Add Routine</Title>
+      <Title>Update routine: {routine.title}</Title>
       <Formik
         onSubmit={async (values) => {
-          dispatch(addRoutine({ ...values }));
-          setIsAdding(false);
+          dispatch(updateRoutine({ ...values, routineId: routine.id }));
+          setIsUpdating(false);
         }}
         initialValues={{
-          title: "",
-          description: "",
+          title: routine.title,
+          description: String(routine.description),
           exercises: [],
         }}
       >
@@ -40,8 +42,7 @@ const AddRoutine: React.FC<Props> = ({ setIsAdding }) => {
                 value={values.title}
                 onChangeText={handleChange("title")}
               />
-              <Paragraph>{errors.title ? errors.title : null}</Paragraph>
-
+              <Paragraph>{errors.title ? errors.title : " "}</Paragraph>
               <TextInput
                 mode="outlined"
                 label="description"
@@ -49,31 +50,30 @@ const AddRoutine: React.FC<Props> = ({ setIsAdding }) => {
                 onChangeText={handleChange("description")}
               />
               <Paragraph>
-                {errors.description ? errors.description : null}
+                {errors.description ? errors.description : " "}
               </Paragraph>
-
               {/* <TextInput
                 mode="outlined"
-                label="exercises"
-                value={values.exercises}
-                onChangeText={handleChange("exercises")}
+                label="reps"
+                value={values.exercises as string}
+                onChangeText={handleChange("reps")}
               />
-              <Paragraph>{errors.exercises ? errors.exercises : null}</Paragraph> */}
+              <Paragraph>{errors.exercises ? errors.exercises : " "}</Paragraph> */}
             </Surface>
 
-            <Button onPress={handleSubmit}>Add Exercise</Button>
+            <Button onPress={handleSubmit}>Update routine</Button>
           </Surface>
         )}
       </Formik>
       <Button
         onPress={() => {
-          setIsAdding(false);
+          setIsUpdating(false);
         }}
       >
-        Cancel
+        Cancel Update
       </Button>
     </Surface>
   );
 };
 
-export default AddRoutine;
+export default UpdateRoutine;

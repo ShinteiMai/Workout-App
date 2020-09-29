@@ -1,20 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../../components/Layout";
-import {
-  Button,
-  List,
-  Surface,
-  Title,
-  Paragraph,
-  Card,
-} from "react-native-paper";
-import { Formik } from "formik";
-import { axios } from "../../axios";
+import { Button, Surface, Title, Paragraph } from "react-native-paper";
 
-import ExerciseList from "../../components/Exercises/ExerciseList";
-import AddExercise from "../../components/Exercises/AddExercise";
-import UpdateExercise from "../../components/Exercises/UpdateExercise";
-import { ExerciseProps } from "../../types";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchExercises,
@@ -22,19 +9,10 @@ import {
 } from "../../features/exercisesSlice";
 import { reduxStatus } from "../../features/types";
 
-type ExercisesProps = ExerciseProps[];
-
-interface fetchExercisesProps {
-  setExercises: React.Dispatch<React.SetStateAction<ExercisesProps>>;
-}
 const Exercises: React.FC = () => {
   const dispatch = useDispatch();
 
-  const [currentDisplay, setCurrentDisplay] = useState<number>(0);
-  const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [isAdding, setIsAdding] = useState<boolean>(false);
-  const [currentExercise, setCurrentExercise] = useState<ExerciseProps>();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const { status } = useSelector(selectExercisesStatus);
 
   useEffect(() => {

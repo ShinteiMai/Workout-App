@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Dimensions, StyleSheet, Image, View } from "react-native";
 import { Button, Surface, Title, Text } from "react-native-paper";
 
@@ -7,10 +7,6 @@ import { AuthScreenProp } from "../index";
 
 import logo from "../../assets/images/splash2.png";
 
-import { useDispatch, useSelector } from "react-redux";
-import { login, selectUserStatus } from "../../features/userSlice";
-
-let width = Dimensions.get("window").width;
 let height = Dimensions.get("window").height;
 
 interface AuthProps {
@@ -18,9 +14,6 @@ interface AuthProps {
 }
 
 const LoginAndRegisterScreen: React.FC<AuthProps> = ({ navigation }) => {
-  const [currentDisplay, setCurrentDisplay] = useState(0);
-  const { status } = useSelector(selectUserStatus);
-
   return (
     <Layout>
       <View style={styles.container}>

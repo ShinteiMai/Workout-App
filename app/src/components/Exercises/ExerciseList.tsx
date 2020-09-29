@@ -4,10 +4,7 @@ import { Formik } from "formik";
 import { axios } from "../../../axios";
 import { ExerciseProps } from "../../../types";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  deleteExercise,
-  selectExercises,
-} from "../../../features/exercisesSlice";
+import { deleteExercise, selectExercises } from "../../features/exercisesSlice";
 
 interface Props {
   setIsUpdating: React.Dispatch<React.SetStateAction<boolean>>;

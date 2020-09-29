@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useDispatch, useSelector } from "react-redux";
-import { login, selectUserStatus } from "../../../features/userSlice";
+import { login, selectUserStatus } from "../../features/userSlice";
 
 import Colors from "../../constants/Colors";
 import { RootStackParamList } from "../../../types";
@@ -10,7 +10,7 @@ import { RootStackParamList } from "../../../types";
 import { Button, Surface, Text, TextInput, Title } from "react-native-paper";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { reduxStatus } from "../../../features/types";
+import { reduxStatus } from "../../features/types";
 
 interface values {
   email: string;

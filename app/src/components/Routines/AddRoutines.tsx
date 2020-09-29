@@ -1,5 +1,4 @@
 import React from "react";
-
 import {
   Button,
   Surface,
@@ -8,28 +7,28 @@ import {
   Title,
 } from "react-native-paper";
 import { Formik } from "formik";
-import { axios } from "../../../axios";
-import { addExercise } from "../../../features/exercisesSlice";
+import { axios, fromApi } from "../../../axios";
 import { useDispatch } from "react-redux";
+import { addRoutine } from "../../features/routinesSlice";
 
 interface Props {
   setIsAdding: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AddExercise: React.FC<Props> = ({ setIsAdding }) => {
+const AddRoutine: React.FC<Props> = ({ setIsAdding }) => {
   const dispatch = useDispatch();
   return (
     <Surface>
-      <Title>Add Exercise</Title>
+      <Title>Add Routine</Title>
       <Formik
         onSubmit={async (values) => {
-          dispatch(addExercise({ ...values }));
+          dispatch(addRoutine({ ...values }));
           setIsAdding(false);
         }}
         initialValues={{
-          name: "",
-          sets: "",
-          reps: "",
+          title: "",
+          description: "",
+          exercises: [],
         }}
       >
         {({ errors, handleSubmit, values, handleChange }) => (
@@ -37,27 +36,29 @@ const AddExercise: React.FC<Props> = ({ setIsAdding }) => {
             <Surface>
               <TextInput
                 mode="outlined"
-                label="name"
-                value={values.name}
-                onChangeText={handleChange("name")}
+                label="title"
+                value={values.title}
+                onChangeText={handleChange("title")}
               />
-              <Paragraph>{errors.name ? errors.name : null}</Paragraph>
+              <Paragraph>{errors.title ? errors.title : null}</Paragraph>
 
               <TextInput
                 mode="outlined"
-                label="sets"
-                value={values.sets}
-                onChangeText={handleChange("sets")}
+                label="description"
+                value={values.description}
+                onChangeText={handleChange("description")}
               />
-              <Paragraph>{errors.sets ? errors.sets : null}</Paragraph>
+              <Paragraph>
+                {errors.description ? errors.description : null}
+              </Paragraph>
 
-              <TextInput
+              {/* <TextInput
                 mode="outlined"
-                label="reps"
-                value={values.reps}
-                onChangeText={handleChange("reps")}
+                label="exercises"
+                value={values.exercises}
+                onChangeText={handleChange("exercises")}
               />
-              <Paragraph>{errors.reps ? errors.reps : null}</Paragraph>
+              <Paragraph>{errors.exercises ? errors.exercises : null}</Paragraph> */}
             </Surface>
 
             <Button onPress={handleSubmit}>Add Exercise</Button>
@@ -75,4 +76,4 @@ const AddExercise: React.FC<Props> = ({ setIsAdding }) => {
   );
 };
 
-export default AddExercise;
+export default AddRoutine;

@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { ActivityIndicator, StyleSheet, View, Image } from "react-native";
 
 import logo from "../../assets/images/splash2.png";
-
-import {
-  ActivityIndicator,
-  AsyncStorage,
-  StyleSheet,
-  View,
-  Image,
-} from "react-native";
 
 interface Props {
   setIsLoaded: React.Dispatch<React.SetStateAction<boolean>>;

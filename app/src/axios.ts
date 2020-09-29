@@ -1,7 +1,6 @@
 import Axios from "axios";
 import { AsyncStorage } from "react-native";
-import * as data from "./buffer/localtunnel.json";
-import { ExerciseProps, RoutineProps } from "./types";
+import * as data from "../buffer/localtunnel.json";
 
 export const axios = Axios.create({
   baseURL: (<any>data).url,
@@ -125,8 +124,8 @@ class SendApiRequest {
 
   async addRoutine(
     title: string,
-    description: string,
-    exercises: ExerciseProps[]
+    description: string
+    // exercises: ExerciseProps[]
   ) {
     return createAxiosRequest(
       "POST",

@@ -7,12 +7,11 @@ import {
   createStackNavigator,
   StackNavigationProp,
 } from "@react-navigation/stack";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { ColorSchemeName } from "react-native";
 
 // Screens
 import SplashScreen from "./screens/SplashScreen";
-import NotFoundScreen from "./screens/NotFoundScreen";
 // New Screens
 import LoginAndRegisterScreen from "./screens/LoginAndRegister";
 import RegisterScreen from "./screens/RegisterScreen";

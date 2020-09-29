@@ -7,10 +7,10 @@ import {
   Title,
 } from "react-native-paper";
 import { Formik } from "formik";
-import { axios } from "../../axios";
-import { ExerciseProps } from "../../types";
+import { axios } from "../../../axios";
+import { ExerciseProps } from "../../../types";
 import { useDispatch } from "react-redux";
-import { updateExercise } from "../../features/exercisesSlice";
+import { updateExercise } from "../../../features/exercisesSlice";
 
 interface Props {
   exercise: ExerciseProps;

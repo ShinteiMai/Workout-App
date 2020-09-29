@@ -6,11 +6,11 @@ import {
   TextInput,
   Title,
 } from "react-native-paper";
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
 import { Formik } from "formik";
-import { RoutineProps } from "../../types";
-import { axios, fromApi } from "../../axios";
-import { updateRoutine } from "../../features/routinesSlice";
+import { RoutineProps } from "../../../types";
+import { axios, fromApi } from "../../../axios";
+import { updateRoutine } from "../../../features/routinesSlice";
 
 interface Props {
   routine: RoutineProps;
@@ -30,7 +30,7 @@ const UpdateRoutine: React.FC<Props> = ({ routine, setIsUpdating }) => {
         initialValues={{
           title: routine.title,
           description: String(routine.description),
-          exercises: []
+          exercises: [],
         }}
       >
         {({ errors, handleSubmit, values, handleChange }) => (
@@ -49,7 +49,9 @@ const UpdateRoutine: React.FC<Props> = ({ routine, setIsUpdating }) => {
                 value={values.description}
                 onChangeText={handleChange("description")}
               />
-              <Paragraph>{errors.description ? errors.description : " "}</Paragraph>
+              <Paragraph>
+                {errors.description ? errors.description : " "}
+              </Paragraph>
               {/* <TextInput
                 mode="outlined"
                 label="reps"
@@ -70,7 +72,7 @@ const UpdateRoutine: React.FC<Props> = ({ routine, setIsUpdating }) => {
       >
         Cancel Update
       </Button>
-    </Surface >
+    </Surface>
   );
 };
 

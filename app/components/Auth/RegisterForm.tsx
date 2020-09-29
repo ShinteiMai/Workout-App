@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { register, selectUserStatus } from "../../features/userSlice";
+import { register, selectUserStatus } from "../../../features/userSlice";
 
 import { StyleSheet } from "react-native";
 
 import { Button, Surface, Text, TextInput, Title } from "react-native-paper";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { reduxStatus } from "../../features/types";
-import { RootStackParamList } from "../../types";
+import { reduxStatus } from "../../../features/types";
+import { RootStackParamList } from "../../../types";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 interface values {

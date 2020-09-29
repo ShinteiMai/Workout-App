@@ -2,12 +2,9 @@ import React from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { Button, Surface, Title } from "react-native-paper";
 
-import RegisterForm from "../../components/Auth/RegisterForm";
+import LoginForm from "../../components/Auth/LoginForm";
 import Layout from "../../components/Layout";
 import { AuthScreenProp } from "../index";
-
-import { useSelector } from "react-redux";
-import { selectUserStatus } from "../../features/userSlice";
 
 let width = Dimensions.get("window").width;
 let height = Dimensions.get("window").height;
@@ -16,27 +13,24 @@ interface AuthProps {
   navigation: AuthScreenProp;
 }
 
-const RegisterScreen: React.FC<AuthProps> = ({ navigation }) => {
-  const { status } = useSelector(selectUserStatus);
-
+const LoginScreen: React.FC<AuthProps> = ({ navigation }) => {
   return (
     <Layout>
       <View style={styles.container}>
         <Surface style={styles.content}>
           <View style={styles.titleContainer}>
-            <Title>Hi!</Title>
-            <Title>Sign Up to get started here!</Title>
+            <Title>Welcome Back!</Title>
           </View>
-          <RegisterForm navigation={navigation} />
+          <LoginForm navigation={navigation} />
           <View style={styles.margin}>
             <Button
               contentStyle={styles.buttonBody}
               labelStyle={styles.buttonText2}
               onPress={() => {
-                navigation.navigate("Login");
+                navigation.navigate("Register");
               }}
             >
-              Already have an account? Login here
+              Don't have an account ? Signup
             </Button>
           </View>
         </Surface>
@@ -102,4 +96,4 @@ const styles = StyleSheet.create({
   //   },
 });
 
-export default RegisterScreen;
+export default LoginScreen;
