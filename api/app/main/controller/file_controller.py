@@ -24,16 +24,8 @@ class Files(Resource):
         image = body["image"]["_parts"][0][1]["picture"]
         filename = body["image"]["_parts"][0][1]["name"]
         file_service.upload_image(image, filename)
-        # print(img)
-        # filename = "test.jpg"
-        # basedir = os.path.abspath(os.path.dirname(
-        #     __file__) + "../../../../images/")
-        # with open(os.path.join(basedir, filename), "wb") as f:
-        #     # with open(filename, "wb") as f:
-        #     print("CURRENT DICKRETORI: ")
-        #     subprocess.call(["pwd"])
-        #     f.write(img)
-        # f.close()
+
+        return "nanti disini return json stuffs"
 
 
 @api.route('/<id>')

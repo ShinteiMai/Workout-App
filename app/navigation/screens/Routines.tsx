@@ -29,26 +29,27 @@ const Routines: React.FC = () => {
 
   useEffect(() => {
     if (status === `fetchRoutines/${reduxStatus.success}`) {
+      console.log(routines + " ss")
     }
   }, [status]);
-  // let display = (
-  //   <RoutineList
-  //     setCurrentRoutine={setCurrentRoutine}
-  //     setIsUpdating={setIsUpdating}
-  //   />
-  // );
-  // if (isUpdating) {
-  //   display = (
-  //     <UpdateRoutine routine={currentRoutine} setIsUpdating={setIsUpdating} />
-  //   );
-  // } else if (isAdding) {
-  //   display = <AddRoutine setIsAdding={setIsAdding} />;
-  // }
+  let display = (
+    <RoutineList
+      setCurrentRoutine={setCurrentRoutine}
+      setIsUpdating={setIsUpdating}
+    />
+  );
+  if (isUpdating) {
+    display = (
+      <UpdateRoutine routine={currentRoutine} setIsUpdating={setIsUpdating} />
+    );
+  } else if (isAdding) {
+    display = <AddRoutine setIsAdding={setIsAdding} />;
+  }
 
   useEffect(() => {
-    if (status === "idle") {
-      dispatch(fetchRoutines());
-    }
+    // if (status === `fetchRoutines/${reduxStatus.idle}`) {
+    dispatch(fetchRoutines());
+    // }
   }, []);
 
   return (
@@ -70,7 +71,7 @@ const Routines: React.FC = () => {
               >
                 Add a new routine
             </Button>
-              {/* {display} */}
+              {display}
             </View>
           )}
       </View>

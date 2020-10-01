@@ -112,6 +112,17 @@ const UserProfile: React.FC<Props> = ({ navigation }) => {
 
         </View>
 
+        <View style={styles.profile}>
+
+          <Text style={{ marginBottom: 10 }}>ID: {user.id}</Text>
+          <Text style={{ marginBottom: 10 }}>Email: {user.email}</Text>
+          <View style={{ marginBottom: 10 }}>
+            <Logout navigation={navigation} />
+          </View>
+
+        </View>
+
+
         <View>
           <Button
             contentStyle={styles.buttonBody}

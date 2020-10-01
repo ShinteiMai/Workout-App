@@ -13,11 +13,12 @@ import { ColorSchemeName } from "react-native";
 // Screens
 import SplashScreen from "./screens/SplashScreen";
 import NotFoundScreen from "./screens/NotFoundScreen";
+
 // New Screens
-import LoginAndRegisterScreen from "./screens/LoginAndRegister";
-import RegisterScreen from "./screens/RegisterScreen";
-import LoginScreen from "./screens/LoginScreen";
-import EmailVerificationScreen from "./screens/EmailVerificationScreen";
+import LoginAndRegisterScreen from "./screens/auth/LoginAndRegister";
+import RegisterScreen from "./screens/auth/RegisterScreen";
+import LoginScreen from "./screens/auth/LoginScreen";
+import EmailVerificationScreen from "./screens/auth/EmailVerificationScreen";
 
 import { RootStackParamList } from "../types";
 import BottomTabNavigator from "./BottomTabNavigator";
@@ -73,16 +74,16 @@ const RootNavigator: React.FC = () => {
       {isUserLoggedIn ? (
         <Stack.Screen name="Root" component={BottomTabNavigator} />
       ) : (
-        <>
-          <Stack.Screen name="Auth" component={LoginAndRegisterScreen} />
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Register" component={RegisterScreen} />
-          <Stack.Screen
-            name="EmailVerification"
-            component={EmailVerificationScreen}
-          />
-        </>
-      )}
+          <>
+            <Stack.Screen name="Auth" component={LoginAndRegisterScreen} />
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Register" component={RegisterScreen} />
+            <Stack.Screen
+              name="EmailVerification"
+              component={EmailVerificationScreen}
+            />
+          </>
+        )}
     </Stack.Navigator>
   );
 };

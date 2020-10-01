@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Dimensions, StyleSheet, Image, View } from "react-native";
 import { Button, Surface, Title, Text } from "react-native-paper";
+import SvgUri from 'react-native-svg-uri';
 
-import Layout from "../../components/Layout";
-import { AuthScreenProp } from "../index";
+import Layout from "../../../components/Layout";
+import { AuthScreenProp } from "../../index";
 
-import logo from "../../assets/images/splash2.png";
+import logo from "../../../assets/images/logo.png";
+import Decor2Svg from "../../../assets/images/decor2.svg";
 
 import { useDispatch, useSelector } from "react-redux";
-import { login, googleAuth, selectUserStatus } from "../../features/userSlice";
+import { login, googleAuth, selectUserStatus } from "../../../features/userSlice";
 
 let width = Dimensions.get("window").width;
 let height = Dimensions.get("window").height;
@@ -24,12 +26,18 @@ const LoginAndRegisterScreen: React.FC<AuthProps> = ({ navigation }) => {
 
   return (
     <Layout>
+
       <View style={styles.container}>
+
         <Surface style={styles.content}>
+
+          <Decor2Svg fill="blue" style={styles.decor} />
           <Image source={logo} style={styles.logo} />
           <Title>stronk</Title>
           <Text>became a chad today</Text>
+
           <View style={styles.buttonContainer}>
+
             <View style={styles.margin}>
               <Button
                 mode="contained"
@@ -41,7 +49,9 @@ const LoginAndRegisterScreen: React.FC<AuthProps> = ({ navigation }) => {
                 Continue with Google
               </Button>
             </View>
+
             <View style={styles.margin}>
+
               <Button
                 mode="contained"
                 color={"#7ac7bf"}
@@ -51,7 +61,9 @@ const LoginAndRegisterScreen: React.FC<AuthProps> = ({ navigation }) => {
               >
                 Use Email Address
               </Button>
+
             </View>
+
             <View style={styles.margin}>
               <Button
                 contentStyle={styles.buttonBody}
@@ -63,8 +75,11 @@ const LoginAndRegisterScreen: React.FC<AuthProps> = ({ navigation }) => {
                 Already have an account? Login here
               </Button>
             </View>
+
           </View>
+
         </Surface>
+
       </View>
     </Layout>
   );
@@ -73,29 +88,26 @@ const LoginAndRegisterScreen: React.FC<AuthProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#fff",
-    // alignItems: "center",
-    // justifyContent: "center",
-    // paddingTop: height,
-    // marginTop: height / 4,
+  },
+  decor: {
+    zIndex: 1,
+    position: "absolute",
+    left: 0,
+    top: 0,
+    transform: [{ rotate: "180deg" }]
   },
   logo: {
     position: "absolute",
     width: 120,
     height: 120,
     resizeMode: "contain",
-    // marginHorizontal: "auto",
     top: height / 10,
-    // left: width / 2.7,
     zIndex: 1,
   },
   content: {
     flex: 1,
-    // backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-    // paddingTop: height,
-    // marginTop: height / 4,
     paddingVertical: height / 3,
   },
   buttonContainer: {
@@ -106,11 +118,8 @@ const styles = StyleSheet.create({
     color: "#7ac7bf",
   },
   buttonBody: {
-    // marginHorizontal: 0,
-    // paddingVertical: 10
   },
   buttonText1: {
-    // marginVertical: 10,
     color: "#ffffff",
     fontSize: 12,
   },
@@ -122,18 +131,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
 
-  //   title: {
-  //     fontSize: 20,
-  //     fontWeight: "bold",
-  //   },
-  //   link: {
-  //     marginTop: 15,
-  //     paddingVertical: 15,
-  //   },
-  //   linkText: {
-  //     fontSize: 14,
-  //     color: "#2e78b7",
-  //   },
 });
 
 export default LoginAndRegisterScreen;

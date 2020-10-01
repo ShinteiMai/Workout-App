@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Dimensions, StyleSheet, Image, View } from "react-native";
 import { Button, Surface, Text, Title } from "react-native-paper";
 
-import LoginForm from "../../components/Auth/LoginForm";
-import Layout from "../../components/Layout";
-import { AuthScreenProp } from "../index";
+import LoginForm from "../../../components/Auth/LoginForm";
+import Layout from "../../../components/Layout";
+import { AuthScreenProp } from "../../index";
+
+import Decor2Svg from "../../../assets/images/decor2.svg";
 
 import { useDispatch, useSelector } from "react-redux";
-import { login, selectUserStatus } from "../../features/userSlice";
+import { login, selectUserStatus } from "../../../features/userSlice";
 
 let width = Dimensions.get("window").width;
 let height = Dimensions.get("window").height;
@@ -28,10 +30,14 @@ const LoginScreen: React.FC<AuthProps> = ({ navigation }) => {
     <Layout>
       <View style={styles.container}>
         <Surface style={styles.content}>
+
+          <Decor2Svg fill="blue" style={styles.decor} />
           <View style={styles.titleContainer}>
             <Title>Welcome Back!</Title>
           </View>
-          <LoginForm navigation={navigation} />
+          <View style={styles.form}>
+            <LoginForm navigation={navigation} />
+          </View>
           <View style={styles.margin}>
             <Button
               contentStyle={styles.buttonBody}
@@ -52,18 +58,22 @@ const LoginScreen: React.FC<AuthProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#fff",
-    // alignItems: "center",
-    // justifyContent: "center",
-    // paddingTop: height,
-    // marginTop: height / 4,
+  },
+  decor: {
+    zIndex: 1,
+    position: "absolute",
+    left: 0,
+    top: 0,
+    transform: [{ rotate: "180deg" }]
   },
   content: {
     flex: 1,
-    // alignItems: "center",
     justifyContent: "center",
     paddingTop: height / 7,
     paddingBottom: height / 3.5,
+  },
+  form: {
+    marginHorizontal: width / 8,
   },
   titleContainer: {
     flex: 1,

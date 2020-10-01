@@ -46,6 +46,7 @@ export interface RoutineProps {
   id?: string;
   title: string;
   description: string;
+  duration: number;
   exercises: ExerciseProps[];
 }
 

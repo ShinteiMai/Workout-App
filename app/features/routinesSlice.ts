@@ -7,8 +7,7 @@ export const fetchRoutines = createAsyncThunk(
   "routines/fetchRoutines",
   async () => {
     const data = await fromApi.fetchRoutines();
-    console.log(data);
-    return data.routines;
+    return data.data;
   }
 );
 
@@ -22,8 +21,8 @@ export const fetchRoutine = createAsyncThunk(
 
 export const addRoutine = createAsyncThunk(
   "routines/addRoutine",
-  async ({ title, description, exercises }: RoutineProps) => {
-    const data = await fromApi.addRoutine(title, description, exercises);
+  async ({ title, description, duration, exercises }: RoutineProps) => {
+    const data = await fromApi.addRoutine(title, description, duration, exercises);
     return data.routine;
   }
 );
@@ -94,7 +93,7 @@ export const routinesSlice = createSlice({
       state.status = `deleteRoutine/${reduxStatus.error}`;
     },
     [fetchRoutines.fulfilled as any]: (state, action) => {
-      console.log(action.payload);
+      console.log(action);
       state.routines = action.payload;
       state.status = `fetchRoutines/${reduxStatus.success}`;
     },

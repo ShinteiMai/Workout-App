@@ -65,21 +65,21 @@ const RegisterForm: React.FC<Props> = ({ navigation }) => {
           {({ values, handleSubmit, handleChange, errors }) => (
             <Surface style={styles.form}>
               <TextInput
-                mode="outlined"
+                // mode="outlined"
                 label="Username"
                 value={values.username}
                 onChangeText={handleChange("username")}
               />
               <Text>{errors.username ? errors.username : " "}</Text>
               <TextInput
-                mode="outlined"
+                // mode="outlined"
                 label="Email"
                 value={values.email}
                 onChangeText={handleChange("email")}
               />
               <Text>{errors.email ? errors.email : " "}</Text>
               <TextInput
-                mode="outlined"
+                // mode="outlined"
                 label="Password"
                 value={values.password}
                 secureTextEntry={true}

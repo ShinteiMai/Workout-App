@@ -22,6 +22,7 @@ const AddRoutine: React.FC<Props> = ({ setIsAdding }) => {
       <Title>Add Routine</Title>
       <Formik
         onSubmit={async (values) => {
+          console.log(values);
           dispatch(addRoutine(
             { ...values }
           ))
@@ -30,6 +31,7 @@ const AddRoutine: React.FC<Props> = ({ setIsAdding }) => {
         initialValues={{
           title: "",
           description: "",
+          duration: 0,
           exercises: [],
         }}
       >
@@ -52,6 +54,13 @@ const AddRoutine: React.FC<Props> = ({ setIsAdding }) => {
               />
               <Paragraph>{errors.description ? errors.description : null}</Paragraph>
 
+              <TextInput
+                mode="outlined"
+                label="duration"
+                value={values.duration}
+                onChangeText={handleChange("duration")}
+              />
+              <Paragraph>{errors.duration ? errors.duration : null}</Paragraph>
               {/* <TextInput
                 mode="outlined"
                 label="exercises"

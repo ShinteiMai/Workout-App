@@ -87,10 +87,10 @@ export const createAxiosRequest = async (
     //     return relationship;
     //   }) || {};
     // console.log(responseObject);
-    return {
+    return responseObject.id ? {
       ...responseObject.attributes,
       id: responseObject.id,
-    };
+    } : { data: responseObject };
   } catch (err) {
     // return the statusCode and the message of the error
     // from the error response object.
@@ -158,6 +158,7 @@ class SendApiRequest {
   async addRoutine(
     title: string,
     description: string,
+    duration: number,
     exercises: ExerciseProps[]
   ) {
     return createAxiosRequest(
@@ -166,6 +167,7 @@ class SendApiRequest {
       {
         title,
         description,
+        duration
         // exercises
       },
       "routine"
@@ -175,7 +177,8 @@ class SendApiRequest {
   async updateRoutine(
     routineId: string,
     title?: string,
-    description?: string
+    description?: string,
+    duration?: number,
     // exercises?: ExerciseProps[]
   ) {
     return createAxiosRequest(

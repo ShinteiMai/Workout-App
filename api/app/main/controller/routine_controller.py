@@ -72,6 +72,7 @@ class Routines(Resource):
     @api.doc('Create a new routine')
     def post(self):
         body = request.get_json(force=True)
+        print(body)
         try:
             routine_schema.load(body)
 
@@ -86,7 +87,7 @@ class Routines(Resource):
             error.validation_error(err.messages["errors"])
 
 
-@api.route('/<id>')
+@api.route('?id=<id>')
 @api.param('id', 'Routine ID')
 class Routine(Resource):
     @api.doc('Fetch a single rooutine with the specified id')

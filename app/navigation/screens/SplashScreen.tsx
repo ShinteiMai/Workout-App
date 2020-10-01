@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 
-import logo from "../../assets/images/splash2.png";
+import Decor1Svg from "../../assets/images/decor1.svg";
+import Decor2Svg from "../../assets/images/decor2.svg";
+import logo from "../../assets/images/logo.png";
 
 import {
   ActivityIndicator,
@@ -32,6 +34,10 @@ const SplashScreen: React.FC<Props> = ({ setIsLoaded }) => {
         size="large"
         style={styles.activityIndicator}
       />
+      <View style={styles.decor}>
+        <Decor1Svg style={[styles.decor, styles.left]} />
+        <Decor2Svg style={styles.decor} />
+      </View>
     </View>
   );
 };
@@ -41,13 +47,16 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    // backgroundColor: "#307ecc",
-    backgroundColor: "#000000",
   },
   logo: {
-    width: "90%",
-    resizeMode: "contain",
     margin: 30,
+  },
+  decor: {
+    position: "absolute",
+    bottom: 0,
+  },
+  left: {
+    right: 0,
   },
   activityIndicator: {
     alignItems: "center",

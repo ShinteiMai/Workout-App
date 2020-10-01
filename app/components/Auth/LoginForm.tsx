@@ -49,6 +49,7 @@ const LoginForm: React.FC<Props> = ({ navigation }) => {
       })
     );
   };
+
   return (
     <Surface style={styles.container}>
       {/* <Title style={styles.title}>LOGIN</Title> */}
@@ -82,7 +83,7 @@ const LoginForm: React.FC<Props> = ({ navigation }) => {
                 Dont lewd nezuko bro
               </Button>
               <TextInput
-                mode="outlined"
+                // mode="outlined"
                 label="Email"
                 value={values.email}
                 onChangeText={handleChange("email")}
@@ -90,7 +91,7 @@ const LoginForm: React.FC<Props> = ({ navigation }) => {
               />
               <Text>{errors.email ? errors.email : " "}</Text>
               <TextInput
-                mode="outlined"
+                // mode="outlined"
                 label="Password"
                 value={values.password}
                 secureTextEntry={true}

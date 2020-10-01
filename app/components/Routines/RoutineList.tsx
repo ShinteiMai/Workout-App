@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { RoutineProps } from '../../types';
 import { deleteRoutine, selectRoutines } from '../../features/routinesSlice';
-import { Surface, Title, Button, List, Paragraph } from "react-native-paper";
+import { Surface, Title, Text, Button, List, Paragraph } from "react-native-paper";
 
 interface Props {
   setCurrentRoutine: React.Dispatch<React.SetStateAction<RoutineProps>>;
@@ -13,13 +13,13 @@ const RoutineList: React.FC<Props> = ({
   setIsUpdating,
   setCurrentRoutine,
 }) => {
-  const dispatch = useDispatch();
   const { routines } = useSelector(selectRoutines);
   return (
     <Surface>
       <Title>Routines</Title>
       <List.Section>
-        {routines.map((routine, index) => (
+        <Text>{JSON.stringify(routines)}</Text>
+        {/* {routines.map((routine, index) => (
           <List.Accordion title={routine.title} key={`routine-${index}`}>
             <Paragraph>{routine.desc}</Paragraph>
             {routine.exercises.map((exercise, index) => {
@@ -47,7 +47,7 @@ const RoutineList: React.FC<Props> = ({
             <Button onPress={() => { }}>Select {routine.title}</Button>
 
           </List.Accordion>
-        ))}
+        ))} */}
       </List.Section>
     </Surface>
   );
